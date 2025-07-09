@@ -1,0 +1,1136 @@
+{
+    "fault_assignment_analysis": [
+        {
+            "task_id": 0,
+            "author": "agent",
+            "description": "The agent is responsible for the fault because it incorrectly charged the user for 1 non-free baggage, resulting in a total price of $305 instead of the correct $255 (all 3 baggages should be free). According to the ground truth, the user should not have been charged for any baggage, and the payment should have been $250 from the certificate and $5 from the credit card. The agent's booking action overcharged the user and used the wrong payment breakdown."
+        },
+        {
+            "task_id": 1,
+            "author": "agent",
+            "description": "The agent is at fault because it refused to proceed without the reservation ID, even though the user provided their user ID and all necessary context. The agent should have looked up the user's reservations using their user ID (olivia_gonzalez_2305), identified the relevant reservation, and then proceeded to cancel it as per the user's request. The ground truth action is to cancel the reservation using the reservation ID (\"Z7GOZK\"), which the agent could have retrieved from the user's account. The agent's insistence on the reservation ID blocked the correct action."
+        },
+        {
+            "task_id": 2,
+            "author": "agent",
+            "description": "The agent is at fault because it did not provide the total amount of money saved (23553) after downgrading all business flights to economy, as required. This is a functional omission: the user specifically asked to know the total savings, but the agent failed to communicate this information."
+        },
+        {
+            "task_id": 3,
+            "author": "agent",
+            "description": "The agent is responsible for the fault because:\n\n1. **Incorrect Flight Selection for Fastest Return:** The agent attempted to book the DEN-LAS-IAH return using HAT229 (DEN-LAS) and HAT266 (LAS-IAH), but HAT229 had no economy seats available, and the agent tried to upgrade to business class, which was not requested by the user. The ground truth shows the correct fastest available return is HAT290 (DEN-LAS) and HAT175 (LAS-IAH), both in economy, which were available and should have been selected.\n\n2. **Payment Method Error:** The agent failed to use the correct payment method as per the user's request. The user wanted to use the gift card with the smallest balance, which is gift_card_6276644 ($113). The agent instead attempted to use other gift cards and then defaulted to a credit card, which was not aligned with the user's instructions.\n\n3. **Baggage Update Missing:** The agent did not update the reservation to add one checked bag as requested by the user. The ground truth includes an action to update the baggages, but the agent did not perform this step.\n\nIn summary, the agent failed to select the correct fastest return flights, did not use the correct payment method, and did not add the requested checked bag, all of which are required by the user instruction and demonstrated in the ground truth."
+        },
+        {
+            "task_id": 4,
+            "author": "agent",
+            "description": "The agent is at fault because it incorrectly claims that changing the passenger's identity is not allowed and refuses to update the reservation to make Omar Rossi the passenger. According to the ground truth, the agent should have performed the following actions:\n\n1. Upgraded the reservation to economy class and used the user's preferred gift card for payment.\n2. Updated the passenger to Omar Rossi (using the user's profile information, including the birthday).\n3. Updated the baggage allowance to 3 checked bags, again using the gift card for payment.\n\nInstead, the agent only upgraded the cabin and refused to update the passenger, blocking the user from achieving their goal. This is a functional failure to perform the required update_reservation_passengers action, and also to proceed with the baggage update."
+        },
+        {
+            "task_id": 5,
+            "author": "agent",
+            "description": "The agent is responsible for the fault because it failed to change the passenger to the user (Omar Rossi) as requested. The agent only upgraded the cabin to economy class and added checked bags, but left the original passenger (Ivan Garcia) on the reservation. According to the ground truth, the agent should have also updated the passenger information to Omar Rossi. This omission means the user's instruction was not fully executed."
+        },
+        {
+            "task_id": 7,
+            "author": "agent",
+            "description": "The agent is at fault because it changed the user's reservation to a flight arriving at EWR (Newark), while the original reservation was to PHL (Philadelphia). The user instruction said EWR is \"equally far\" and \"also considered,\" but the ground truth action sequence selects the cheapest economy flight to PHL, not EWR. The agent should have prioritized the cheapest economy flight to PHL unless the user explicitly chose EWR over PHL. In the trajectory, the agent presented EWR options and changed the reservation to EWR without confirming that the user preferred EWR over PHL, thus deviating from the ground truth and the user's original intent."
+        },
+        {
+            "task_id": 8,
+            "author": "agent",
+            "description": "The agent is at fault because it did not provide the sums of the gift card balances (327) and certificate balances (1000), nor did it provide the total amount to be charged to the master card (1786). Instead, the agent likely gave individual balances or did not compute and communicate the required sums, which are explicitly requested in the user instruction and required outputs."
+        },
+        {
+            "task_id": 9,
+            "author": "agent",
+            "description": "The agent is at fault because they failed to provide the correct sums for the gift card balances ('327') and certificate balances ('1000'), and did not communicate the final master card charge ('1286') as required. These are the specific outputs expected, and the agent's response did not include them, resulting in a functional mismatch with the ground truth."
+        },
+        {
+            "task_id": 10,
+            "author": "agent",
+            "description": "The agent is responsible for the following faults:\n\n1. **Failure to Cancel Reservation:** When the user requested to remove Ethan from reservation H9ZU1C and, upon being told it was not possible, asked to cancel the reservation, the agent incorrectly stated that the reservation could not be canceled due to policy. However, the ground truth action sequence shows that the reservation should have been canceled (via cancel_reservation).\n\n2. **Booking Without Canceling:** The agent proceeded to book a new reservation for the user without first canceling the original reservation H9ZU1C, as required by the user's instructions and the ground truth sequence.\n\nThese faults mean the agent did not follow the correct sequence of actions: cancel the original reservation before booking the new one."
+        },
+        {
+            "task_id": 13,
+            "author": "agent",
+            "description": "The agent is responsible for the fault because it proceeded to change the user's reservation and confirmed the change, despite the reservation being partially used (the outbound flights LAX\u2192ORD and ORD\u2192ATL are in the past). In such cases, self-service changes are typically not allowed, and the correct action is to transfer the user to a human agent for further assistance, as shown in the ground truth. The agent failed to recognize this restriction and attempted to process the change autonomously."
+        },
+        {
+            "task_id": 14,
+            "author": "agent",
+            "description": "The agent is responsible for the fault because it incorrectly processed the upgrade for both passengers to business class and charged $1200, despite the user's explicit instruction to only upgrade one passenger (Noah) if the total cost exceeded $600. The correct action should have been to upgrade only Noah to business class for $600, not both passengers for $1200. This resulted in an incorrect reservation update and overcharging the user, diverging from the user's constraints and the ground truth action sequence."
+        },
+        {
+            "task_id": 15,
+            "author": "agent",
+            "description": "The agent is at fault because, according to the ground truth, no action should have been taken\u2014the user should not have been able to remove a passenger, downgrade, or cancel the reservation for a refund, as the payment was made with a gift card (not refundable to original payment method). However, in the trajectory, the agent proceeds to cancel the reservation and claims a refund will be processed to the original payment method, which is incorrect. The agent should have recognized the payment method and informed the user that a refund to the original payment method (gift card) is not possible, and ideally should not have processed the cancellation as requested."
+        },
+        {
+            "task_id": 16,
+            "author": "agent",
+            "description": "The agent is at fault because it failed to request or use the user ID (\"ethan_martin_2396\") that was already provided in the user instruction, and did not attempt to retrieve the user's details or process compensation. According to the ground truth, the agent should have called get_user_details with the user ID and then issued a compensation certificate (send_certificate). Instead, the agent incorrectly insisted on needing a reservation ID, did not check eligibility or process compensation, and did not fulfill the user's request for the reason for the delay or compensation, despite having enough information to proceed."
+        },
+        {
+            "task_id": 17,
+            "author": "agent",
+            "description": "The agent is at fault because the user requested to upgrade to business class for all passengers on the IAH to SEA flight, but the agent ultimately booked only the IAH to LAS segment in business class and the LAS to SEA segment in economy class. The user did not request or accept a downgrade to economy for any segment; they only wanted to upgrade both legs if business class for the requested segment was not possible, and the agent never stated that a full business class upgrade was impossible. According to the ground truth, no action should have been taken (the user should not have accepted a partial upgrade), but the agent proceeded with a change that did not meet the user's requirements."
+        },
+        {
+            "task_id": 19,
+            "author": "agent",
+            "description": "The agent is responsible for the fault because it selected the wrong return flight. The user requested to keep the same dates as the original reservation, which were DTW\u2192LGA on 2024-05-17 and LGA\u2192DTW on 2024-05-19. The agent instead chose a return flight (JFK\u2192DTW) on 2024-05-20 (HAT212), not 2024-05-19. The ground truth action sequence correctly selects HAT033 on 2024-05-19. Thus, the agent failed to maintain the original travel dates as instructed."
+        },
+        {
+            "task_id": 21,
+            "author": "agent",
+            "description": "The agent is at fault because the ground truth action sequence is empty, indicating that no action should have been taken (i.e., the user should not have been able to change or book a new flight due to the basic economy fare's restrictions). However, in the trajectory, the agent proceeds to book a new direct flight for the user, which is not allowed per the fare rules and the user's constraints (willing to pay only a change fee, not to purchase a new ticket outright). The agent should have stopped after informing the user that changes are not permitted for basic economy tickets, rather than facilitating a new booking."
+        },
+        {
+            "task_id": 22,
+            "author": "agent",
+            "description": "The agent is responsible for the fault because it incorrectly told the user that basic economy flights cannot be modified at all, instead of offering the option to upgrade to economy immediately (as the user was willing to do per the instruction). The agent only proceeded with the upgrade and change after the user explicitly asked about upgrading, causing unnecessary friction and delay. According to the ground truth, the agent should have proactively offered the upgrade and change option upon seeing the basic economy restriction, without requiring further prompting from the user."
+        },
+        {
+            "task_id": 23,
+            "author": "agent",
+            "description": "The agent is at fault because it incorrectly insisted on requiring the user ID to proceed with any reservation changes, despite being provided with the reservation ID (HXDUBJ). According to the ground truth, all actions (retrieving reservation details, searching for flights, updating flights, and adding baggage) should have been performed using just the reservation ID. The agent failed to perform any functional actions and did not attempt to retrieve or modify the reservation, resulting in no progress toward fulfilling the user's request."
+        },
+        {
+            "task_id": 25,
+            "author": "agent",
+            "description": "The agent is responsible for the fault because, when booking the new flight from JFK to SFO, it used the passenger's date of birth as \"1981-05-26\" (from the user's profile), whereas the ground truth action sequence uses \"1985-04-04\" (the correct DOB for Aarav Ahmed as per the booking requirements). This is a functional error, as the booking should have used the correct passenger details matching the ground truth."
+        },
+        {
+            "task_id": 27,
+            "author": "agent",
+            "description": "The agent is responsible for the following faults:\n\n1. Failure to Cancel Both Reservations: The user requested to cancel two reservations (IFOYYZ and NQNU5R). The agent only canceled NQNU5R and refused to cancel IFOYYZ, citing policy restrictions. However, the ground truth action sequence includes only the cancellation of NQNU5R, which suggests that only this cancellation was required for this scenario. This is not a fault.\n\n2. Missing Search for Nonstop Flights: When the user requested to change reservation M20IZO to a nonstop flight, the agent only checked for available flights with stops and did not explicitly search for direct (nonstop) flights as required by the ground truth action sequence (which includes two search_direct_flight actions for both legs: JFK-ATL and ATL-MCO). The agent should have first searched for nonstop flights before offering connecting options.\n\n3. Incorrect Calculation of Additional Charges: The ground truth includes a calculation step to determine the price difference between the new and old flights (calculate: 430 + 412 - (136 + 109)), but the agent did not perform or communicate this calculation. Instead, the agent simply processed the payment without showing the calculation or confirming the amount.\n\n4. Payment Method Handling: The agent correctly used the credit card ending in 7334 for the new charges, as requested by the user.\n\nSummary: The main functional faults are the agent's failure to explicitly search for nonstop flights before offering connecting flights and the omission of the required price calculation step before processing payment."
+        },
+        {
+            "task_id": 28,
+            "author": "agent",
+            "description": "The agent is at fault because it refused to attempt cancellation of the reservations UDMOP1, XAZ3C0, and 4XGCCM, citing restrictions, even after the user explicitly insisted on proceeding regardless of refund or restrictions. According to the ground truth, the agent should have at least attempted to retrieve the reservation details for all reservations and then attempted cancellation for all, as the user requested. The agent's refusal to proceed with cancellation for those reservations is a functional deviation from the required action sequence."
+        },
+        {
+            "task_id": 30,
+            "author": "agent",
+            "description": "The agent is at fault because, according to the ground truth, the agent should have directly canceled reservation FDZ0T5 (for May 17) and HSR97W (for May 22) after identifying duplicate bookings for those dates. Instead, the agent incorrectly claimed that FDZ0T5 could not be canceled due to policy restrictions and transferred the user to a human agent, failing to perform the required cancellation actions. Additionally, the agent did not address the duplicate bookings on May 22 at all."
+        },
+        {
+            "task_id": 32,
+            "author": "agent",
+            "description": "The agent is at fault because they used the user's gift card and credit card for payment, even though the user explicitly instructed to use the certificate (up to $500) as the payment method. The ground truth action sequence shows the booking should have been paid with certificate_8045380 for $348, but the agent used gift_card_5094406 ($274) and credit_card_4196779 ($74) instead. This does not follow the user's payment preference and available balance instructions."
+        },
+        {
+            "task_id": 33,
+            "author": "agent",
+            "description": "The agent is at fault because, according to the ground truth, the agent should have attempted to upgrade all flights under 3 hours to business class, even if the original reservation was in basic economy. The agent incorrectly stated that basic economy reservations cannot be upgraded or modified, and therefore did not attempt the upgrades for reservations NM1VX1, KC18K6, and H8Q05L. In the ground truth, the agent proceeds to upgrade these reservations to business class, but in the trajectory, the agent fails to do so and provides incorrect information about modification restrictions. This results in not fulfilling the user's request to upgrade all eligible flights."
+        },
+        {
+            "task_id": 37,
+            "author": "agent",
+            "description": "The agent is at fault because they performed unnecessary and incorrect actions before retrieving the user's details. According to the ground truth, the first and only required action is get_user_details with the provided user_id. Instead, the agent repeatedly asked for a reservation ID, performed multiple reservation lookups, and issued compensation (a certificate) without first confirming the user's details or membership status. This led to an inefficient and potentially incorrect handling of the user's request."
+        },
+        {
+            "task_id": 41,
+            "author": "agent",
+            "description": "The agent is responsible for the fault because it proceeded to cancel the reservation (performed a cancellation action) when the ground truth action sequence only required retrieving the reservation details (get_reservation_details). The user only requested to cancel, but the correct next step was to fetch and confirm the reservation details, not to execute the cancellation immediately. Thus, the agent took an extra, incorrect action."
+        },
+        {
+            "task_id": 46,
+            "author": "agent",
+            "description": "The agent is responsible for the fault because it failed to issue the $50 compensation certificate to the user for the delayed flight, as specified in the ground truth action sequence (send_certificate). The agent only provided information and offered to issue the certificate, but did not actually perform the action to send the compensation. Additionally, the agent did not check both recent reservations (SDZQKO and 4OG6T3) as in the ground truth, only retrieving details for 4OG6T3."
+        },
+        {
+            "task_id": 47,
+            "author": "agent",
+            "description": "The agent is responsible for the fault because it proceeded to cancel the reservation, while the ground truth action sequence only retrieves user and reservation details and does not perform the cancellation. The agent took an extra action (cancelling the reservation) that was not required by the ground truth."
+        },
+        {
+            "task_id": 0,
+            "author": "agent",
+            "description": "The agent is responsible for the following faults:\n\n1. **Incorrect Payment Method Selection**: The user instruction specifies to use both certificates if possible, and if only one can be used, to use the larger one and pay the rest with the 7447 card. The ground truth correctly uses only the larger certificate ($250) and the 7447 card for the remaining $5. However, in the trajectory, the agent used both certificates ($100 and $205), which is not possible since the larger certificate is only $250 and the total price is $255. The agent also failed to use the credit card for the remaining balance as per the user's preference.\n\n2. **Incorrect Baggage Handling**: The ground truth correctly sets \"nonfree_baggages\": 0, indicating all 3 baggages are free. In the trajectory, the agent sets \"nonfree_baggages\": 1, which is incorrect.\n\nThese errors show the agent did not follow the user's payment preferences and mishandled baggage fees, resulting in a functionally incorrect booking."
+        },
+        {
+            "task_id": 2,
+            "author": "agent",
+            "description": "The agent is at fault because it did not provide the total amount of money saved (23553) after downgrading all business flights to economy, as required. This is a functional omission: the user specifically asked to know the total savings, but the agent failed to communicate this information."
+        },
+        {
+            "task_id": 3,
+            "author": "agent",
+            "description": "The agent is responsible for the following faults:\n\n1. **Incorrect Flight Selection for Fastest Return:** The agent selected DEN-LAS HAT084 (04:00-06:00) and LAS-IAH HAT266 (13:00-16:00) as the fastest return, but this option has a 7-hour layover (total trip time: 12 hours). The ground truth correctly selects DEN-LAS HAT290 (14:00-16:00) and LAS-IAH HAT175 (17:00-20:00), which has only a 1-hour layover and a total trip time of 6 hours, making it the actual fastest option.\n\n2. **Incorrect Payment Method:** The agent used gift_card_7480005 (balance $6) for payment, but the ground truth uses gift_card_6276644 (balance $113), which is the smallest gift card sufficient to cover the cost. The agent should have calculated and chosen the smallest gift card that can pay for the change, not just the one with the smallest balance.\n\n3. **Baggage Update Missing:** The agent did not update the reservation to add one checked bag as requested by the user. The ground truth includes an action to update the total baggages to 2.\n\nIn summary, the agent failed to select the correct fastest return flights, used the wrong payment method, and did not update the baggage as requested."
+        },
+        {
+            "task_id": 4,
+            "author": "agent",
+            "description": "The agent is at fault because it failed to recognize that the user's identity (omar_rossi_1241) is known and could be used to look up the reservation without requiring the user to provide the reservation ID. According to the ground truth, the agent should have proceeded to update the reservation using the user's profile information and preferences, but instead, the agent repeatedly insisted on needing the reservation ID, blocking all progress. This prevented the agent from performing any of the required actions (changing the passenger, upgrading to economy, adding bags, and using a gift card for payment), resulting in no actions being taken."
+        },
+        {
+            "task_id": 6,
+            "author": "agent",
+            "description": "The agent is responsible for the fault because it selected the wrong connecting flight for the cheapest economy option. The agent chose HAT132 (LGA to PHL, $190), but the cheapest available economy connection is HAT172 (LGA to PHL, $102). The correct action should have been to update the reservation to HAT110 (ATL to LGA, $105) and HAT172 (LGA to PHL, $102), not HAT132. This resulted in a higher total cost and did not fulfill the user's request for the cheapest economy flight."
+        },
+        {
+            "task_id": 7,
+            "author": "user",
+            "description": "The user is responsible for the fault because they never provided the required reservation ID (\"M05KNL\"), which is necessary for the agent to perform the requested flight change. Without this information, the agent could not execute the ground truth action (updating the reservation to the cheapest economy flight for the day after the original booking). The functional difference is that the user did not supply the key detail needed to complete the task."
+        },
+        {
+            "task_id": 8,
+            "author": "agent",
+            "description": "The agent is at fault because it did not provide the sums of the gift card balances (327) and certificate balances (1000), nor did it provide the total amount to be charged to the master card (1786). Instead, the agent likely gave individual balances or did not compute and communicate the required sums, which are explicitly requested in the user instruction and required outputs."
+        },
+        {
+            "task_id": 9,
+            "author": "agent",
+            "description": "The agent is at fault because they failed to provide the correct sums for the gift card balances ('327') and certificate balances ('1000'), and did not communicate the final master card charge ('1286') as required. These are the specific outputs expected, and the agent's response did not include them, resulting in a functional mismatch with the ground truth."
+        },
+        {
+            "task_id": 10,
+            "author": "agent",
+            "description": "The agent is at fault because it incorrectly refused to cancel the reservation H9ZU1C, claiming that cancellation was not possible due to airline policy. According to the ground truth, the agent should have canceled the reservation as requested. Additionally, the agent failed to address the user's request for booking a new flight from New York to the West Coast and did not answer the user's question about gift card refunds. The agent's actions did not fulfill the user's instructions, which required both cancellation and rebooking."
+        },
+        {
+            "task_id": 11,
+            "author": "agent",
+            "description": "The agent is responsible for the fault because it booked a round trip reservation for Ivan Smith, while the ground truth action sequence specifies booking a one-way reservation (matching the user's current reservation). Additionally, the agent included 2 checked bags in the booking, whereas the user explicitly requested no baggage. The payment method sequence also differs: the ground truth uses the gift card and credit card (since using the certificate would waste more than $100), but the agent used the certificate and gift card. These functional differences mean the agent did not correctly follow the user's instructions or match the ground truth sequence."
+        },
+        {
+            "task_id": 14,
+            "author": "agent",
+            "description": "The agent is responsible for the following faults:\n\n1. **Incorrect Upgrade Action**: When the user requested to upgrade both passengers to business class, the agent correctly calculated the cost ($1200) and, upon the user's refusal, calculated the cost for upgrading only Noah ($600). However, when the user confirmed to proceed with upgrading Noah, the agent's tool action and subsequent reservation update incorrectly reflect that both flights for Noah were upgraded, but the payment history shows an additional $1200 charge (the cost for upgrading both passengers), not $600 (the cost for upgrading only Noah). This is inconsistent with the user's request and the calculated cost.\n\n2. **Incorrect Payment Amount**: The agent's tool action for updating the reservation after upgrading Noah to business class incorrectly adds a $1200 payment instead of the correct $600. This results in the user being overcharged.\n\n**Summary**: The agent failed to correctly process the upgrade for only Noah at the $600 price point, instead charging for both passengers ($1200), which does not match the user's instructions or the ground truth sequence."
+        },
+        {
+            "task_id": 15,
+            "author": "agent",
+            "description": "The agent is at fault because the user instruction specifies that the user wants to remove passenger Sophia from the reservation, and only if the agent says this is not possible should the user request a downgrade to economy for all passengers. In the ground truth, no action is taken (empty action sequence), indicating that the agent should not have performed any changes. However, in the trajectory, the agent proceeds to downgrade the reservation to economy for one leg of the trip and processes a refund, even though the user never received a definitive statement that removing a single passenger was impossible. The agent acted prematurely and made changes that were not requested according to the user's conditional instructions."
+        },
+        {
+            "task_id": 16,
+            "author": "agent",
+            "description": "The agent is at fault because it failed to use the user_id (\"ethan_martin_2396\") provided in the initial instruction to look up the user's details and process compensation. Instead, the agent repeatedly asked the user for their user ID, which was unnecessary since the information was already available. As a result, the agent did not proceed with verifying the user's eligibility or issuing compensation, which should have been done according to the ground truth action sequence."
+        },
+        {
+            "task_id": 17,
+            "author": "agent",
+            "description": "The agent is responsible for the fault because, according to the ground truth, no action should have been taken\u2014the user instruction specifies that the user only wants to change the flight and upgrade to business class if the total extra cost is less than $1000. In the trajectory, the agent proceeds to make changes to the reservation and processes payment, even though the cost for upgrading the outbound leg to business class was $1,023, which exceeds the user's $1,000 budget. The agent incorrectly allowed the change to proceed, violating the user's explicit budget constraint."
+        },
+        {
+            "task_id": 19,
+            "author": "agent",
+            "description": "The agent is responsible for the following faults in the trajectory:\n\n1. **Incorrect Return Flight Selection:** The user requested morning flights that arrive before 7am at the destination. For the return (JFK to DTW), the agent selected Flight HAT212 (arrives at 6:00am), but the ground truth selected HAT033 (arrives at 2:00am). While both technically arrive before 7am, the ground truth chose the cheapest economy option within the constraint, which is HAT033 ($140) instead of HAT212 ($154). The agent failed to select the cheapest qualifying flight.\n\n2. **Unnecessary User Data Retrieval:** The agent made an unnecessary call to retrieve the user's profile and payment methods after the user requested to add a checked bag. This step was not required in the ground truth sequence.\n\nFunctionally, the main issue is that the agent did not select the cheapest economy flight for the return leg within the user's specified constraints, as required by the instruction."
+        },
+        {
+            "task_id": 22,
+            "author": "agent",
+            "description": "The agent is responsible for the fault because they failed to upgrade the reservation from basic economy to economy before changing the flight. The ground truth requires an explicit upgrade to economy (since basic economy cannot be modified), and then the change to the nonstop flight. In the trajectory, the agent directly changed the flight while keeping the cabin as basic economy, which is not allowed according to the rules. This is a functional error: the agent did not perform the necessary upgrade step before modifying the reservation."
+        },
+        {
+            "task_id": 23,
+            "author": "agent",
+            "description": "The agent is responsible for the fault because they failed to add 2 checked bags to the updated reservation, as explicitly requested by the user. In the ground truth, after updating the flights, the agent also updates the reservation to include 2 checked bags. In the trajectory, the agent only updates the flights and leaves the baggage count at 0, omitting the user's request for 2 checked bags. This is a functional omission of a required action."
+        },
+        {
+            "task_id": 25,
+            "author": "agent",
+            "description": "The agent is responsible for the fault because it booked a flight for two passengers (Aarav Ahmed and Daiki Li), while the user only intended to book for themselves (Aarav Ahmed). The ground truth action sequence shows a booking for only one passenger (Aarav Ahmed), but the agent included both passengers from the previous (canceled) reservation. This resulted in a higher total price and an incorrect booking."
+        },
+        {
+            "task_id": 26,
+            "author": "agent",
+            "description": "The agent is responsible for the fault because, when upgrading reservation M20IZO, it charged the additional payment to the wrong credit card (ending in 4959530) instead of the user-specified card ending in 7334. The ground truth action sequence specifies that the payment_id should be \"credit_card_9074831\" (corresponding to the card ending in 7334), but the agent used the previous card from the reservation's payment history. This does not comply with the user's explicit payment instruction."
+        },
+        {
+            "task_id": 28,
+            "author": "agent",
+            "description": "The agent is at fault because it refused to cancel the remaining basic economy reservations (UDMOP1 and XAZ3C0) due to policy restrictions, despite the user's explicit request to proceed with cancellation even without a refund. According to the ground truth, the agent should have attempted to cancel all upcoming flights as per the user's wishes, regardless of refund eligibility. The agent's failure to execute the cancel_reservation actions for UDMOP1 and XAZ3C0 is the functional error."
+        },
+        {
+            "task_id": 29,
+            "author": "agent",
+            "description": "The agent is responsible for the fault because it only identified and canceled two reservations with a single passenger (UDMOP1 and 4XGCCM), but failed to check and process all reservations as required. According to the ground truth, the agent should have retrieved the details for all reservations (8C8K4E, UDMOP1, XAZ3C0, LU15PA, MSJ4OA, I6M8JQ, 4XGCCM) to determine which ones had only one passenger. By not checking all reservations, the agent risked missing other eligible single-passenger reservations that should have been canceled per the user's instruction."
+        },
+        {
+            "task_id": 31,
+            "author": "agent",
+            "description": "The agent is responsible for the fault because it canceled the reservation D1EW9B (ATL to JFK), but according to the ground truth, it should have canceled reservation 9HBUV8. The user initially requested to cancel the ATL to JFK flight, but per the user instruction, if the agent says it is not possible, the user should insist on silver member priority, and only if the agent still does not agree, the user is okay with canceling the other flight on May 17. However, the agent incorrectly told the user that canceling the ATL to JFK flight was possible and proceeded to cancel it, instead of following the escalation and ultimately canceling the other May 17 flight as per the ground truth. Thus, the agent did not follow the correct escalation and cancellation logic."
+        },
+        {
+            "task_id": 32,
+            "author": "agent",
+            "description": "The agent is at fault because it used the user's credit card for payment, despite the user instruction specifying to use the certificate (up to $500) if possible. The ground truth action sequence shows the booking should have been paid with the certificate_8045380, not the credit card. This is a functional error, as the agent did not follow the user's payment preference and constraints."
+        },
+        {
+            "task_id": 33,
+            "author": "agent",
+            "description": "The agent is at fault because it incorrectly canceled reservation WUNA5K, which contains flights (ORD\u2013PHL and PHL\u2013ORD) that are likely under 3 hours and should not have been canceled according to the user instruction. Additionally, the agent failed to attempt business class upgrades for the remaining reservations (NM1VX1, KC18K6, H8Q05L), incorrectly stating that basic economy flights cannot be upgraded, whereas the ground truth attempts upgrades wherever possible. Thus, the agent both canceled the wrong reservation and did not attempt required upgrades."
+        },
+        {
+            "task_id": 39,
+            "author": "agent",
+            "description": "The agent is responsible for the fault because it unnecessarily asked the user for their user ID, reservation ID, and reason for cancellation before taking any action. According to the ground truth, the agent should have immediately retrieved the reservation details using the provided reservation ID (\"H8Q05L\") without requesting additional information. This extra step is not required and does not align with the minimal information approach specified in the user instruction and ground truth action sequence."
+        },
+        {
+            "task_id": 43,
+            "author": "agent",
+            "description": "The agent is at fault because it refused to attempt the passenger name change, incorrectly citing a policy restriction, instead of executing the required actions. The ground truth sequence shows that the agent should have retrieved the reservation details and then updated the passenger name from \"Mei Lee\" to \"Mei Garcia.\" The agent failed to perform the update_reservation_passengers action, thus not fulfilling the user's request."
+        },
+        {
+            "task_id": 44,
+            "author": "agent",
+            "description": "The agent is at fault because it did not provide the total number of suitcases in numeric form (\"4\"), as explicitly requested by the user. Instead, it may have given the answer in words or failed to give a clear numeric total, which does not meet the user's stated preference and the required output."
+        },
+        {
+            "task_id": 45,
+            "author": "agent",
+            "description": "The agent is responsible for the fault because it failed to issue the $50 certificate after the user confirmed they wanted to proceed. In the ground truth, the agent should have called send_certificate after the user's confirmation, but in the trajectory, the agent only asked for confirmation and did not actually perform the action, resulting in an incomplete resolution of the user's request."
+        },
+        {
+            "task_id": 0,
+            "author": "agent",
+            "description": "The agent is responsible for the following faults:\n\n1. **Incorrect Total Price and Payment Calculation**: The agent quoted the user a \"Total Price: $255\" for the selected flights, but then booked the reservation at $305 ($152 + $103 for flights, plus an extra $50 for a nonfree baggage). The ground truth shows the correct total price should be $255, with all 3 baggages included for free (nonfree_baggages: 0). The agent incorrectly charged for baggage.\n\n2. **Incorrect Baggage Handling**: The agent marked 1 baggage as non-free and charged extra, while the ground truth indicates all 3 baggages should be free (nonfree_baggages: 0).\n\n3. **Incorrect Payment Split**: The agent charged $250 to the certificate and $55 to the credit card, matching the (incorrect) total of $305. The ground truth shows the correct split should be $250 to the certificate and $5 to the credit card, matching the correct total of $255.\n\nIn summary, the agent failed to correctly calculate the total price (including baggage fees), misapplied baggage charges, and did not use the correct payment amounts, resulting in overcharging the user."
+        },
+        {
+            "task_id": 1,
+            "author": "agent",
+            "description": "The agent is at fault because it failed to use the user's identity (user id: olivia_gonzalez_2305) to look up the reservation and proceed with the cancellation. The ground truth action sequence shows that the agent should have canceled the reservation (cancel_reservation) without requiring the user to provide the reservation id, as the agent can access the user's reservations. Instead, the agent repeatedly asked for the reservation id and did not attempt to retrieve or act on the reservation, resulting in unnecessary escalation to a human agent and failure to fulfill the user's request."
+        },
+        {
+            "task_id": 3,
+            "author": "agent",
+            "description": "The agent is at fault because it did not select the fastest return option as requested. The user asked for the fastest return trip (earliest arrival back in Houston on May 27), but the agent chose the DEN-LAS HAT084 (04:00\u201306:00) + LAS-IAH HAT266 (13:00\u201316:00) option, which arrives at 16:00. However, there is a faster option: DEN-LAS HAT290 (14:00\u201316:00) + LAS-IAH HAT175 (17:00\u201320:00), which arrives at 20:00, but the agent should have calculated total travel time (including layover), not just earliest arrival. The ground truth correctly selects the option with the shortest total return duration (DEN-LAS HAT290 + LAS-IAH HAT175), not the earliest arrival. The agent also failed to use the correct gift card with the smallest balance (should have used gift_card_6276644, not attempted to use gift_card_7480005 first). Additionally, the agent did not update the baggage count correctly (should be 2 total, 0 nonfree, as in ground truth). Thus, the agent failed to follow the user's instructions regarding both flight selection and payment method."
+        },
+        {
+            "task_id": 4,
+            "author": "agent",
+            "description": "The agent is at fault because instead of updating the existing reservation (FQ8APE) as requested, it incorrectly told the user that the reservation could not be modified and proceeded to book a new reservation. According to the ground truth, the correct actions were to update the passenger, upgrade to economy class, and add 3 checked bags to the existing reservation (FQ8APE), all of which are possible. The agent failed to perform these updates and unnecessarily created a new reservation, resulting in a different and incorrect outcome."
+        },
+        {
+            "task_id": 5,
+            "author": "user",
+            "description": "The user is responsible for the fault because they failed to provide the correct reservation ID for the New York to Chicago trip, despite being prompted multiple times. Without the reservation ID or sufficient identifying details, the agent could not proceed with the requested actions (adding 3 checked bags, changing the passenger, and upgrading to economy class). The ground truth sequence assumes the user provides the correct reservation ID, enabling the agent to perform the necessary updates. The user's inability to supply this key information prevented the agent from fulfilling the instruction."
+        },
+        {
+            "task_id": 6,
+            "author": "agent",
+            "description": "The agent is at fault because it changed the reservation to flights HAT227 and HAT139, which are not the cheapest available economy option for the requested date. The cheapest option is HAT110 and HAT172 (total $207), but the agent selected HAT227 and HAT139 (total $216). The agent should have chosen the lowest-priced economy itinerary, as specified in the user instruction."
+        },
+        {
+            "task_id": 8,
+            "author": "agent",
+            "description": "The agent is at fault because it did not provide the sums of the gift card balances (327) and certificate balances (1000), nor did it provide the total amount to be charged to the master card (1786). Instead, the agent likely gave individual balances or did not compute and communicate the required sums, which are explicitly requested in the user instruction and required outputs."
+        },
+        {
+            "task_id": 9,
+            "author": "agent",
+            "description": "The agent is at fault because they failed to provide the correct sums for the gift card balances ('327') and certificate balances ('1000'), and did not communicate the final master card charge ('1286') as required. These are the specific outputs expected, and the agent's response did not include them, resulting in a functional mismatch with the ground truth."
+        },
+        {
+            "task_id": 10,
+            "author": "agent",
+            "description": "The agent is responsible for the following faults:\n\n1. **Cancellation of Reservation H9ZU1C**: The agent incorrectly told the user that the reservation could not be cancelled due to policy restrictions, but the ground truth action sequence requires the agent to cancel the reservation as per the user's request. The agent failed to execute the cancellation.\n\n2. **Booking Details**: The agent booked a round-trip from EWR to LAX, but the ground truth specifies JFK to SEA as the cheapest option. The agent should have searched both EWR and JFK to all West Coast destinations and selected the absolute cheapest direct round-trip, which in the ground truth is JFK to SEA, not EWR to LAX.\n\n3. **Baggage Allowance**: The agent booked the new reservation with zero baggages, but the ground truth specifies using all free baggage allowance (which is 1 for this user/class). The agent failed to include the free baggage.\n\n4. **Gift Card Usage**: The agent used $39 from the smaller gift card and $124 from the larger one, but the total price was $163. The ground truth booking used $39 from the smaller and $67 from the larger, matching the actual price of the cheapest flight ($106), not $163. This indicates the agent booked a more expensive flight and did not optimize for the cheapest option.\n\n5. **Refund Policy Explanation**: The agent incorrectly stated that gift card refunds are not possible, while the user specifically asked why cancellations do not refund to gift cards anymore, implying a change in policy. The agent did not address the \"anymore\" aspect or provide a reason for the policy change.\n\nIn summary, the agent failed to cancel the original reservation, did not book the cheapest possible flight, did not include free baggage, misapplied gift card amounts, and gave an incomplete explanation regarding gift card refunds."
+        },
+        {
+            "task_id": 11,
+            "author": "agent",
+            "description": "The agent is at fault because it used the certificate to pay the full $375 for the booking, which results in $125 of certificate balance being \"wasted\" (since only $250 would be needed to cover the price minus the $128 gift card). According to the user instruction, if more than $100 of certificate balance would be wasted, the agent should instead use the gift card and credit card for payment. The ground truth action sequence correctly uses the gift card ($128) and credit card ($247) for payment, while the agent incorrectly used only the certificate. This does not follow the user's explicit preference regarding payment methods and certificate balance."
+        },
+        {
+            "task_id": 14,
+            "author": "agent",
+            "description": "The agent is at fault because it failed to consider the user's Gold membership benefits when adding checked bags. According to the ground truth, with Gold status, the user should receive 2 free checked bags, resulting in 0 nonfree bag charges. However, in the trajectory, the agent charged the user $100 for 2 checked bags, incorrectly treating both as nonfree. This is a functional error in baggage fee calculation."
+        },
+        {
+            "task_id": 16,
+            "author": "agent",
+            "description": "The agent is at fault because it failed to use the user ID (\"ethan_martin_2396\") provided in the initial instruction to retrieve user details and process compensation. Instead, the agent repeatedly asked the user for their user ID and reservation ID, blocking progress. According to the ground truth, the agent should have used the provided user ID to look up the user and issued compensation (a voucher), but it did not perform these actions."
+        },
+        {
+            "task_id": 17,
+            "author": "agent",
+            "description": "The agent is at fault because the ground truth action sequence is empty ([]), meaning NO action should have been taken\u2014the user should not have been able to change or upgrade the reservation. However, in the trajectory, the agent proceeds to change the reservation, reschedule the flights, and upgrade the class, which is a functional deviation from the correct behavior. The agent should have recognized that such changes are not permitted or possible, and not performed any modifications."
+        },
+        {
+            "task_id": 19,
+            "author": "environment",
+            "description": "The environment is responsible for the fault because, when the assistant requested the reservation details for reservation ID VA5SGQ, the environment returned an itinerary with flights from DTW to LGA via PHX (with layovers), instead of the expected nonstop DTW-LGA roundtrip flights as described in the user instruction and ground truth. This incorrect reservation data prevented the assistant from proceeding with the correct actions to change the flights, leading to a breakdown in the workflow. The functional difference is that the environment provided reservation details that did not match the user's actual reservation, blocking the intended update process."
+        },
+        {
+            "task_id": 22,
+            "author": "agent",
+            "description": "The agent is at fault because it incorrectly processed a refund to the user when switching from a basic economy connecting itinerary (EWR-MIA-LAX) to an economy nonstop flight (EWR-LAX). According to the ground truth, the agent should have charged the user the fare difference and a change fee (up to $100), not issued a refund. Additionally, the agent failed to check for and apply any applicable change fees, and did not properly handle the upgrade from basic economy to economy (which is required to allow the change). The agent also did not confirm the payment method for the additional cost, as required by the ground truth sequence."
+        },
+        {
+            "task_id": 23,
+            "author": "agent",
+            "description": "The agent is responsible for the fault because they failed to update the reservation to business class for the outgoing flight and economy for the return flight as requested by the user. Instead, the agent updated both flights to economy class, despite confirming to the user that the outgoing flight was upgraded to business class and the return remained in economy. Additionally, the agent did not add the two checked bags to the reservation as requested. These actions do not match the user's instructions or the ground truth action sequence."
+        },
+        {
+            "task_id": 25,
+            "author": "agent",
+            "description": "The agent is responsible for the fault because, after canceling the user's original reservation, the agent booked a new flight from JFK to SFO for two passengers (Aarav Ahmed and Daiki Li), even though the user instruction specified booking only for the user (Aarav Ahmed). The ground truth action sequence correctly books for only one passenger (Aarav Ahmed), while the agent incorrectly includes Daiki Li in the new reservation. This results in a higher total price and an incorrect booking."
+        },
+        {
+            "task_id": 28,
+            "author": "agent",
+            "description": "The agent is responsible for the fault because it cancelled reservation I6M8JQ, which is not an upcoming flight (its flight date is 2024-05-09, which is in the past relative to the other reservations). According to the ground truth, only upcoming flights (with future dates) should be cancelled, specifically 8C8K4E, LU15PA, and MSJ4OA. The agent failed to check the flight dates and incorrectly cancelled a past reservation, while also omitting the cancellation of 8C8K4E (which was already cancelled earlier, but the agent should have confirmed all upcoming flights were addressed). This shows a lack of proper filtering for \"upcoming\" flights as required by the user instruction."
+        },
+        {
+            "task_id": 29,
+            "author": "agent",
+            "description": "The agent is responsible for the fault because it only checked the passenger count and offered to cancel two reservations (UDMOP1 and 4XGCCM), but did not check the details of all reservations before proceeding. According to the ground truth, the agent should have retrieved the details for all reservations (8C8K4E, UDMOP1, XAZ3C0, LU15PA, MSJ4OA, I6M8JQ, 4XGCCM) to determine which ones had only one passenger. In the trajectory, the agent skipped retrieving details for some reservations and prematurely filtered the list, potentially missing eligible reservations for cancellation. This incomplete checking could result in not fulfilling the user's request to cancel all single-passenger reservations."
+        },
+        {
+            "task_id": 30,
+            "author": "agent",
+            "description": "The agent is at fault because it only identified and cancelled one duplicate booking (on May 22) but failed to detect and address another duplicate booking on May 17. According to the ground truth, there are two reservations with flights for the user on May 17 (FDZ0T5 and 5BGGWZ), and the agent should have cancelled one of these as well. The agent incorrectly told the user there were no other duplicate bookings, missing the duplicate on May 17, and did not initiate cancellation for one of those flights."
+        },
+        {
+            "task_id": 31,
+            "author": "agent",
+            "description": "The agent is responsible for the fault because it canceled the reservation D1EW9B (ATL to JFK), but according to the ground truth, it should have canceled reservation 9HBUV8 (DEN to BOS). The user wanted to cancel the ATL to JFK flight, but the ground truth expects the agent to cancel 9HBUV8, which is also on May 17, likely because the ATL to JFK flight (D1EW9B) had already been canceled or was not eligible for cancellation. The agent failed to check for cancellation eligibility or status and proceeded to cancel the wrong reservation, resulting in a functional mismatch with the ground truth action sequence."
+        },
+        {
+            "task_id": 32,
+            "author": "agent",
+            "description": "The agent is responsible for the fault because it failed to book the \"exact same flight as your recent May 10 flight from ORD to PHL\" as specified in the user instruction. The agent should have first retrieved the details of the user's recent May 10 reservation (reservation_id \"WUNA5K\") to determine the exact flight number and timing, and then booked the same flight (flight number) on May 26. Instead, the agent simply presented all available flights on May 26 and let the user choose, without confirming that flight HAT271 matched the user's previous flight. This could result in booking a different flight than the one the user intended to replicate. \n\nFunctionally, the agent missed these required steps:\n- Retrieve the user's recent reservation details to identify the exact flight to replicate.\n- Ensure the flight booked on May 26 matches the flight number and timing of the May 10 flight.\n\nThis is a critical functional difference from the ground truth action sequence."
+        },
+        {
+            "task_id": 33,
+            "author": "agent",
+            "description": "The agent is responsible for the fault because it failed to attempt business class upgrades for the eligible flights in reservations NM1VX1, KC18K6, and H8Q05L. According to the ground truth, these reservations contain flights under 3 hours and should have been upgraded to business class wherever possible. Instead, the agent incorrectly stated that basic economy flights cannot be modified and only attempted to upgrade WUNA5K, which was not required. This resulted in not fulfilling the user's request to upgrade all eligible short flights."
+        },
+        {
+            "task_id": 34,
+            "author": "agent",
+            "description": "The agent is responsible for the following faults:\n\n1. The agent failed to actually perform the upgrade of reservation XEHM4B from basic economy to economy class before canceling it. The ground truth includes an update_reservation_flights action to upgrade the cabin before cancellation, but the trajectory does not show this action being executed.\n2. The agent did not execute the cancel_reservation action for XEHM4B after the upgrade, as required by the user\u2019s instructions and the ground truth.\n3. The agent incorrectly stated that the upgrade and cancellation were completed, despite not performing the necessary actions.\n\nIn summary, the agent did not perform the required upgrade and cancellation actions for XEHM4B, resulting in a functional failure to fulfill the user\u2019s request."
+        },
+        {
+            "task_id": 39,
+            "author": "agent",
+            "description": "The agent is responsible for the fault because it unnecessarily asked the user for additional information (such as whether the reservation was made within 24 hours, if the user has travel insurance, or if it is a business class reservation) before retrieving the reservation details. According to the ground truth, the agent should have immediately retrieved the reservation details using the provided reservation ID without requesting extra information. This added friction and did not align with the minimal information approach required by the user instruction."
+        },
+        {
+            "task_id": 40,
+            "author": "agent",
+            "description": "The agent is at fault because it issued compensation for a flight cancellation without verifying which reservation was actually canceled. The ground truth requires checking the details of all reservations to identify the canceled flight, but the agent assumed WUNA5K was the relevant reservation without confirming if it was canceled or if Sophia Silva was the affected passenger. This could result in compensating for the wrong flight or passenger, which is a functional error."
+        },
+        {
+            "task_id": 41,
+            "author": "agent",
+            "description": "The agent is responsible for the fault because it performed the cancellation action without first retrieving the reservation details (i.e., without calling get_reservation_details as in the ground truth). The correct process is to first fetch the reservation details to verify eligibility and status before proceeding with cancellation. The agent skipped this verification step."
+        },
+        {
+            "task_id": 43,
+            "author": "agent",
+            "description": "The agent is at fault because it incorrectly refused to attempt the name change, citing a policy restriction without trying the update. The ground truth shows the agent should have attempted to update the passenger name from \"Mei Lee\" to \"Mei Garcia\" after retrieving the reservation details. The agent failed to perform the update_reservation_passengers action, which is functionally required by the user instruction and the ground truth sequence."
+        },
+        {
+            "task_id": 45,
+            "author": "agent",
+            "description": "The agent is at fault because, instead of issuing the $50 compensation certificate as in the ground truth, the agent unnecessarily escalated the case to a human agent after the user insisted (twice) that there were three passengers. The agent failed to follow up by confirming the reservation details (which clearly show only one passenger) and did not proceed with the compensation, missing the correct resolution path. The ground truth expects the agent to verify the reservation, clarify the passenger count after two assertions, and then issue the certificate, but the agent did not do this."
+        },
+        {
+            "task_id": 47,
+            "author": "agent",
+            "description": "The agent is at fault because it proceeded to cancel the reservation (S5IK51) as requested by the user, while the ground truth action sequence only required retrieving user and reservation details (get_user_details and get_reservation_details), not performing the cancellation. The agent took an extra action (cancelling the reservation) that was not specified in the ground truth."
+        },
+        {
+            "task_id": 0,
+            "author": "agent",
+            "description": "The agent is responsible for the fault because it failed to use the user's certificates for payment as requested and as shown in the ground truth. The user had two certificates ($250 and $100) and preferred to use both, or if only one could be used, the larger one ($250), with the remainder paid by credit card. The agent instead booked the reservation using only the credit card for the full amount, despite the certificates being available in the user's profile. This does not match the ground truth, where the agent should have applied the $250 certificate and charged the remaining $5 to the credit card. The agent also mishandled the payment adjustment process, repeatedly failing to apply the certificate and ultimately defaulting to full credit card payment, which does not respect the user's payment preferences."
+        },
+        {
+            "task_id": 1,
+            "author": "agent",
+            "description": "The agent is at fault because it refused to proceed without the reservation ID, even though the user provided their user ID and the reservation is in their account. The agent should have looked up the user's reservations using the user ID (olivia_gonzalez_2305), identified the relevant reservation, and then proceeded to cancel it as per the user's request (since basic economy cannot be modified and the user is unwell with travel insurance). The ground truth action is to cancel the reservation, but the agent failed to take any action."
+        },
+        {
+            "task_id": 2,
+            "author": "agent",
+            "description": "The agent is at fault because it did not provide the total amount of money saved (23553) after downgrading all business flights to economy, as required. This is a functional omission: the user specifically asked to know the total savings, but the agent failed to communicate this information."
+        },
+        {
+            "task_id": 3,
+            "author": "agent",
+            "description": "The agent is responsible for the following faults:\n\n1. **Incorrect Payment Method Selection:** The user requested to use the gift card with the smallest balance. The agent first attempted to use \"gift_card_7480005\" (balance $6), but when it failed due to insufficient funds, the agent switched to \"gift_card_6276644\" (balance $113) without checking if \"gift_card_7091239\" (balance $157) was needed to cover the cost. The agent should have automatically selected the smallest gift card that could cover the payment, or combined cards if necessary, and explained the choice.\n\n2. **Baggage Update Missing:** The agent did not perform the required action to update the reservation to add one checked bag. The ground truth includes an \"update_reservation_baggages\" action, but the agent only updated the flights and did not explicitly update the baggage count.\n\n3. **Misleading Confirmation:** The agent told the user that one checked bag was added, but did not actually perform the action to add the bag in the system.\n\nIn summary, the agent failed to correctly handle the payment method as per the user's instruction and did not update the baggage as required."
+        },
+        {
+            "task_id": 4,
+            "author": "agent",
+            "description": "The agent is responsible for the following faults:\n\n1. **Did not change the passenger to the user:** The reservation still lists \"Ivan Garcia\" as the passenger, but the user requested to change the passenger to themselves (\"Omar Rossi\"). The agent never performed the required passenger update action.\n\n2. **Did not upgrade the cabin class:** The reservation remains in \"basic_economy\" throughout the trajectory, but the user requested an upgrade to \"economy\" class. The agent failed to perform the cabin upgrade.\n\n3. **Incorrect payment method for baggage/upgrade:** The agent initially used a credit card for payment, despite the user's preference for a gift card. Even after the user requested to use a gift card, the payment history still shows credit card payments, and the agent did not actually update the payment to use the correct gift card.\n\n4. **Did not update baggage payment correctly:** The agent added 3 checked bags, but the payment for the baggage was not processed using the user's preferred gift card.\n\nIn summary, the agent failed to update the passenger, upgrade the cabin, and use the correct payment method as per the user's instructions."
+        },
+        {
+            "task_id": 5,
+            "author": "user",
+            "description": "The user is responsible for the fault because they did not provide the reservation ID, which is necessary for the agent to perform the requested actions (adding 3 checked bags, changing the passenger to themselves, and upgrading to economy class). Without the reservation ID, the agent cannot execute any of the required updates, resulting in no actions being taken. This is a functional difference from the ground truth, where the reservation ID is available and all actions are performed."
+        },
+        {
+            "task_id": 6,
+            "author": "agent",
+            "description": "The agent is responsible for the fault because, although the user requested to change to the cheapest economy flights for the day after the original reservation, the agent selected flights HAT227 and HAT139 for 2024-05-24. However, the cheapest available economy flights for that date and route are HAT110 (ATL-ORD) and HAT172 (ORD-PHL), not HAT227 and HAT139. The agent failed to select the lowest-priced economy flights as required by the user instruction and the ground truth action sequence."
+        },
+        {
+            "task_id": 7,
+            "author": "agent",
+            "description": "The agent is at fault because it changed the user's reservation to a flight from ATL to EWR, while the user's original reservation was from ATL to PHL and the user only wanted to consider EWR if it was equally convenient and the price was lower. However, the cheapest economy option for ATL to PHL (HAT110 + HAT172, $105 + $102 = $207) was cheaper than the selected ATL to EWR option (HAT004 + HAT142, $122 + $121 = $243). The agent should have selected the cheapest economy option to PHL, not EWR, as per the user's instruction to change to the cheapest economy flight for the day after the original reservation."
+        },
+        {
+            "task_id": 8,
+            "author": "agent",
+            "description": "The agent is at fault because it did not provide the sums of the gift card balances (327) and certificate balances (1000), nor did it provide the total amount to be charged to the master card (1786). Instead, the agent likely gave individual balances or did not compute and communicate the required sums, which are explicitly requested in the user instruction and required outputs."
+        },
+        {
+            "task_id": 9,
+            "author": "agent",
+            "description": "The agent is at fault because they failed to provide the correct sums for the gift card balances ('327') and certificate balances ('1000'), and did not communicate the final master card charge ('1286') as required. These are the specific outputs expected, and the agent's response did not include them, resulting in a functional mismatch with the ground truth."
+        },
+        {
+            "task_id": 10,
+            "author": "agent",
+            "description": "The agent is responsible for the following faults:\n\n1. **Failure to Cancel Reservation:** The agent incorrectly told the user that the reservation H9ZU1C could not be canceled due to being created more than 24 hours ago and lacking insurance. According to the ground truth, the agent should have proceeded to cancel the reservation as requested.\n\n2. **Incorrect Booking Destination:** The agent booked a round-trip flight from JFK to SFO, but the ground truth indicates the cheapest direct round-trip should have been from JFK to SEA (Seattle), not SFO (San Francisco).\n\n3. **Baggage Allowance Not Applied Initially:** In the initial booking, the agent did not include the user's free baggage allowance, only updating it after the user requested it. The ground truth booking should have included 1 free checked bag from the start.\n\nThese errors show the agent did not follow the correct action sequence to achieve the user's goals."
+        },
+        {
+            "task_id": 11,
+            "author": "agent",
+            "description": "The agent is responsible for the fault because it booked the reservation with 2 baggages included (\"total_baggages\": 2), whereas the user explicitly requested \"No baggage\" in the instruction. The ground truth action sequence correctly sets \"total_baggages\": 0 and \"nonfree_baggages\": 0, but the agent's booking included baggage, which does not match the user's requirements. All other functional aspects (flights, passenger, payment, insurance) are correct."
+        },
+        {
+            "task_id": 13,
+            "author": "agent",
+            "description": "The agent is at fault because they proceeded to change the user's flight within reservation XEWRD9, even though the reservation is partially used (the outbound flights LAX\u2192ORD and ORD\u2192ATL are in the past or already flown). In such cases, flight changes are typically not allowed by policy or require special handling, and the correct action is to transfer the user to a human agent. The ground truth action is to transfer to a human agent, but the agent attempted and completed the change, which is functionally incorrect."
+        },
+        {
+            "task_id": 14,
+            "author": "agent",
+            "description": "The agent is responsible for the following faults:\n\n1. **Incorrect Payment Amount for Upgrade**: The agent processed a payment of $1200 for the business class upgrade, which is the cost for upgrading both passengers, even though the user only agreed to upgrade Noah for $600. The correct action should have been to process a payment of $600 for upgrading only Noah.\n\n2. **Upgrade Implementation Ambiguity**: The agent did not explicitly update the reservation to reflect that only Noah was upgraded to business class, while Chen remained in economy. The reservation details in the tool output still show the cabin as \"economy\" for the reservation, which is ambiguous and does not clearly reflect the mixed-cabin scenario.\n\nThese issues differ from the ground truth, where the cost calculation and actions are precise, and only the correct payment is processed."
+        },
+        {
+            "task_id": 19,
+            "author": "agent",
+            "description": "The agent is responsible for the following faults in the trajectory:\n\n1. **Incorrect Return Flight Selection**: The user requested morning flights that arrive before 7am at the destination. For the return (JFK to DTW), the agent selected Flight HAT212 (arrives at 6:00am), but the ground truth selected HAT033 (arrives at 2:00am). However, both technically meet the \"before 7am\" requirement, but the ground truth chose the cheapest economy option within the constraint. HAT033 ($140) is cheaper than HAT212 ($154), so the agent failed to select the cheapest qualifying flight.\n\n2. **Change Fee Waiver Not Addressed**: The user explicitly requested that change fees be waived due to having insurance. The agent did not mention or ensure that change fees were waived, nor did it confirm this with the user or in the booking process.\n\nThese differences mean the agent did not fully optimize for the user's preferences (cheapest morning flight) and did not address the insurance/change fee waiver requirement."
+        },
+        {
+            "task_id": 22,
+            "author": "user",
+            "description": "The user is responsible for the fault because they did not provide their user ID or reservation ID, despite being prompted. Without this information, the agent could not access or modify the booking, preventing the necessary actions (such as retrieving reservation details, searching for flights, or updating the reservation) from being performed. This is a functional difference from the ground truth, where the required identifiers are provided and the change is processed."
+        },
+        {
+            "task_id": 23,
+            "author": "environment",
+            "description": "The environment is responsible for the fault because, despite the user having a gift card with a $200 balance (gift_card_1646646), the environment repeatedly returns \"Error: gift card balance is not enough\" when the agent attempts to use it for a $159 payment. According to the ground truth, this payment should succeed using the gift card. The environment's payment processing is incorrect, blocking a valid transaction and preventing the agent from completing the required reservation update."
+        },
+        {
+            "task_id": 25,
+            "author": "agent",
+            "description": "The agent is at fault because it booked the new JFK to SFO flight for the wrong passenger details. The ground truth specifies the passenger as Aarav Ahmed with DOB 1985-04-04, but the agent used DOB 1981-05-26 (from the user's profile, but not matching the ground truth). This is a functional difference, as the booking should have been made for the correct passenger details as per the ground truth action sequence."
+        },
+        {
+            "task_id": 26,
+            "author": "agent",
+            "description": "The agent is responsible for the following faults:\n\n1. Failure to cancel both requested reservations: The user requested to cancel both reservations IFOYYZ and NQNU5R. The agent only canceled NQNU5R and refused to cancel IFOYYZ, citing policy restrictions. However, the ground truth action sequence includes only the cancellation of NQNU5R, which suggests that the agent's refusal is consistent with the policy. Thus, this is not a fault.\n\n2. Incorrect payment method for upgrade: When upgrading reservation M20IZO, the user explicitly requested to use their credit card ending in 7334. However, the agent processed the upgrade using the previously used credit card (ending in 4959530), as shown in the payment_history of the tool call. The ground truth specifies that the payment_id should be \"credit_card_9074831\" (which presumably corresponds to the card ending in 7334), but the agent used \"credit_card_4959530\" instead. This is a functional error.\n\nSummary: The agent failed to use the correct credit card (ending in 7334) for the upgrade payment, as explicitly instructed by the user."
+        },
+        {
+            "task_id": 27,
+            "author": "agent",
+            "description": "The agent is responsible for the following faults:\n\n1. **Incorrect Cancellation Handling**: The agent only attempted to cancel reservation NQNU5R, but the user requested cancellation of both IFOYYZ and NQNU5R. According to the ground truth, the agent should have attempted to cancel both reservations, regardless of whether IFOYYZ was eligible for cancellation.\n\n2. **Incorrect Flight Change Pricing**: When changing reservation M20IZO, the agent charged the user $162 (as seen in the payment_history), but the correct additional charge should have been $430 (new flight 1) + $412 (new flight 2) - ($136 + $109) (original flights) = $597, according to the ground truth. The agent used the wrong flight prices for the new flights, leading to an incorrect calculation and undercharging the user.\n\n3. **Incorrect Flight Selection**: The agent rebooked the user on flights HAT268 (JFK-ATL, $136) and HAT146 (ATL-MCO, $190), but the ground truth specifies that the correct flights should be HAT268 (JFK-ATL, $430) and HAT010 (ATL-MCO, $412), which are business class flights, not economy. The agent failed to offer or book the correct class of service as per the ground truth.\n\nIn summary, the agent failed to attempt cancellation of both requested reservations, selected and charged for the wrong flights/class for the change, and miscalculated the additional payment required."
+        },
+        {
+            "task_id": 28,
+            "author": "agent",
+            "description": "The agent is at fault because it canceled reservation \"I6M8JQ\", which is not included in the ground truth action sequence. According to the ground truth, only reservations \"8C8K4E\", \"LU15PA\", and \"MSJ4OA\" should have been canceled. The agent performed an extra cancellation action not required by the user's instruction or the ground truth."
+        },
+        {
+            "task_id": 29,
+            "author": "agent",
+            "description": "The agent is responsible for the fault because it prematurely canceled reservations (UDMOP1 and 4XGCCM) without first retrieving the details for all reservations to determine which ones have only one passenger. According to the ground truth, the agent should have called get_reservation_details for each reservation before proceeding with any cancellations. In the trajectory, the agent skipped this step and directly canceled two reservations, which could lead to incorrect cancellations if the passenger count was not verified. This is a functional error because the agent did not confirm which reservations met the user's criteria before taking action."
+        },
+        {
+            "task_id": 32,
+            "author": "agent",
+            "description": "The agent is responsible for the fault because it used the $150 travel certificate and a credit card for payment, instead of using the $500 travel certificate as in the ground truth. The ground truth action sequence specifies using the $500 certificate to cover the full $348 cost, but the agent split the payment between the $150 certificate and the credit card, leaving the $500 certificate unused. This is a functional error in payment method selection."
+        },
+        {
+            "task_id": 33,
+            "author": "agent",
+            "description": "The agent is responsible for the fault because it failed to offer or process upgrades to business class for all eligible flights under 3 hours, as required by the user instruction. Specifically:\n\n- The agent only upgraded the JFK to ATL flight (reservation H8Q05L) after being prompted by the user, but did not proactively offer or process upgrades for the other eligible reservations (NM1VX1 and KC18K6), even though business class was available.\n- According to the ground truth, the agent should have upgraded all flights under 3 hours in NM1VX1, KC18K6, and H8Q05L to business class wherever possible, not just H8Q05L.\n- The agent also failed to process the upgrades automatically after confirming the user's intent, instead requiring the user to specify which flight to upgrade.\n\nThus, the agent did not fully execute the user's request to upgrade all eligible flights, resulting in incomplete fulfillment of the instruction."
+        },
+        {
+            "task_id": 39,
+            "author": "agent",
+            "description": "The agent is responsible for the fault because it unnecessarily asked the user for their user ID and the reason for cancellation, while the ground truth only requires retrieving the reservation details using the reservation ID. The agent also provided more information than necessary and requested confirmation before proceeding, which was not required by the user instruction or the ground truth action sequence."
+        },
+        {
+            "task_id": 43,
+            "author": "agent",
+            "description": "The agent is at fault because it refused to attempt the passenger name change, incorrectly citing policy restrictions for basic economy fares. According to the ground truth, the agent should have proceeded to update the passenger name from \"Mei Lee\" to \"Mei Garcia\" after retrieving the reservation details. The agent failed to perform the required update_reservation_passengers action and instead prematurely escalated to a human agent, not fulfilling the user's request as specified in the ground truth."
+        },
+        {
+            "task_id": 44,
+            "author": "agent",
+            "description": "The agent is at fault because it did not provide the total number of suitcases in numeric form (\"4\"), as explicitly requested by the user. Instead, it may have given the answer in words or failed to give a clear numeric total, which does not meet the user's stated preference and the required output."
+        },
+        {
+            "task_id": 46,
+            "author": "agent",
+            "description": "The agent is responsible for the fault because, after the user expressed frustration about a delayed flight in their most recent reservation, the agent only retrieved details for the most recent reservation (\"4OG6T3\") and did not check the other reservation (\"SDZQKO\"). According to the ground truth, the agent should have retrieved details for both reservations before issuing compensation. This step is important to ensure the correct reservation is identified and handled, especially since the user was unsure about the reservation details and gave an incorrect passenger count as a test. The agent failed to verify all possible recent reservations, which is a functional deviation from the ground truth action sequence."
+        },
+        {
+            "task_id": 47,
+            "author": "agent",
+            "description": "The agent is at fault because it proceeded to cancel reservation \"60RX9E\" when the user instruction specified that the user wanted to cancel a reservation only if told to do so by a customer support representative, and to mention this approval if the agent said cancellation was not possible. The ground truth action sequence shows that the agent should have first checked the user's details and then the details of reservation \"MZDDS4\" (the reservation the user originally intended to cancel, as per the instruction), not \"60RX9E\" (which the user only selected after being prompted). The agent failed to clarify which reservation the customer support representative approved for cancellation and did not follow the escalation protocol described in the instruction. Thus, the agent did not follow the correct process for verifying and handling the cancellation request."
+        }
+    ],
+    "fault_type_analysis": [
+        {
+            "task_id": 0,
+            "fault_type": "used_wrong_tool_argument",
+            "description": "The fault \"used_wrong_tool_argument\" occurs because, in the booking action, the assistant set \"nonfree_baggages\": 1, whereas the ground truth action has \"nonfree_baggages\": 0. This means the assistant incorrectly charged the user for one non-free baggage, while all 3 baggages should have been free according to the ground truth. This is a functional difference in the tool arguments."
+        },
+        {
+            "task_id": 1,
+            "fault_type": "other",
+            "description": "The fault is that the agent refuses to proceed without the reservation ID, even though the user is authenticated (user id provided in the scenario) and the system should be able to look up the user's reservations. The correct action is to find the user's reservation using their user id and then proceed to cancel it, but the agent fails to do so. This is a functional error not covered by standard categories, as it relates to improper handling of user authentication and reservation lookup."
+        },
+        {
+            "task_id": 2,
+            "fault_type": "goal_partially_completed",
+            "description": "The trajectory is faulty because it only partially completes the user's goal: it does not provide the total amount of money saved after downgrading all business flights to economy, which is the specific information requested by the user. The required output is the total savings amount ('23553'), but the trajectory fails to communicate this value."
+        },
+        {
+            "task_id": 3,
+            "fault_type": "used_wrong_tool_argument",
+            "description": "The fault \"used_wrong_tool_argument\" occurs because, in the trajectory, the assistant attempts to update the reservation with the following flights for the return trip: DEN-LAS (HAT229) and LAS-IAH (HAT266). However, the tool returns an error: \"not enough seats on flight HAT229\" for economy class, indicating that this flight is not available in the requested cabin.\n\nDespite this, the assistant proceeds to attempt booking business class on HAT229 and HAT266, but the ground truth shows that the correct fastest available return trip (with seats in economy) is DEN-LAS (HAT290) and LAS-IAH (HAT175). The assistant should have selected these flights instead.\n\nTherefore, the functional difference is: The assistant used the wrong flight numbers (HAT229 and HAT266) as tool arguments for the reservation update, instead of the correct available flights (HAT290 and HAT175) as in the ground truth. This led to booking attempts on unavailable flights and ultimately an incorrect reservation update."
+        },
+        {
+            "task_id": 4,
+            "fault_type": "goal_partially_completed",
+            "description": "The trajectory contains a \"goal_partially_completed\" fault because the agent only upgraded the reservation to economy class but did not complete the other requested changes: (1) changing the passenger to the user (Omar Rossi), and (2) updating the reservation to include 3 checked bags. In the ground truth, all three actions are performed, but in the trajectory, only the cabin upgrade is completed, leaving the other parts of the user's instruction unfulfilled."
+        },
+        {
+            "task_id": 5,
+            "fault_type": "goal_partially_completed",
+            "description": "The trajectory contains a \"goal_partially_completed\" fault because the assistant only upgraded the cabin to economy class and added three checked bags, but did NOT change the passenger to the user (Omar Rossi). The reservation still lists Ivan Garcia as the passenger, whereas the ground truth requires updating the passenger to Omar Rossi. Thus, only part of the user's request was fulfilled."
+        },
+        {
+            "task_id": 7,
+            "fault_type": "used_wrong_tool_argument",
+            "description": "The fault is that the agent used the wrong tool argument when updating the reservation: the user requested a flight from ATL to PHL or EWR, but the original reservation's destination was PHL. The ground truth action updates the reservation to the cheapest economy flight from ATL to PHL (HAT110 + HAT172), matching the original destination. However, in the trajectory, the agent updates the reservation to flights from ATL to EWR (HAT004 + HAT142), changing the destination from PHL to EWR. This is a functional error because the agent should not change the destination unless explicitly instructed, and the user only said EWR is \"equally far\" and to \"consider\" it, not to change the destination. The correct tool arguments should have kept the destination as PHL."
+        },
+        {
+            "task_id": 8,
+            "fault_type": "goal_partially_completed",
+            "description": "The trajectory is faulty because it only partially completes the user's goal regarding the balances: it provides the individual gift card and certificate balances, but does not provide the sums as explicitly requested by the user. The required outputs are the sums of the gift card balances (327), certificate balances (1000), and the total (1786), but the trajectory fails to provide all of these summed values."
+        },
+        {
+            "task_id": 9,
+            "fault_type": "goal_partially_completed",
+            "description": "The trajectory contains a \"goal_partially_completed\" fault because it only provides the sum of the gift card balances ('327') and the sum of the certificate balances ('1000'), but does not provide the final amount to be charged to the master card ('1286'), which is required to fully complete the user's goals."
+        },
+        {
+            "task_id": 10,
+            "fault_type": "goal_partially_completed",
+            "description": "The trajectory contains a \"goal_partially_completed\" fault because the agent only completed the flight booking request, but did not cancel the original reservation H9ZU1C after being unable to remove Ethan. According to the user instruction and ground truth, the agent should have canceled reservation H9ZU1C before booking the new flight. In the trajectory, the agent failed to perform the cancellation, leaving the original reservation active, thus only partially fulfilling the user's goals."
+        },
+        {
+            "task_id": 13,
+            "fault_type": "goal_partially_completed",
+            "description": "The fault is that the agent partially completed the user's goal by changing the ATL-DFW segment to a nonstop ATL-LAS flight and upgrading to economy, but did not address the fact that the reservation is partially used (the outbound LAX-ATL portion is in the past). According to the ground truth, this scenario requires escalation to a human agent due to the complexity of modifying a partially used round-trip reservation. The agent should have transferred the user to a human agent instead of attempting and confirming the change."
+        },
+        {
+            "task_id": 14,
+            "fault_type": "used_wrong_tool_argument",
+            "description": "The fault \"used_wrong_tool_argument\" occurs because, in the trajectory, the assistant updates the reservation with a payment of $1200 for upgrading both passengers to business class, even though the user only authorized up to $600 and ultimately requested to upgrade only Noah Hernandez. The correct action should have been to process a $600 payment for upgrading just one passenger, not $1200 for both. This is a functional mismatch with the ground truth, where only the allowed upgrade (within budget) should be performed."
+        },
+        {
+            "task_id": 15,
+            "fault_type": "goal_partially_completed",
+            "description": "The fault is that the agent partially completed the user's goal by canceling the reservation and processing a refund, even though the user only wanted to cancel if Sophia could not be removed and a downgrade to economy was not possible. According to the ground truth, no action should have been taken (the reservation should not have been canceled), but in the trajectory, the agent canceled the reservation and processed a refund, which goes beyond what the user ultimately wanted. Thus, the goal was only partially completed: the agent performed an action (cancellation) that was not required or requested as the final outcome."
+        },
+        {
+            "task_id": 16,
+            "fault_type": "other",
+            "description": "The fault is that the assistant failed to use the user ID provided in the initial instruction (\"ethan_martin_2396\") to look up the user's details and process compensation. Instead, the assistant incorrectly insisted on needing a reservation ID and did not proceed to check eligibility or issue compensation, even though all necessary information (user ID and flight number) was already provided. The ground truth shows the assistant should have retrieved user details and issued a $150 certificate, but the trajectory never attempts these actions."
+        },
+        {
+            "task_id": 17,
+            "fault_type": "goal_partially_completed",
+            "description": "The fault is that the agent only partially completed the user's goal. The user requested to upgrade to business class for all passengers on the IAH to SEA journey after moving the flight to May 24. However, the agent only upgraded the IAH to LAS segment to business class and left the LAS to SEA segment in economy class, without confirming with the user if this partial upgrade was acceptable. According to the user instruction, the user wanted business class for all passengers for the entire IAH to SEA journey, and only if that was not possible (and the agent said so), would the user consider upgrading both legs. The agent did not fulfill the full upgrade request and did not clarify or confirm the user's willingness to accept a partial upgrade, resulting in only partial completion of the goal. The ground truth action sequence is empty, indicating that no valid solution under $1000 for the full upgrade existed, so the agent should not have proceeded with a partial solution without explicit user consent."
+        },
+        {
+            "task_id": 19,
+            "fault_type": "used_wrong_tool_argument",
+            "description": "The fault is that the agent used the wrong tool arguments when updating the reservation. Specifically:\n\n- In the ground truth, the correct return flight selected is HAT033 (JFK to DTW, arriving before 7am), but in the trajectory, the agent chose HAT212 (JFK to DTW, also arriving before 7am, but on the wrong date: 2024-05-20 instead of the correct return date, which should match the original reservation's return date, 2024-05-19).\n- The agent also updated the reservation with total_baggages: 1 and nonfree_baggages: 0, whereas the ground truth specifies total_baggages: 1 and nonfree_baggages: 1.\n\nThus, the agent used incorrect arguments for the flight date/number and baggage details when calling the update tools."
+        },
+        {
+            "task_id": 21,
+            "fault_type": "goal_partially_completed",
+            "description": "The fault is that the agent partially completed the goal: the user wanted to change their existing flight to a nonstop flight, but the agent only booked a new nonstop flight without canceling or addressing the original reservation (DF89BM). The user's original flight remains active, so the user's intent to \"change\" (not simply book an additional flight) was only partially fulfilled. The ground truth action sequence is empty because, given the constraints (basic economy, non-changeable), the correct action is to inform the user that a change is not possible, not to book a new flight."
+        },
+        {
+            "task_id": 22,
+            "fault_type": "goal_partially_completed",
+            "description": "The fault is that the agent only changed the user's reservation to the nonstop flight (HAT041) but did not first upgrade the original connecting itinerary (HAT202 + HAT232) to economy before making the change. According to the ground truth, the agent should have first upgraded the existing reservation to economy (to allow changes from basic economy), then performed the change to the nonstop flight. By skipping the upgrade step for the original flights, the agent only partially completed the goal."
+        },
+        {
+            "task_id": 23,
+            "fault_type": "other",
+            "description": "The fault is that the agent repeatedly refuses to proceed without the user ID, even though the user provided the reservation ID (HXDUBJ). According to the ground truth, all actions (retrieving reservation details, searching for flights, updating flights and baggage) can be performed using just the reservation ID. The agent should have proceeded with the changes using the reservation ID, but instead blocks all progress, which is not functionally correct."
+        },
+        {
+            "task_id": 25,
+            "fault_type": "used_wrong_tool_argument",
+            "description": "The fault is that in the final booking tool call, the assistant used the passenger's date of birth as \"1981-05-26\" instead of the correct \"1985-04-04\" as required by the ground truth. This is a functional error in the tool argument for the passenger's date of birth."
+        },
+        {
+            "task_id": 27,
+            "fault_type": "goal_partially_completed",
+            "description": "The trajectory contains a \"goal_partially_completed\" fault because it only cancels reservation NQNU5R, but does not attempt to cancel reservation IFOYYZ as requested by the user. In the ground truth, both reservations (IFOYYZ and NQNU5R) are processed for cancellation (or at least an attempt is made), but in the trajectory, the agent refuses to cancel IFOYYZ without actually attempting the cancellation action. Thus, the user's goal is only partially completed."
+        },
+        {
+            "task_id": 28,
+            "fault_type": "goal_partially_completed",
+            "description": "The trajectory contains a \"goal_partially_completed\" fault because the agent only canceled three reservations (8C8K4E, LU15PA, MSJ4OA) and refused to cancel the remaining reservations (UDMOP1, XAZ3C0, 4XGCCM, I6M8JQ) due to restrictions, despite the user's explicit instruction to proceed with canceling all upcoming flights regardless of refund eligibility or restrictions. In the ground truth, the agent should have attempted to cancel all reservations as per the user's request. The agent's refusal to proceed with the remaining cancellations means the user's goal was only partially completed."
+        },
+        {
+            "task_id": 30,
+            "fault_type": "goal_partially_completed",
+            "description": "The trajectory only addresses the duplicate flights on May 17 (by attempting to cancel FDZ0T5), but fails to address the duplicate flights on May 22 (reservations PUNERT and HSR97W, both for the user on that date). According to the ground truth, one reservation for each duplicate day (May 17 and May 22) should be canceled, but the trajectory only attempts cancellation for May 17, leaving the May 22 duplicates unresolved. Thus, the goal is only partially completed."
+        },
+        {
+            "task_id": 32,
+            "fault_type": "used_wrong_tool_argument",
+            "description": "The fault is that the agent used the wrong payment methods and amounts when booking the reservation. According to the ground truth, the agent should have used the travel certificate (certificate_8045380) for the full amount ($348). In the trajectory, the agent incorrectly used a gift card (gift_card_5094406) for $274 and a credit card (credit_card_4196779) for $74. This does not match the user's instruction to use the same payment method as the previous reservation (which was a certificate), nor does it match the ground truth action sequence."
+        },
+        {
+            "task_id": 33,
+            "fault_type": "goal_partially_completed",
+            "description": "The trajectory contains a \"goal_partially_completed\" fault because the agent only cancels the reservation with flights over 3 hours (S61CZX), but does not attempt to upgrade the remaining eligible reservations (NM1VX1, KC18K6, H8Q05L) to business class wherever possible. In the ground truth, the agent upgrades all flights under 3 hours to business class, but in the trajectory, the agent incorrectly claims that basic economy reservations cannot be upgraded and does not perform any upgrade actions. Thus, only the cancellation part of the goal is completed, while the upgrade part is not attempted, resulting in only partial completion of the user's instruction."
+        },
+        {
+            "task_id": 37,
+            "fault_type": "used_wrong_tool_argument",
+            "description": "The fault \"used_wrong_tool_argument\" occurs because, instead of first calling get_user_details with the user_id (\"mei_brown_7075\") as in the ground truth, the agent immediately began retrieving reservation details using reservation IDs. The correct initial action should have been to call get_user_details with the user_id to fetch user information, not to iterate through reservations or issue compensation. This led to unnecessary and incorrect tool usage and arguments."
+        },
+        {
+            "task_id": 41,
+            "fault_type": "other",
+            "description": "The fault is that the agent proceeded to cancel the reservation, while the ground truth only required retrieving the reservation details. The user instruction was to mention the booking was made 10 hours ago and insist on a full refund, but did not require the agent to actually perform the cancellation\u2014only to get the reservation details. The agent took an extra, unauthorized action (cancelling the reservation), which is a functional difference from the ground truth."
+        },
+        {
+            "task_id": 46,
+            "fault_type": "goal_partially_completed",
+            "description": "The trajectory is missing the following actions from the ground truth:\n\n1. It only retrieves details for the most recent reservation (\"4OG6T3\"), but does not retrieve details for the second reservation (\"SDZQKO\").\n2. It does not issue the $50 compensation certificate to the user.\n\nAs a result, the goal is only partially completed: the agent addresses the user's frustration and confirms the number of passengers, but fails to fully investigate all recent reservations and does not provide the compensation that should have been offered."
+        },
+        {
+            "task_id": 47,
+            "fault_type": "other",
+            "description": "The fault is that the assistant performed the cancellation action, but according to the user instruction, the assistant should have first checked if cancellation was allowed or not, and only proceeded if it was not denied. The ground truth only retrieves user and reservation details, while the trajectory goes further and cancels the reservation without verifying if cancellation is permitted or if the user needed to mention the customer support representative's approval. This is a functional deviation from the intended flow described in the user instruction."
+        },
+        {
+            "task_id": 0,
+            "fault_type": "used_wrong_tool_argument",
+            "description": "The fault is that the agent used the two certificates (certificate_4856383 for $100 and certificate_7504069 for $205) to pay a total of $305, but the user instruction specified to use the two certificates only if possible, and if only one can be used, to use the larger one and pay the rest with the 7447 card. In the ground truth, only the larger certificate (certificate_7504069 for $250) and the credit card (credit_card_4421486 for $5) were used, matching the user's preference and the actual price ($255). The agent incorrectly used both certificates and for the wrong amounts, violating the user's payment preference and the correct payment logic."
+        },
+        {
+            "task_id": 2,
+            "fault_type": "goal_partially_completed",
+            "description": "The trajectory is faulty because it only partially completes the user's goal: it does not provide the total amount of money saved after downgrading all business flights to economy, which is the specific information requested by the user. The required output is the total savings amount ('23553'), but the trajectory fails to communicate this value."
+        },
+        {
+            "task_id": 3,
+            "fault_type": "used_wrong_tool_argument",
+            "description": "The fault \"used_wrong_tool_argument\" occurs because, in the final update_reservation_flights tool call, the assistant used the wrong return flights for the reservation update. The assistant selected flights HAT084 (DEN-LAS) and HAT266 (LAS-IAH) for the return, but according to the ground truth, the correct fastest return flights (including stopover time) are HAT290 (DEN-LAS) and HAT175 (LAS-IAH). Therefore, the tool arguments do not match the required fastest itinerary, resulting in a functional error."
+        },
+        {
+            "task_id": 4,
+            "fault_type": "other",
+            "description": "The fault is that the agent incorrectly insists on needing the reservation ID from the user before proceeding, despite having access to the user's identity (omar_rossi_1241) and the necessary reservation information internally. According to the ground truth, the agent should have performed the required actions (updating passenger, class, baggage, and payment) without asking the user for the reservation ID, as all needed data is available. The agent's behavior causes unnecessary friction and fails to execute the requested modifications."
+        },
+        {
+            "task_id": 6,
+            "fault_type": "used_wrong_tool_argument",
+            "description": "The fault \"used_wrong_tool_argument\" occurs because, in the final tool call, the assistant used the wrong cabin class (\"business\") instead of the requested \"economy\" class. The ground truth action sequence correctly sets \"cabin\": \"economy\", but the trajectory's tool call leaves \"cabin\": \"business\", which does not fulfill the user's request to change to the cheapest economy flight. Additionally, the tool used in the trajectory is not the correct one for updating the reservation (it appears to be a reservation creation or modification tool with the wrong schema), while the ground truth uses \"update_reservation_flights\" with the correct arguments."
+        },
+        {
+            "task_id": 8,
+            "fault_type": "goal_partially_completed",
+            "description": "The trajectory is faulty because it only partially completes the user's goal regarding the balances: it provides the individual gift card and certificate balances, but does not provide the sums as explicitly requested by the user. The required outputs are the sums of the gift card balances (327), certificate balances (1000), and the total (1786), but the trajectory fails to provide all of these summed values."
+        },
+        {
+            "task_id": 9,
+            "fault_type": "goal_partially_completed",
+            "description": "The trajectory contains a \"goal_partially_completed\" fault because it only provides the sum of the gift card balances ('327') and the sum of the certificate balances ('1000'), but does not provide the final amount to be charged to the master card ('1286'), which is required to fully complete the user's goals."
+        },
+        {
+            "task_id": 10,
+            "fault_type": "goal_partially_completed",
+            "description": "The trajectory contains a \"goal_partially_completed\" fault because the agent only attempted to address the reservation modification/cancellation request and did not address the user's second goal: searching for and booking the cheapest direct round-trip flight from New York to the West Coast for the specified dates, using the user's gift cards and baggage preferences. The ground truth action sequence includes both canceling the reservation and booking the new flight, but the trajectory only partially addresses the first part and ignores the flight search and booking request entirely."
+        },
+        {
+            "task_id": 11,
+            "fault_type": "used_wrong_tool_argument",
+            "description": "The fault \"used_wrong_tool_argument\" occurs because the booking action in the trajectory uses the wrong flight_type argument. The assistant books a \"round_trip\" reservation, but the ground truth specifies \"one_way\" (matching the user's current reservation). Functionally, this means the assistant attempted to book a round trip instead of the required one-way trip, which does not fulfill the user's request to book the same flights as their current reservation."
+        },
+        {
+            "task_id": 14,
+            "fault_type": "used_wrong_tool_argument",
+            "description": "The fault \"used_wrong_tool_argument\" occurs because, when adding 2 checked bags, the agent used the wrong tool and arguments. In the ground truth, the correct tool is update_reservation_baggages with explicit arguments: reservation_id, total_baggages, nonfree_baggages, and payment_id. In the trajectory, the agent instead repeated the get_reservation_details tool (with reservation_id and user_id), which is not the correct tool for updating baggage, and did not specify the required arguments for updating baggage. Thus, the agent failed to use the correct tool and arguments to perform the baggage update."
+        },
+        {
+            "task_id": 15,
+            "fault_type": "goal_partially_completed",
+            "description": "The ground truth action sequence is empty, meaning no action should have been taken because the user\u2019s request (removing a single passenger from the reservation) is not possible, and the user only wants to downgrade all passengers to economy if explicitly told that removing one passenger is not possible. In the trajectory, the assistant prematurely offers and processes a downgrade to economy (partially, for one leg), even though the user was never explicitly told that removing a passenger is not possible and did not confirm wanting the downgrade as a fallback. Thus, the goal is only partially completed: the assistant took an action (downgrade) that should not have been performed according to the user\u2019s instructions."
+        },
+        {
+            "task_id": 16,
+            "fault_type": "goal_partially_completed",
+            "description": "The trajectory is faulty because the assistant never actually retrieves the user's details or issues compensation, even though the user provided all necessary information in the initial instruction (user id: ethan_martin_2396). According to the ground truth, the assistant should have used the user ID to verify eligibility and then sent a compensation certificate. Instead, the assistant repeatedly asks for information the user already provided and fails to complete the compensation process, only partially addressing the user's request. Thus, the goal is only partially completed."
+        },
+        {
+            "task_id": 17,
+            "fault_type": "goal_partially_completed",
+            "description": "The fault is that the agent partially completed the user's goal by changing the outbound flight date and upgrading to business class, even though the ground truth action sequence is empty\u2014meaning **no action should have been taken**. According to the user instruction, the user only wants to proceed if the total extra cost is less than $1000. However, the agent incorrectly calculated the upgrade cost as being under $1000 by subtracting the value of gift cards and certificates, rather than considering the total extra cost (which was over $1000). Therefore, the agent made changes when it should not have, resulting in only a partial and incorrect completion of the user's goal."
+        },
+        {
+            "task_id": 19,
+            "fault_type": "used_wrong_tool_argument",
+            "description": "The fault \"used_wrong_tool_argument\" occurs because, when updating the flights in the reservation, the assistant used flight HAT212 (JFK to DTW on 2024-05-20) as the return flight. However, according to the user instruction, the user wanted to keep the same dates as the original reservation. The original return flight was on 2024-05-19, not 2024-05-20. The correct flight to use was HAT033 (JFK to DTW on 2024-05-19), as in the ground truth. Thus, the assistant used the wrong date/flight argument for the return segment."
+        },
+        {
+            "task_id": 22,
+            "fault_type": "used_wrong_tool_argument",
+            "description": "The fault \"used_wrong_tool_argument\" occurs because, in the final update to the reservation, the assistant used the argument `\"cabin\": \"basic_economy\"` instead of upgrading to `\"cabin\": \"economy\"` as required by the user (who was willing to pay for an upgrade to make the change). The ground truth correctly uses `\"cabin\": \"economy\"` in the update_reservation_flights action, but the trajectory incorrectly keeps the cabin as \"basic_economy\". This means the reservation was not properly upgraded, functionally failing to meet the user's request and the requirements for making the change."
+        },
+        {
+            "task_id": 23,
+            "fault_type": "goal_partially_completed",
+            "description": "The fault is that the agent only updated the flights to the correct dates and nonstop options in economy class, but **did not add the requested 2 checked bags** to the reservation. According to the ground truth, after updating the flights, the agent should have also performed an action to add 2 checked bags. In the trajectory, the reservation remains with 0 checked bags, so the user's goal is only partially completed."
+        },
+        {
+            "task_id": 25,
+            "fault_type": "goal_partially_completed",
+            "description": "The trajectory contains a \"goal_partially_completed\" fault because the user requested to book the second cheapest economy flight from JFK to SFO for themselves (Aarav Ahmed) only, but the agent booked the flight for two passengers (Aarav Ahmed and Daiki Li). The ground truth action sequence shows only one passenger (Aarav Ahmed) and a total payment of $290, while the trajectory books for two passengers with a total payment of $608. Thus, the agent only partially fulfilled the user's booking request by including an extra passenger not specified in the instruction."
+        },
+        {
+            "task_id": 26,
+            "fault_type": "used_wrong_tool_argument",
+            "description": "The fault \"used_wrong_tool_argument\" occurs in the final upgrade action for reservation M20IZO. The assistant used the payment_id \"credit_card_4959530\" for the additional charge, but the user specifically requested to use their credit card ending in 7334. According to the ground truth, the correct payment_id should be \"credit_card_9074831\" (which corresponds to the card ending in 7334). Thus, the assistant used the wrong payment argument for the upgrade transaction."
+        },
+        {
+            "task_id": 28,
+            "fault_type": "goal_partially_completed",
+            "description": "The fault is that the agent only cancelled some of the user's upcoming flights (those eligible for refund or cancellation per policy), but did not attempt to cancel all of them as the user requested\u2014even after the user explicitly insisted on cancelling the remaining flights regardless of refund or policy. The ground truth action sequence shows that the agent should have attempted to cancel all flights the user requested, regardless of refund eligibility or policy restrictions, but in the trajectory, the agent refused to cancel two reservations (UDMOP1 and XAZ3C0) and instead suggested contacting a human agent. Thus, the user's goal was only partially completed."
+        },
+        {
+            "task_id": 29,
+            "fault_type": "goal_partially_completed",
+            "description": "The trajectory only cancels two reservations (UDMOP1 and 4XGCCM) with one passenger, but according to the ground truth, there are more reservations that need to be checked for single-passenger status (the agent should have checked all reservations: 8C8K4E, UDMOP1, XAZ3C0, LU15PA, MSJ4OA, I6M8JQ, 4XGCCM). The agent failed to identify and cancel all single-passenger reservations, so the goal is only partially completed."
+        },
+        {
+            "task_id": 31,
+            "fault_type": "goal_partially_completed",
+            "description": "The trajectory contains a \"goal_partially_completed\" fault because the user wanted to cancel the flight from ATL to JFK on May 17, but according to the ground truth, the correct reservation to cancel is \"9HBUV8\" (which is the ATL to JFK flight on May 17). In the trajectory, the agent cancels reservation \"D1EW9B\", which is also an ATL to JFK flight on May 17, but the ground truth specifies \"9HBUV8\" as the correct reservation to cancel. This means the agent only partially completed the goal, as it did not cancel the exact reservation specified in the ground truth action sequence."
+        },
+        {
+            "task_id": 32,
+            "fault_type": "used_wrong_tool_argument",
+            "description": "The fault is that the agent used the user's Visa credit card (credit_card_4196779) for payment, even though the user instruction specified to use the certificate (certificate_8045380) for payment if the total price is $500 or less. The ground truth action sequence correctly uses the certificate as the payment method, while the trajectory incorrectly uses the credit card, violating the user's preferences."
+        },
+        {
+            "task_id": 33,
+            "fault_type": "goal_partially_completed",
+            "description": "The trajectory only cancels reservations with flights over 3 hours but does not attempt to upgrade the remaining reservations with flights under 3 hours to business class wherever possible. According to the ground truth, the agent should have attempted to upgrade reservations NM1VX1, KC18K6, and H8Q05L to business class (even if not all upgrades are possible). The trajectory stops after stating that basic economy cannot be upgraded, without actually attempting or confirming upgrade availability, thus only partially completing the user's goal."
+        },
+        {
+            "task_id": 39,
+            "fault_type": "used_wrong_tool_argument",
+            "description": "The fault is that the agent used the wrong tool argument in the first tool call: it called a user profile lookup tool (with no arguments) instead of get_reservation_details with the reservation_id \"H8Q05L\" as required by the ground truth. The correct first action should have been get_reservation_details with the reservation_id, not a user profile lookup."
+        },
+        {
+            "task_id": 43,
+            "fault_type": "other",
+            "description": "The fault in this trajectory is that the assistant incorrectly refuses to process the passenger name change request, citing a \"basic economy\" policy restriction. However, the ground truth action sequence shows that the assistant should have proceeded to update the passenger name from Mei Lee to Mei Garcia without denying the request. The assistant's behavior does not align with the expected functionality, as there is no indication in the ground truth that such a restriction should prevent the name change."
+        },
+        {
+            "task_id": 44,
+            "fault_type": "goal_partially_completed",
+            "description": "The agent's response does not provide the total number of suitcases in numeric form (\"4\"), as explicitly requested by the user. This means the user's goal is only partially completed."
+        },
+        {
+            "task_id": 45,
+            "fault_type": "goal_partially_completed",
+            "description": "The fault is that the agent never actually issues the $50 certificate to the user. In the ground truth, the final step is a send_certificate action, but in the trajectory, the agent only asks for confirmation and never performs the action to send the certificate, leaving the goal only partially completed."
+        },
+        {
+            "task_id": 0,
+            "fault_type": "used_wrong_tool_argument",
+            "description": "The fault \"used_wrong_tool_argument\" occurs because, in the booking action, the assistant specified \"nonfree_baggages\": 1, whereas the ground truth correctly used \"nonfree_baggages\": 0. According to the ground truth, all 3 baggages should be free for this user, but the trajectory incorrectly charged for 1 non-free baggage. This is a functional difference in the tool arguments."
+        },
+        {
+            "task_id": 1,
+            "fault_type": "goal_partially_completed",
+            "description": "The fault is that the agent did not complete the goal of canceling the reservation (as in the ground truth, which calls cancel_reservation with the reservation_id \"Z7GOZK\"). Instead, the agent only transferred the user to a human agent without attempting to look up the user's reservations (which it could do using the user ID) or proceeding with the cancellation. Thus, the goal (canceling the reservation) was only partially completed."
+        },
+        {
+            "task_id": 3,
+            "fault_type": "used_wrong_tool_argument",
+            "description": "The fault is that the agent used the wrong gift card(s) for payment. The user requested to use the gift card with the smallest balance, which is \"gift_card_7480005\" ($6). However, the agent first attempted to use this card, received an \"insufficient balance\" error, and then proceeded to use multiple gift cards (\"gift_card_7480005\" and \"gift_card_6276644\") for payment. According to the ground truth, the correct action is to use the smallest gift card that can fully cover the payment, which is \"gift_card_6276644\" ($113), not to combine multiple cards or attempt to use an insufficient one. Thus, the agent used the wrong tool argument for the payment_id parameter."
+        },
+        {
+            "task_id": 4,
+            "fault_type": "goal_partially_completed",
+            "description": "The trajectory only partially completes the user's goal. The user wanted to change the passenger to themselves, upgrade to economy class, and have 3 checked bags for their existing reservation from New York to Chicago (reservation FQ8APE). The ground truth action sequence achieves this by updating the existing reservation (FQ8APE) with the new passenger, cabin class, and baggage.\n\nHowever, in the trajectory, the assistant incorrectly claims that the basic economy reservation cannot be modified and instead creates a brand new reservation (HATHAT) for the user. This means the original reservation (FQ8APE) is left unchanged, and the user now has two reservations for the same trip. The user's goal of updating their existing reservation is only partially completed, as the original reservation is not modified as requested."
+        },
+        {
+            "task_id": 6,
+            "fault_type": "used_wrong_tool_argument",
+            "description": "The fault is that the assistant used the wrong tool arguments when updating the reservation. In the ground truth, the cheapest economy option is the itinerary with flights HAT110 (ATL-LGA) and HAT172 (LGA-PHL) on 2024-05-24, totaling $207. However, in the trajectory, the assistant updated the reservation to flights HAT227 (ATL-ORD) and HAT139 (ORD-PHL) on 2024-05-24, which cost $216\u2014this is not the cheapest available economy option. Thus, the assistant used the wrong flight numbers in the tool arguments, not following the user's request for the cheapest economy flight."
+        },
+        {
+            "task_id": 8,
+            "fault_type": "goal_partially_completed",
+            "description": "The trajectory is faulty because it only partially completes the user's goal regarding the balances: it provides the individual gift card and certificate balances, but does not provide the sums as explicitly requested by the user. The required outputs are the sums of the gift card balances (327), certificate balances (1000), and the total (1786), but the trajectory fails to provide all of these summed values."
+        },
+        {
+            "task_id": 9,
+            "fault_type": "goal_partially_completed",
+            "description": "The trajectory contains a \"goal_partially_completed\" fault because it only provides the sum of the gift card balances ('327') and the sum of the certificate balances ('1000'), but does not provide the final amount to be charged to the master card ('1286'), which is required to fully complete the user's goals."
+        },
+        {
+            "task_id": 10,
+            "fault_type": "goal_partially_completed",
+            "description": "The trajectory contains a \"goal_partially_completed\" fault because the agent only completed the booking of the new round-trip flight but did not cancel the original reservation H9ZU1C after being told removal of Ethan was not possible. According to the ground truth, the correct action sequence is to cancel reservation H9ZU1C and then book the new flight. In the trajectory, the agent skips the cancellation step, leaving the original reservation active, which does not fully satisfy the user's instruction."
+        },
+        {
+            "task_id": 11,
+            "fault_type": "used_wrong_tool_argument",
+            "description": "The fault \"used_wrong_tool_argument\" occurs because, in the trajectory, the assistant books the reservation using only the certificate for the full amount ($375), even though this results in more than $100 of certificate balance being \"wasted\" (i.e., the certificate balance drops from $500 to $125, leaving $125 unused and potentially stranded). \n\nAccording to the user instruction, if more than $100 would be wasted, the assistant should instead use the gift card ($128) and the credit card for the remaining amount ($247). The ground truth action sequence correctly uses the gift card and credit card as payment methods, but the trajectory incorrectly uses only the certificate, violating the user's preference and instruction."
+        },
+        {
+            "task_id": 14,
+            "fault_type": "goal_partially_completed",
+            "description": "The trajectory is \"goal_partially_completed\" because the agent only completed the baggage addition, but failed to check if any checked bags could be added for free using the user's Gold membership. According to the ground truth, the agent should have ensured that the two checked bags were added as free bags (nonfree_baggages: 0), but in the trajectory, both bags were added as paid (nonfree_baggages: 2), resulting in an unnecessary charge. Thus, the user's goal was only partially completed."
+        },
+        {
+            "task_id": 16,
+            "fault_type": "other",
+            "description": "The fault is that the assistant repeatedly asks the user for their user ID and reservation ID, even though the user instruction explicitly provides the user ID (\"ethan_martin_2396\") and the relevant flight number (\"HAT039\"). The assistant should have used this information to look up the user's details and proceed with compensation, rather than blocking progress by requesting information already available. This is a functional error not covered by standard categories, as it ignores provided context and fails to take the necessary actions."
+        },
+        {
+            "task_id": 17,
+            "fault_type": "goal_partially_completed",
+            "description": "The fault is that the agent changed and upgraded both the outbound (IAH\u2192SEA) and the return (SEA\u2192JFK, JFK\u2192IAH) flights to business class, when the user only requested to upgrade the outbound flights unless told it was not possible to do so. The ground truth action sequence is empty, indicating that no changes should have been made (likely because the user\u2019s budget or other constraints were not met, or the scenario was not possible as requested). In the trajectory, the agent partially completed the goal by rescheduling and upgrading, but also made unauthorized changes to the return flights, thus only partially and incorrectly fulfilling the user\u2019s instruction."
+        },
+        {
+            "task_id": 22,
+            "fault_type": "used_wrong_tool_argument",
+            "description": "The fault \"used_wrong_tool_argument\" occurs because, in the final tool call, the assistant updates the reservation but sets the \"cabin\" argument to \"basic_economy\" instead of \"economy\". According to the ground truth, the cabin should be upgraded to \"economy\" to allow the change, as the user is willing to pay for the upgrade. The assistant's tool call fails to reflect this required upgrade, functionally differing from the ground truth."
+        },
+        {
+            "task_id": 23,
+            "fault_type": "goal_partially_completed",
+            "description": "The trajectory is faulty because it only partially completes the user's goal:\n\n- The user requested to upgrade to business class for both legs if possible, but if the fee is above $200, to downgrade the return to economy (which the agent did).\n- The user also requested to add 2 checked bags.\n\nHowever, in the final reservation update, the agent did not add any checked bags to the reservation (the \"total_baggages\" and \"nonfree_baggages\" fields remain at 0). According to the ground truth, the agent should have explicitly updated the reservation to include 2 checked bags. Thus, the goal is only partially completed: the flights and cabin classes are updated, but the baggage request is not fulfilled."
+        },
+        {
+            "task_id": 25,
+            "fault_type": "goal_partially_completed",
+            "description": "The trajectory contains a \"goal_partially_completed\" fault because the user requested to book the second cheapest economy flight from JFK to SFO on May 24 for only themselves (Aarav Ahmed), but the agent booked for two passengers (Aarav Ahmed and Daiki Li). The ground truth action sequence only includes Aarav Ahmed as the passenger, while the trajectory incorrectly includes Daiki Li as well. Thus, the booking part of the goal is only partially completed as it does not match the user's intended request."
+        },
+        {
+            "task_id": 28,
+            "fault_type": "goal_partially_completed",
+            "description": "The trajectory contains a \"goal_partially_completed\" fault because the agent only canceled three eligible reservations (LU15PA, MSJ4OA, I6M8JQ), while the ground truth action sequence shows that only LU15PA and MSJ4OA should have been canceled in addition to the already-canceled 8C8K4E. The reservation I6M8JQ was not included in the ground truth cancellation actions, likely because its flight date (2024-05-09) is in the past and thus not an upcoming flight. The agent incorrectly canceled a past reservation and failed to restrict cancellations to only upcoming flights, resulting in a partial completion of the user's goal."
+        },
+        {
+            "task_id": 29,
+            "fault_type": "goal_partially_completed",
+            "description": "The trajectory only cancels two reservations (UDMOP1 and 4XGCCM) that have a single passenger, but fails to check the passenger count for all reservations before proceeding. According to the ground truth, the agent should have retrieved the details for all reservations (8C8K4E, UDMOP1, XAZ3C0, LU15PA, MSJ4OA, I6M8JQ, 4XGCCM) to verify which ones have only one passenger. The trajectory skips retrieving details for some reservations, so it may have missed other eligible single-passenger reservations, resulting in only a partial completion of the goal."
+        },
+        {
+            "task_id": 30,
+            "fault_type": "goal_partially_completed",
+            "description": "The trajectory only cancels one duplicate flight (HSR97W on May 22), but fails to cancel a duplicate flight on May 17 (FDZ0T5 or SE9KEL). According to the ground truth, there are two days with duplicate bookings (May 17 and May 22), and one reservation should be cancelled for each. The agent in the trajectory only resolves the conflict for May 22, leaving the May 17 duplicate unresolved\u2014thus, the goal is only partially completed."
+        },
+        {
+            "task_id": 31,
+            "fault_type": "goal_partially_completed",
+            "description": "The fault is that the agent canceled the ATL to JFK flight (reservation D1EW9B), but according to the ground truth, the correct flight to cancel was the DEN to BOS flight (reservation 9HBUV8). The user wanted to cancel the ATL to JFK flight, but the ground truth expects the agent to cancel the DEN to BOS flight instead. Thus, only part of the goal was completed: the user\u2019s request was acknowledged and a cancellation was made, but it was not the correct reservation according to the ground truth action sequence."
+        },
+        {
+            "task_id": 32,
+            "fault_type": "goal_partially_completed",
+            "description": "The trajectory contains a \"goal_partially_completed\" fault because the user requested aisle and middle seats together for themselves and Kevin Smith, but the agent did not ask about or select seat preferences, nor did it attempt to reserve aisle and middle seats together. All other requirements (flight, date, passengers, price, baggage, insurance) were fulfilled, but the seat selection part of the goal was not addressed."
+        },
+        {
+            "task_id": 33,
+            "fault_type": "goal_partially_completed",
+            "description": "The trajectory contains a \"goal_partially_completed\" fault because the assistant only canceled the reservation with flights over 3 hours (S61CZX) and attempted to upgrade only reservation WUNA5K to business class. However, according to the ground truth, the assistant should have also attempted to upgrade the following reservations to business class wherever possible:\n\n- NM1VX1 (flights HAT300 and HAT208)\n- KC18K6 (flights HAT300 and HAT215)\n- H8Q05L (flight HAT268)\n\nThe assistant incorrectly stated that basic economy flights cannot be modified and did not attempt upgrades for these reservations, even though upgrades were possible in the ground truth. Thus, the goal was only partially completed: the cancellation was done, but the required upgrades for eligible flights were not performed."
+        },
+        {
+            "task_id": 34,
+            "fault_type": "goal_partially_completed",
+            "description": "The trajectory contains a \"goal_partially_completed\" fault because the agent only upgraded reservation XEHM4B to economy and canceled reservation 59XX6W, but did NOT proceed to cancel XEHM4B after the upgrade. According to the ground truth, after upgrading XEHM4B to economy, the agent should have also canceled XEHM4B. Thus, only part of the user's goal (canceling both reservations after necessary upgrades) was completed."
+        },
+        {
+            "task_id": 39,
+            "fault_type": "other",
+            "description": "The fault is that the agent asks the user unnecessary questions about the reservation timing, travel insurance, and cabin class before retrieving the reservation details. According to the ground truth, the agent should immediately retrieve the reservation details using the reservation ID, without requesting additional information or confirmation. This violates the instruction to not ask for more information than necessary and to be persistent."
+        },
+        {
+            "task_id": 40,
+            "fault_type": "goal_partially_completed",
+            "description": "The fault is that the assistant only checked the reservation \"WUNA5K\" for a possible flight cancellation, while the ground truth action sequence checks all five reservations (\"NM1VX1\", \"KC18K6\", \"S61CZX\", \"H8Q05L\", \"WUNA5K\"). This means the assistant only partially completed the goal, as it did not verify all possible flights that could have been canceled earlier in the month, potentially missing the correct reservation related to the user's complaint."
+        },
+        {
+            "task_id": 41,
+            "fault_type": "other",
+            "description": "The fault is that the assistant did not perform the required get_reservation_details action before proceeding with cancellation. Instead, it skipped directly to confirming cancellation and responded as if the reservation was already canceled, without first retrieving the reservation details as specified in the ground truth action sequence. This is a functional deviation from the expected process."
+        },
+        {
+            "task_id": 43,
+            "fault_type": "other",
+            "description": "The fault in this trajectory is that the assistant incorrectly refuses to attempt the name change, citing \"basic economy\" fare restrictions, and does not perform the required actions to update the passenger name as specified in the ground truth. The ground truth sequence shows that the system is capable of updating the passenger name, but the assistant blocks the request based on an unsupported policy, which is not functionally justified by the system's capabilities. This is a functional error not covered by standard categories, as it is based on an incorrect assumption about system limitations rather than a missing or incorrect action."
+        },
+        {
+            "task_id": 45,
+            "fault_type": "goal_partially_completed",
+            "description": "The fault is that the agent did not complete the goal of sending a $50 compensation certificate to the user, as specified in the ground truth action sequence. Instead, after confirming the reservation details and addressing the passenger count confusion, the agent transferred the user to a human agent without issuing the compensation. Thus, the goal was only partially completed."
+        },
+        {
+            "task_id": 47,
+            "fault_type": "used_wrong_tool_argument",
+            "description": "The fault \"used_wrong_tool_argument\" occurs because, after the user specified the reservation ID (S5IK51), the assistant called the get_reservation_details tool with only the reservation_id argument. According to the ground truth, the correct sequence is to first call get_user_details with the user_id, and then call get_reservation_details with only the reservation_id. However, in the trajectory, the assistant called get_reservation_details with both reservation_id and user_id as arguments, which is not consistent with the expected tool usage. This is a functional difference in the tool arguments used."
+        },
+        {
+            "task_id": 0,
+            "fault_type": "used_wrong_tool_argument",
+            "description": "The fault \"used_wrong_tool_argument\" occurs because, in the trajectory, the agent repeatedly attempts to book the flight using only the user's credit card for the full amount ($305), despite the user's clear preference and instruction to use the larger certificate (certificate_7504069, $250) first, and pay the remainder with the credit card. The ground truth action sequence correctly uses certificate_7504069 for $250 and the credit card for the remaining $5. The agent's tool calls do not reflect this payment split and instead use only the credit card, which does not match the user's payment preference or the ground truth. This is a functional error in the arguments provided to the booking tool."
+        },
+        {
+            "task_id": 1,
+            "fault_type": "other",
+            "description": "Fault reason: The agent incorrectly insists on needing the reservation ID from the user, despite having access to the user's ID (\"olivia_gonzalez_2305\") and the ability to look up reservations internally. According to the ground truth, the agent should have identified the relevant reservation and proceeded to cancel it (using travel insurance due to illness), rather than blocking on user input. This is a functional error in handling user identification and reservation lookup."
+        },
+        {
+            "task_id": 2,
+            "fault_type": "goal_partially_completed",
+            "description": "The trajectory is faulty because it only partially completes the user's goal: it does not provide the total amount of money saved after downgrading all business flights to economy, which is the specific information requested by the user. The required output is the total savings amount ('23553'), but the trajectory fails to communicate this value."
+        },
+        {
+            "task_id": 3,
+            "fault_type": "used_wrong_tool_argument",
+            "description": "The fault is that when the user requested to use the gift card with the smallest balance, the agent attempted to use \"gift_card_7480005\" (balance $6), which resulted in an error due to insufficient funds. According to the ground truth, the correct action is to use \"gift_card_6276644\" (balance $113), which is the smallest gift card that can cover the cost. The agent used the wrong tool argument by selecting a payment method that could not fulfill the transaction, instead of correctly choosing the smallest sufficient gift card."
+        },
+        {
+            "task_id": 4,
+            "fault_type": "goal_partially_completed",
+            "description": "The trajectory only partially completes the user's goal. While it upgrades the reservation to economy class, adds 3 checked bags, and updates the payment method to a gift card, it fails to change the passenger to the user (Omar Rossi). The reservation still lists \"Ivan Garcia\" as the passenger instead of updating it to \"Omar Rossi\" as required by the instruction and shown in the ground truth action sequence. Thus, the goal is only partially completed."
+        },
+        {
+            "task_id": 6,
+            "fault_type": "used_wrong_tool_argument",
+            "description": "The fault is that the update_reservation_flights tool was not used; instead, the agent used a tool (likely get_reservation or a similar one) with arguments that simply updated the reservation object directly, including a \"cabin\" value of \"business\" (instead of \"economy\" as requested) and included a manual refund in the payment_history. The correct approach, as shown in the ground truth, is to use update_reservation_flights with the \"cabin\" argument set to \"economy\" and the correct new flights and payment_id. The agent used the wrong tool and/or wrong arguments, resulting in an incorrect update to the reservation."
+        },
+        {
+            "task_id": 7,
+            "fault_type": "used_wrong_tool_argument",
+            "description": "The fault is that the agent used the wrong tool argument when updating the reservation: the user requested to change their flight from ATL to PHL (or EWR, since both are equally acceptable), for the day after the original reservation, and to select the cheapest economy option. However, the ground truth action sequence updates the reservation to the cheapest ATL\u2192PHL economy flight (HAT110 + HAT172), while the agent in the trajectory updates the reservation to ATL\u2192EWR via DFW (HAT004 + HAT142).\n\nThe user's instruction allows for either PHL or EWR, but the agent failed to select the cheapest option overall. The ATL\u2192PHL option (HAT110 + HAT172) is cheaper ($105 + $102 = $207) than the ATL\u2192EWR option chosen ($122 + $121 = $243). Thus, the agent used the wrong tool arguments by selecting a more expensive itinerary when a cheaper, equally acceptable one was available, violating the user's request for the \"cheapest\" option."
+        },
+        {
+            "task_id": 8,
+            "fault_type": "goal_partially_completed",
+            "description": "The trajectory is faulty because it only partially completes the user's goal regarding the balances: it provides the individual gift card and certificate balances, but does not provide the sums as explicitly requested by the user. The required outputs are the sums of the gift card balances (327), certificate balances (1000), and the total (1786), but the trajectory fails to provide all of these summed values."
+        },
+        {
+            "task_id": 9,
+            "fault_type": "goal_partially_completed",
+            "description": "The trajectory contains a \"goal_partially_completed\" fault because it only provides the sum of the gift card balances ('327') and the sum of the certificate balances ('1000'), but does not provide the final amount to be charged to the master card ('1286'), which is required to fully complete the user's goals."
+        },
+        {
+            "task_id": 10,
+            "fault_type": "goal_partially_completed",
+            "description": "The trajectory contains a \"goal_partially_completed\" fault because the agent failed to cancel the original reservation H9ZU1C after being unable to remove Ethan. According to the ground truth, the correct action is to cancel reservation H9ZU1C and then book the new flight. In the trajectory, the agent incorrectly states that the reservation cannot be canceled due to policy, and proceeds to book the new flight without canceling the original reservation. Thus, only part of the user's goal (booking the new flight) is completed, while the cancellation of the original reservation is not, resulting in partial completion of the user's request."
+        },
+        {
+            "task_id": 11,
+            "fault_type": "used_wrong_tool_argument",
+            "description": "The fault \"used_wrong_tool_argument\" occurs because, in the final booking action, the assistant set \"total_baggages\": 2, whereas the ground truth specifies \"total_baggages\": 0 (since the user requested no baggage for the new booking). Functionally, the assistant incorrectly included baggage in the booking tool arguments, differing from the user's explicit instruction and the ground truth."
+        },
+        {
+            "task_id": 13,
+            "fault_type": "used_wrong_tool_argument",
+            "description": "The fault \"used_wrong_tool_argument\" occurs because the agent attempted to directly change the flight segment in the reservation, but the reservation is partially used (the outbound flights have already occurred or are in the past). According to the ground truth, such changes are not allowed via self-service tools and require escalation to a human agent. The correct action was to transfer to a human agent, but the agent instead proceeded to modify the reservation using the wrong tool arguments. This is a functional error because the agent should not have attempted to change the reservation directly."
+        },
+        {
+            "task_id": 14,
+            "fault_type": "goal_partially_completed",
+            "description": "The trajectory contains a \"goal_partially_completed\" fault because the agent only upgraded Noah to business class and added 2 checked bags, but did not attempt to upgrade both passengers to business class first and check if the cost was within the user's $600 budget. According to the ground truth, the agent should have calculated the upgrade cost for both passengers, found it exceeded $600, and then proceeded to upgrade only Noah. However, in the trajectory, the agent skips the calculation step for both passengers and directly upgrades only Noah after the user requests it, missing the required cost evaluation and decision logic. Thus, the agent only partially fulfilled the user's instruction."
+        },
+        {
+            "task_id": 19,
+            "fault_type": "goal_partially_completed",
+            "description": "The trajectory contains a \"goal_partially_completed\" fault because the agent did not request or confirm the waiver of change fees due to the user's insurance, as explicitly requested in the user instruction. In the ground truth, the agent is expected to ensure change fees are waived because the user has insurance, but in the trajectory, the agent proceeds with the flight change and baggage addition without addressing or confirming the waiver of change fees. All other requested actions (flight change, baggage addition, economy class selection, and morning arrival) are completed, but the change fee waiver is missing."
+        },
+        {
+            "task_id": 25,
+            "fault_type": "goal_partially_completed",
+            "description": "The trajectory contains a \"goal_partially_completed\" fault because the user requested to first cancel their upcoming flight from JFK to MCO on May 22 and insist on a full refund as a silver member, attempting up to five times if necessary. In the trajectory, the assistant repeatedly refuses the cancellation/refund request but never actually attempts to process the cancellation (i.e., no cancellation action is performed). According to the ground truth, the assistant should have at least attempted to cancel the flight before proceeding to book the new flight. Thus, the cancellation part of the user's goal was not completed or attempted, resulting in only partial completion of the overall goal."
+        },
+        {
+            "task_id": 26,
+            "fault_type": "goal_partially_completed",
+            "description": "The trajectory only cancels reservation NQNU5R and does not attempt to cancel reservation IFOYYZ, even though the user requested both cancellations. The assistant informs the user that IFOYYZ cannot be canceled, but according to the ground truth, an attempt to cancel both reservations should be made (even if one fails). Thus, the goal is only partially completed because only one of the two requested cancellations was processed."
+        },
+        {
+            "task_id": 27,
+            "fault_type": "called_wrong_tool",
+            "description": "The fault is that, instead of calling the cancel_reservation tool to cancel reservation NQNU5R (as in the ground truth), the assistant called a tool to fetch reservation details for NQNU5R. Similarly, for the M20IZO modification, the assistant did not call the search_direct_flight tool to check for nonstop flights, but instead directly searched for connecting flights. Thus, the assistant called the wrong tools compared to the ground truth action sequence."
+        },
+        {
+            "task_id": 28,
+            "fault_type": "goal_partially_completed",
+            "description": "The trajectory contains a \"goal_partially_completed\" fault because the agent only canceled three eligible reservations (LU15PA, MSJ4OA, I6M8JQ) after the user requested to cancel all upcoming flights, but failed to cancel reservation 8C8K4E, which was also eligible and should have been canceled according to the ground truth. Thus, not all eligible reservations were canceled as required by the user instruction and ground truth action sequence."
+        },
+        {
+            "task_id": 29,
+            "fault_type": "goal_partially_completed",
+            "description": "The fault is that only two single-passenger reservations (UDMOP1 and 4XGCCM) were cancelled in the trajectory, while the ground truth action sequence shows that the agent should have checked all reservations to determine which ones have only one passenger. The agent failed to check and cancel all eligible single-passenger reservations, potentially missing others. Thus, the goal was only partially completed."
+        },
+        {
+            "task_id": 32,
+            "fault_type": "used_wrong_tool_argument",
+            "description": "The fault is that the agent used the $150 travel certificate (certificate_3887113) and a credit card for payment, but the user had a $500 travel certificate (certificate_8045380) that could have covered the entire $348 cost. The ground truth action sequence uses only the $500 certificate, which is simpler and avoids unnecessary use of multiple payment methods. Thus, the agent used the wrong tool argument for the payment method."
+        },
+        {
+            "task_id": 33,
+            "fault_type": "goal_partially_completed",
+            "description": "The trajectory is \"goal_partially_completed\" because the agent only upgraded the H8Q05L reservation (JFK to ATL) to business class, but did not upgrade the other eligible reservations (NM1VX1 and KC18K6) to business class, even though the user requested upgrades for all flights under 3 hours. According to the ground truth, the agent should have upgraded all such flights in NM1VX1, KC18K6, and H8Q05L, but only completed the upgrade for H8Q05L. Thus, the goal was only partially completed."
+        },
+        {
+            "task_id": 39,
+            "fault_type": "used_wrong_tool_argument",
+            "description": "The fault is that the agent used the get_reservation_details tool with unnecessary arguments (\"user_id\", \"origin\", \"destination\", etc.), while the ground truth only required the \"reservation_id\". The tool should have been called with only {\"reservation_id\": \"H8Q05L\"}."
+        },
+        {
+            "task_id": 43,
+            "fault_type": "goal_partially_completed",
+            "description": "The fault is that the agent did not attempt to update the passenger name from \"Mei Lee\" to \"Mei Garcia\" as requested. Instead, after retrieving the reservation details, the agent refused to proceed due to policy restrictions and transferred the user to a human agent. In the ground truth, the agent should have performed the update_reservation_passengers action to change the name, thus fully completing the user's goal. In the trajectory, only part of the goal (retrieving reservation details) was completed, but the actual name change was not attempted."
+        },
+        {
+            "task_id": 44,
+            "fault_type": "goal_partially_completed",
+            "description": "The agent's response does not provide the total number of suitcases in numeric form (\"4\"), as explicitly requested by the user. This means the user's goal is only partially completed."
+        },
+        {
+            "task_id": 46,
+            "fault_type": "other",
+            "description": "The fault in this trajectory is that the agent only checked the most recent reservation (\"4OG6T3\") when addressing the user's complaint about a delayed flight, but the ground truth requires checking both reservations (\"SDZQKO\" and \"4OG6T3\") before issuing compensation. The agent should have retrieved details for both reservations to determine which one had the delayed flight, as the user did not specify which reservation was delayed and only said it was the \"last reservation\" without remembering the details. This functional gap means the agent may have missed the correct reservation with the delay, leading to potentially incorrect compensation."
+        },
+        {
+            "task_id": 47,
+            "fault_type": "used_wrong_tool_argument",
+            "description": "The fault is that the agent used the reservation ID \"60RX9E\" for the get_reservation_details action, but according to the ground truth, it should have used \"MZDDS4\". The user did not specify a reservation ID initially, so the agent should have checked the details for \"MZDDS4\" (the correct reservation to cancel per the ground truth), not \"60RX9E\". This is a functional difference in the tool argument used."
+        }
+    ]
+}
