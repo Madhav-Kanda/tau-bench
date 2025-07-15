@@ -35,7 +35,7 @@ def run(config: RunConfig) -> List[EnvRunResult]:
     assert config.env in ["retail", "airline"], "Only retail and airline envs are supported"
     assert config.model_provider in provider_list, "Invalid model provider"
     assert config.user_model_provider in provider_list, "Invalid user model provider"
-    assert config.agent_strategy in ["tool-calling", "act", "react", "few-shot", "one-shot", "assertions-agent", "orchestrator", "tool-calling-with-preconditions", "tool-calling-with-preconditions-and-python"], "Invalid agent strategy"
+    assert config.agent_strategy in ["tool-calling", "act", "react", "few-shot", "one-shot", "assertions-agent", "orchestrator", "tool-calling-with-preconditions", "tool-calling-with-preconditions-and-python", "tool-calling-with-subtasks-check", "tool-calling-with-subtasks-feedback"], "Invalid agent strategy"
     assert config.task_split in ["train", "test", "dev"], "Invalid task split"
     assert config.user_strategy in [item.value for item in UserStrategy], "Invalid user strategy"
 
@@ -88,18 +88,18 @@ def run(config: RunConfig) -> List[EnvRunResult]:
             )
 
             print(f"Running task {idx}")
-            res = agent.solve(
-                env=isolated_env,
-                task_index=idx,
-            )
-            result = EnvRunResult(
-                task_id=idx,
-                reward=res.reward,
-                info=res.info,
-                traj=res.messages,
-                trial=i,
-                records=res.records,
-            )
+            # res = agent.solve(
+            #     env=isolated_env,
+            #     task_index=idx,
+            # )
+            # result = EnvRunResult(
+            #     task_id=idx,
+            #     reward=res.reward,
+            #     info=res.info,
+            #     traj=res.messages,
+            #     trial=i,
+            #     records=res.records,
+            # )
             try:
                 res = agent.solve(
                     env=isolated_env,
@@ -174,6 +174,28 @@ def agent_factory(
         from tau_bench.agents.tool_calling_with_preconditions import ToolCallingAgentWithPreconditions
 
         return ToolCallingAgentWithPreconditions(
+            tools_info=tools_info,
+            wiki=wiki,
+            model=config.model,
+            provider=config.model_provider,
+            temperature=config.temperature,
+        )
+    elif config.agent_strategy == "tool-calling-with-subtasks-check":
+        # tool calling with preconditions
+        from tau_bench.agents.tool_calling_with_subtasks_check import ToolCallingWithSubtasksCheckAgent
+
+        return ToolCallingWithSubtasksCheckAgent(
+            tools_info=tools_info,
+            wiki=wiki,
+            model=config.model,
+            provider=config.model_provider,
+            temperature=config.temperature,
+        )
+    elif config.agent_strategy == "tool-calling-with-subtasks-feedback":
+        # tool calling with preconditions
+        from tau_bench.agents.tool_calling_with_subtasks_feedback import ToolCallingWithSubtasksFeedbackAgent
+
+        return ToolCallingWithSubtasksFeedbackAgent(
             tools_info=tools_info,
             wiki=wiki,
             model=config.model,

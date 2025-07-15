@@ -33,7 +33,7 @@ python run.py --agent-strategy <agent-name> --env retail --model none --model-pr
 
 To run a range of tasks, use the `--start-index` and `--end-index` flags. For example:
  
- ```bash
+```bash
 python run.py --agent-strategy <agent-name> --env retail --model none --model-provider openai --user-model none --user-model-provider openai --user-strategy llm --max-concurrency 10 --start-index 10 --end-index 100
 ```
 
