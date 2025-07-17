@@ -35,7 +35,7 @@ def run(config: RunConfig) -> List[EnvRunResult]:
     assert config.env in ["retail", "airline"], "Only retail and airline envs are supported"
     assert config.model_provider in provider_list, "Invalid model provider"
     assert config.user_model_provider in provider_list, "Invalid user model provider"
-    assert config.agent_strategy in ["tool-calling", "act", "react", "few-shot", "one-shot", "assertions-agent", "orchestrator", "tool-calling-with-preconditions", "tool-calling-with-preconditions-and-python", "tool-calling-with-subtasks-check", "tool-calling-with-subtasks-feedback"], "Invalid agent strategy"
+    assert config.agent_strategy in ["tool-calling", "act", "react", "few-shot", "one-shot", "assertions-agent", "orchestrator", "tool-calling-with-preconditions", "tool-calling-with-preconditions-and-python", "tool-calling-with-subtasks-check", "tool-calling-with-subtasks-feedback", "tool-calling-with-dynamic-subtasks"], "Invalid agent strategy"
     assert config.task_split in ["train", "test", "dev"], "Invalid task split"
     assert config.user_strategy in [item.value for item in UserStrategy], "Invalid user strategy"
 
@@ -196,6 +196,17 @@ def agent_factory(
         from tau_bench.agents.tool_calling_with_subtasks_feedback import ToolCallingWithSubtasksFeedbackAgent
 
         return ToolCallingWithSubtasksFeedbackAgent(
+            tools_info=tools_info,
+            wiki=wiki,
+            model=config.model,
+            provider=config.model_provider,
+            temperature=config.temperature,
+        )
+    elif config.agent_strategy == "tool-calling-with-dynamic-subtasks":
+        # tool calling with preconditions
+        from tau_bench.agents.tool_calling_with_dynamic_subtasks import ToolCallingWithDynamicSubtasks
+
+        return ToolCallingWithDynamicSubtasks(
             tools_info=tools_info,
             wiki=wiki,
             model=config.model,
