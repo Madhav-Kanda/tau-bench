@@ -1,10 +1,12 @@
 # Copyright Sierra
 
 from termcolor import colored
+import asyncio
 import random
 from hashlib import sha256
 from tau_bench.envs.tool import Tool
 from typing import Any, Callable, Dict, List, Type, Optional, Set, Union, Tuple
+from fastmcp import Client
 
 from tau_bench.envs.user import load_user, UserStrategy
 from tau_bench.types import (
@@ -88,6 +90,14 @@ class Env(object):
             observation=initial_observation, info=EnvInfo(task=self.task, source="user")
         )
 
+    async def tool_call(self, function, function_args):
+        mcp_server = "mcp/retail_server.py"
+        mcp_client = Client(mcp_server)
+        async with mcp_client:
+            func_response = await mcp_client.call_tool(function, function_args)
+            res = func_response.content[0].text
+        return res
+
     def step(self, action: Action) -> EnvResponse:
         self.actions.append(action)
 
@@ -100,9 +110,12 @@ class Env(object):
             done = "###STOP###" in observation
         elif action.name in self.tools_map:
             try:
-                observation = self.tools_map[action.name].invoke(
-                    data=self.data, **action.kwargs
-                )
+                # observation = self.tools_map[action.name].invoke(
+                #     data=self.data, **action.kwargs
+                # )
+                args = action.kwargs.copy()
+                args["data"] = self.data
+                observation = asyncio.run(self.tool_call(action.name, args))
             except Exception as e:
                 observation = f"Error: {e}"
             info.source = action.name
