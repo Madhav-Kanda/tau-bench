@@ -1,0 +1,332 @@
+[
+  {
+    "task_id": 70,
+    "reward": 0.0,
+    "info": {
+      "error": "(invalid_function_parameters) Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.\nCode: invalid_function_parameters\nMessage: Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.",
+      "traceback": "Traceback (most recent call last):\n  File \"C:\\Users\\t-avalsingh\\tau-bench\\tau_bench\\run.py\", line 118, in _run\n    res = agent.solve(\n        env=isolated_env,\n        task_index=idx,\n    )\n  File \"C:\\Users\\t-avalsingh\\tau-bench\\tau_bench\\agents\\tool_calling_agent.py\", line 44, in solve\n    res = completion(\n        messages=messages,\n    ...<3 lines>...\n        temperature=self.temperature,\n    )\n  File \"C:\\Users\\t-avalsingh\\tau-bench\\tau_bench\\trapi_infer.py\", line 106, in completion\n    res = client.complete(*args, **filtered_kwargs)\n  File \"C:\\Users\\t-avalsingh\\AppData\\Local\\miniconda3\\Lib\\site-packages\\azure\\ai\\inference\\_patch.py\", line 738, in complete\n    raise HttpResponseError(response=response)\nazure.core.exceptions.HttpResponseError: (invalid_function_parameters) Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.\nCode: invalid_function_parameters\nMessage: Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.\n"
+    },
+    "traj": [],
+    "trial": 70,
+    "records": {}
+  },
+  {
+    "task_id": 71,
+    "reward": 0.0,
+    "info": {
+      "error": "(invalid_function_parameters) Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.\nCode: invalid_function_parameters\nMessage: Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.",
+      "traceback": "Traceback (most recent call last):\n  File \"C:\\Users\\t-avalsingh\\tau-bench\\tau_bench\\run.py\", line 118, in _run\n    res = agent.solve(\n        env=isolated_env,\n        task_index=idx,\n    )\n  File \"C:\\Users\\t-avalsingh\\tau-bench\\tau_bench\\agents\\tool_calling_agent.py\", line 44, in solve\n    res = completion(\n        messages=messages,\n    ...<3 lines>...\n        temperature=self.temperature,\n    )\n  File \"C:\\Users\\t-avalsingh\\tau-bench\\tau_bench\\trapi_infer.py\", line 106, in completion\n    res = client.complete(*args, **filtered_kwargs)\n  File \"C:\\Users\\t-avalsingh\\AppData\\Local\\miniconda3\\Lib\\site-packages\\azure\\ai\\inference\\_patch.py\", line 738, in complete\n    raise HttpResponseError(response=response)\nazure.core.exceptions.HttpResponseError: (invalid_function_parameters) Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.\nCode: invalid_function_parameters\nMessage: Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.\n"
+    },
+    "traj": [],
+    "trial": 71,
+    "records": {}
+  },
+  {
+    "task_id": 72,
+    "reward": 0.0,
+    "info": {
+      "error": "(invalid_function_parameters) Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.\nCode: invalid_function_parameters\nMessage: Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.",
+      "traceback": "Traceback (most recent call last):\n  File \"C:\\Users\\t-avalsingh\\tau-bench\\tau_bench\\run.py\", line 118, in _run\n    res = agent.solve(\n        env=isolated_env,\n        task_index=idx,\n    )\n  File \"C:\\Users\\t-avalsingh\\tau-bench\\tau_bench\\agents\\tool_calling_agent.py\", line 44, in solve\n    res = completion(\n        messages=messages,\n    ...<3 lines>...\n        temperature=self.temperature,\n    )\n  File \"C:\\Users\\t-avalsingh\\tau-bench\\tau_bench\\trapi_infer.py\", line 106, in completion\n    res = client.complete(*args, **filtered_kwargs)\n  File \"C:\\Users\\t-avalsingh\\AppData\\Local\\miniconda3\\Lib\\site-packages\\azure\\ai\\inference\\_patch.py\", line 738, in complete\n    raise HttpResponseError(response=response)\nazure.core.exceptions.HttpResponseError: (invalid_function_parameters) Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.\nCode: invalid_function_parameters\nMessage: Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.\n"
+    },
+    "traj": [],
+    "trial": 72,
+    "records": {}
+  },
+  {
+    "task_id": 73,
+    "reward": 0.0,
+    "info": {
+      "error": "(invalid_function_parameters) Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.\nCode: invalid_function_parameters\nMessage: Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.",
+      "traceback": "Traceback (most recent call last):\n  File \"C:\\Users\\t-avalsingh\\tau-bench\\tau_bench\\run.py\", line 118, in _run\n    res = agent.solve(\n        env=isolated_env,\n        task_index=idx,\n    )\n  File \"C:\\Users\\t-avalsingh\\tau-bench\\tau_bench\\agents\\tool_calling_agent.py\", line 44, in solve\n    res = completion(\n        messages=messages,\n    ...<3 lines>...\n        temperature=self.temperature,\n    )\n  File \"C:\\Users\\t-avalsingh\\tau-bench\\tau_bench\\trapi_infer.py\", line 106, in completion\n    res = client.complete(*args, **filtered_kwargs)\n  File \"C:\\Users\\t-avalsingh\\AppData\\Local\\miniconda3\\Lib\\site-packages\\azure\\ai\\inference\\_patch.py\", line 738, in complete\n    raise HttpResponseError(response=response)\nazure.core.exceptions.HttpResponseError: (invalid_function_parameters) Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.\nCode: invalid_function_parameters\nMessage: Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.\n"
+    },
+    "traj": [],
+    "trial": 73,
+    "records": {}
+  },
+  {
+    "task_id": 74,
+    "reward": 0.0,
+    "info": {
+      "error": "(invalid_function_parameters) Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.\nCode: invalid_function_parameters\nMessage: Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.",
+      "traceback": "Traceback (most recent call last):\n  File \"C:\\Users\\t-avalsingh\\tau-bench\\tau_bench\\run.py\", line 118, in _run\n    res = agent.solve(\n        env=isolated_env,\n        task_index=idx,\n    )\n  File \"C:\\Users\\t-avalsingh\\tau-bench\\tau_bench\\agents\\tool_calling_agent.py\", line 44, in solve\n    res = completion(\n        messages=messages,\n    ...<3 lines>...\n        temperature=self.temperature,\n    )\n  File \"C:\\Users\\t-avalsingh\\tau-bench\\tau_bench\\trapi_infer.py\", line 106, in completion\n    res = client.complete(*args, **filtered_kwargs)\n  File \"C:\\Users\\t-avalsingh\\AppData\\Local\\miniconda3\\Lib\\site-packages\\azure\\ai\\inference\\_patch.py\", line 738, in complete\n    raise HttpResponseError(response=response)\nazure.core.exceptions.HttpResponseError: (invalid_function_parameters) Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.\nCode: invalid_function_parameters\nMessage: Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.\n"
+    },
+    "traj": [],
+    "trial": 74,
+    "records": {}
+  },
+  {
+    "task_id": 75,
+    "reward": 0.0,
+    "info": {
+      "error": "(invalid_function_parameters) Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.\nCode: invalid_function_parameters\nMessage: Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.",
+      "traceback": "Traceback (most recent call last):\n  File \"C:\\Users\\t-avalsingh\\tau-bench\\tau_bench\\run.py\", line 118, in _run\n    res = agent.solve(\n        env=isolated_env,\n        task_index=idx,\n    )\n  File \"C:\\Users\\t-avalsingh\\tau-bench\\tau_bench\\agents\\tool_calling_agent.py\", line 44, in solve\n    res = completion(\n        messages=messages,\n    ...<3 lines>...\n        temperature=self.temperature,\n    )\n  File \"C:\\Users\\t-avalsingh\\tau-bench\\tau_bench\\trapi_infer.py\", line 106, in completion\n    res = client.complete(*args, **filtered_kwargs)\n  File \"C:\\Users\\t-avalsingh\\AppData\\Local\\miniconda3\\Lib\\site-packages\\azure\\ai\\inference\\_patch.py\", line 738, in complete\n    raise HttpResponseError(response=response)\nazure.core.exceptions.HttpResponseError: (invalid_function_parameters) Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.\nCode: invalid_function_parameters\nMessage: Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.\n"
+    },
+    "traj": [],
+    "trial": 75,
+    "records": {}
+  },
+  {
+    "task_id": 76,
+    "reward": 0.0,
+    "info": {
+      "error": "(invalid_function_parameters) Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.\nCode: invalid_function_parameters\nMessage: Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.",
+      "traceback": "Traceback (most recent call last):\n  File \"C:\\Users\\t-avalsingh\\tau-bench\\tau_bench\\run.py\", line 118, in _run\n    res = agent.solve(\n        env=isolated_env,\n        task_index=idx,\n    )\n  File \"C:\\Users\\t-avalsingh\\tau-bench\\tau_bench\\agents\\tool_calling_agent.py\", line 44, in solve\n    res = completion(\n        messages=messages,\n    ...<3 lines>...\n        temperature=self.temperature,\n    )\n  File \"C:\\Users\\t-avalsingh\\tau-bench\\tau_bench\\trapi_infer.py\", line 106, in completion\n    res = client.complete(*args, **filtered_kwargs)\n  File \"C:\\Users\\t-avalsingh\\AppData\\Local\\miniconda3\\Lib\\site-packages\\azure\\ai\\inference\\_patch.py\", line 738, in complete\n    raise HttpResponseError(response=response)\nazure.core.exceptions.HttpResponseError: (invalid_function_parameters) Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.\nCode: invalid_function_parameters\nMessage: Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.\n"
+    },
+    "traj": [],
+    "trial": 76,
+    "records": {}
+  },
+  {
+    "task_id": 77,
+    "reward": 0.0,
+    "info": {
+      "error": "(invalid_function_parameters) Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.\nCode: invalid_function_parameters\nMessage: Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.",
+      "traceback": "Traceback (most recent call last):\n  File \"C:\\Users\\t-avalsingh\\tau-bench\\tau_bench\\run.py\", line 118, in _run\n    res = agent.solve(\n        env=isolated_env,\n        task_index=idx,\n    )\n  File \"C:\\Users\\t-avalsingh\\tau-bench\\tau_bench\\agents\\tool_calling_agent.py\", line 44, in solve\n    res = completion(\n        messages=messages,\n    ...<3 lines>...\n        temperature=self.temperature,\n    )\n  File \"C:\\Users\\t-avalsingh\\tau-bench\\tau_bench\\trapi_infer.py\", line 106, in completion\n    res = client.complete(*args, **filtered_kwargs)\n  File \"C:\\Users\\t-avalsingh\\AppData\\Local\\miniconda3\\Lib\\site-packages\\azure\\ai\\inference\\_patch.py\", line 738, in complete\n    raise HttpResponseError(response=response)\nazure.core.exceptions.HttpResponseError: (invalid_function_parameters) Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.\nCode: invalid_function_parameters\nMessage: Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.\n"
+    },
+    "traj": [],
+    "trial": 77,
+    "records": {}
+  },
+  {
+    "task_id": 78,
+    "reward": 0.0,
+    "info": {
+      "error": "(invalid_function_parameters) Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.\nCode: invalid_function_parameters\nMessage: Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.",
+      "traceback": "Traceback (most recent call last):\n  File \"C:\\Users\\t-avalsingh\\tau-bench\\tau_bench\\run.py\", line 118, in _run\n    res = agent.solve(\n        env=isolated_env,\n        task_index=idx,\n    )\n  File \"C:\\Users\\t-avalsingh\\tau-bench\\tau_bench\\agents\\tool_calling_agent.py\", line 44, in solve\n    res = completion(\n        messages=messages,\n    ...<3 lines>...\n        temperature=self.temperature,\n    )\n  File \"C:\\Users\\t-avalsingh\\tau-bench\\tau_bench\\trapi_infer.py\", line 106, in completion\n    res = client.complete(*args, **filtered_kwargs)\n  File \"C:\\Users\\t-avalsingh\\AppData\\Local\\miniconda3\\Lib\\site-packages\\azure\\ai\\inference\\_patch.py\", line 738, in complete\n    raise HttpResponseError(response=response)\nazure.core.exceptions.HttpResponseError: (invalid_function_parameters) Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.\nCode: invalid_function_parameters\nMessage: Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.\n"
+    },
+    "traj": [],
+    "trial": 78,
+    "records": {}
+  },
+  {
+    "task_id": 79,
+    "reward": 0.0,
+    "info": {
+      "error": "(invalid_function_parameters) Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.\nCode: invalid_function_parameters\nMessage: Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.",
+      "traceback": "Traceback (most recent call last):\n  File \"C:\\Users\\t-avalsingh\\tau-bench\\tau_bench\\run.py\", line 118, in _run\n    res = agent.solve(\n        env=isolated_env,\n        task_index=idx,\n    )\n  File \"C:\\Users\\t-avalsingh\\tau-bench\\tau_bench\\agents\\tool_calling_agent.py\", line 44, in solve\n    res = completion(\n        messages=messages,\n    ...<3 lines>...\n        temperature=self.temperature,\n    )\n  File \"C:\\Users\\t-avalsingh\\tau-bench\\tau_bench\\trapi_infer.py\", line 106, in completion\n    res = client.complete(*args, **filtered_kwargs)\n  File \"C:\\Users\\t-avalsingh\\AppData\\Local\\miniconda3\\Lib\\site-packages\\azure\\ai\\inference\\_patch.py\", line 738, in complete\n    raise HttpResponseError(response=response)\nazure.core.exceptions.HttpResponseError: (invalid_function_parameters) Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.\nCode: invalid_function_parameters\nMessage: Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.\n"
+    },
+    "traj": [],
+    "trial": 79,
+    "records": {}
+  },
+  {
+    "task_id": 80,
+    "reward": 0.0,
+    "info": {
+      "error": "(invalid_function_parameters) Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.\nCode: invalid_function_parameters\nMessage: Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.",
+      "traceback": "Traceback (most recent call last):\n  File \"C:\\Users\\t-avalsingh\\tau-bench\\tau_bench\\run.py\", line 118, in _run\n    res = agent.solve(\n        env=isolated_env,\n        task_index=idx,\n    )\n  File \"C:\\Users\\t-avalsingh\\tau-bench\\tau_bench\\agents\\tool_calling_agent.py\", line 44, in solve\n    res = completion(\n        messages=messages,\n    ...<3 lines>...\n        temperature=self.temperature,\n    )\n  File \"C:\\Users\\t-avalsingh\\tau-bench\\tau_bench\\trapi_infer.py\", line 106, in completion\n    res = client.complete(*args, **filtered_kwargs)\n  File \"C:\\Users\\t-avalsingh\\AppData\\Local\\miniconda3\\Lib\\site-packages\\azure\\ai\\inference\\_patch.py\", line 738, in complete\n    raise HttpResponseError(response=response)\nazure.core.exceptions.HttpResponseError: (invalid_function_parameters) Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.\nCode: invalid_function_parameters\nMessage: Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.\n"
+    },
+    "traj": [],
+    "trial": 80,
+    "records": {}
+  },
+  {
+    "task_id": 81,
+    "reward": 0.0,
+    "info": {
+      "error": "(invalid_function_parameters) Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.\nCode: invalid_function_parameters\nMessage: Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.",
+      "traceback": "Traceback (most recent call last):\n  File \"C:\\Users\\t-avalsingh\\tau-bench\\tau_bench\\run.py\", line 118, in _run\n    res = agent.solve(\n        env=isolated_env,\n        task_index=idx,\n    )\n  File \"C:\\Users\\t-avalsingh\\tau-bench\\tau_bench\\agents\\tool_calling_agent.py\", line 44, in solve\n    res = completion(\n        messages=messages,\n    ...<3 lines>...\n        temperature=self.temperature,\n    )\n  File \"C:\\Users\\t-avalsingh\\tau-bench\\tau_bench\\trapi_infer.py\", line 106, in completion\n    res = client.complete(*args, **filtered_kwargs)\n  File \"C:\\Users\\t-avalsingh\\AppData\\Local\\miniconda3\\Lib\\site-packages\\azure\\ai\\inference\\_patch.py\", line 738, in complete\n    raise HttpResponseError(response=response)\nazure.core.exceptions.HttpResponseError: (invalid_function_parameters) Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.\nCode: invalid_function_parameters\nMessage: Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.\n"
+    },
+    "traj": [],
+    "trial": 81,
+    "records": {}
+  },
+  {
+    "task_id": 82,
+    "reward": 0.0,
+    "info": {
+      "error": "(invalid_function_parameters) Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.\nCode: invalid_function_parameters\nMessage: Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.",
+      "traceback": "Traceback (most recent call last):\n  File \"C:\\Users\\t-avalsingh\\tau-bench\\tau_bench\\run.py\", line 118, in _run\n    res = agent.solve(\n        env=isolated_env,\n        task_index=idx,\n    )\n  File \"C:\\Users\\t-avalsingh\\tau-bench\\tau_bench\\agents\\tool_calling_agent.py\", line 44, in solve\n    res = completion(\n        messages=messages,\n    ...<3 lines>...\n        temperature=self.temperature,\n    )\n  File \"C:\\Users\\t-avalsingh\\tau-bench\\tau_bench\\trapi_infer.py\", line 106, in completion\n    res = client.complete(*args, **filtered_kwargs)\n  File \"C:\\Users\\t-avalsingh\\AppData\\Local\\miniconda3\\Lib\\site-packages\\azure\\ai\\inference\\_patch.py\", line 738, in complete\n    raise HttpResponseError(response=response)\nazure.core.exceptions.HttpResponseError: (invalid_function_parameters) Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.\nCode: invalid_function_parameters\nMessage: Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.\n"
+    },
+    "traj": [],
+    "trial": 82,
+    "records": {}
+  },
+  {
+    "task_id": 83,
+    "reward": 0.0,
+    "info": {
+      "error": "(invalid_function_parameters) Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.\nCode: invalid_function_parameters\nMessage: Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.",
+      "traceback": "Traceback (most recent call last):\n  File \"C:\\Users\\t-avalsingh\\tau-bench\\tau_bench\\run.py\", line 118, in _run\n    res = agent.solve(\n        env=isolated_env,\n        task_index=idx,\n    )\n  File \"C:\\Users\\t-avalsingh\\tau-bench\\tau_bench\\agents\\tool_calling_agent.py\", line 44, in solve\n    res = completion(\n        messages=messages,\n    ...<3 lines>...\n        temperature=self.temperature,\n    )\n  File \"C:\\Users\\t-avalsingh\\tau-bench\\tau_bench\\trapi_infer.py\", line 106, in completion\n    res = client.complete(*args, **filtered_kwargs)\n  File \"C:\\Users\\t-avalsingh\\AppData\\Local\\miniconda3\\Lib\\site-packages\\azure\\ai\\inference\\_patch.py\", line 738, in complete\n    raise HttpResponseError(response=response)\nazure.core.exceptions.HttpResponseError: (invalid_function_parameters) Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.\nCode: invalid_function_parameters\nMessage: Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.\n"
+    },
+    "traj": [],
+    "trial": 83,
+    "records": {}
+  },
+  {
+    "task_id": 84,
+    "reward": 0.0,
+    "info": {
+      "error": "(invalid_function_parameters) Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.\nCode: invalid_function_parameters\nMessage: Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.",
+      "traceback": "Traceback (most recent call last):\n  File \"C:\\Users\\t-avalsingh\\tau-bench\\tau_bench\\run.py\", line 118, in _run\n    res = agent.solve(\n        env=isolated_env,\n        task_index=idx,\n    )\n  File \"C:\\Users\\t-avalsingh\\tau-bench\\tau_bench\\agents\\tool_calling_agent.py\", line 44, in solve\n    res = completion(\n        messages=messages,\n    ...<3 lines>...\n        temperature=self.temperature,\n    )\n  File \"C:\\Users\\t-avalsingh\\tau-bench\\tau_bench\\trapi_infer.py\", line 106, in completion\n    res = client.complete(*args, **filtered_kwargs)\n  File \"C:\\Users\\t-avalsingh\\AppData\\Local\\miniconda3\\Lib\\site-packages\\azure\\ai\\inference\\_patch.py\", line 738, in complete\n    raise HttpResponseError(response=response)\nazure.core.exceptions.HttpResponseError: (invalid_function_parameters) Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.\nCode: invalid_function_parameters\nMessage: Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.\n"
+    },
+    "traj": [],
+    "trial": 84,
+    "records": {}
+  },
+  {
+    "task_id": 85,
+    "reward": 0.0,
+    "info": {
+      "error": "(invalid_function_parameters) Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.\nCode: invalid_function_parameters\nMessage: Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.",
+      "traceback": "Traceback (most recent call last):\n  File \"C:\\Users\\t-avalsingh\\tau-bench\\tau_bench\\run.py\", line 118, in _run\n    res = agent.solve(\n        env=isolated_env,\n        task_index=idx,\n    )\n  File \"C:\\Users\\t-avalsingh\\tau-bench\\tau_bench\\agents\\tool_calling_agent.py\", line 44, in solve\n    res = completion(\n        messages=messages,\n    ...<3 lines>...\n        temperature=self.temperature,\n    )\n  File \"C:\\Users\\t-avalsingh\\tau-bench\\tau_bench\\trapi_infer.py\", line 106, in completion\n    res = client.complete(*args, **filtered_kwargs)\n  File \"C:\\Users\\t-avalsingh\\AppData\\Local\\miniconda3\\Lib\\site-packages\\azure\\ai\\inference\\_patch.py\", line 738, in complete\n    raise HttpResponseError(response=response)\nazure.core.exceptions.HttpResponseError: (invalid_function_parameters) Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.\nCode: invalid_function_parameters\nMessage: Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.\n"
+    },
+    "traj": [],
+    "trial": 85,
+    "records": {}
+  },
+  {
+    "task_id": 86,
+    "reward": 0.0,
+    "info": {
+      "error": "(invalid_function_parameters) Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.\nCode: invalid_function_parameters\nMessage: Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.",
+      "traceback": "Traceback (most recent call last):\n  File \"C:\\Users\\t-avalsingh\\tau-bench\\tau_bench\\run.py\", line 118, in _run\n    res = agent.solve(\n        env=isolated_env,\n        task_index=idx,\n    )\n  File \"C:\\Users\\t-avalsingh\\tau-bench\\tau_bench\\agents\\tool_calling_agent.py\", line 44, in solve\n    res = completion(\n        messages=messages,\n    ...<3 lines>...\n        temperature=self.temperature,\n    )\n  File \"C:\\Users\\t-avalsingh\\tau-bench\\tau_bench\\trapi_infer.py\", line 106, in completion\n    res = client.complete(*args, **filtered_kwargs)\n  File \"C:\\Users\\t-avalsingh\\AppData\\Local\\miniconda3\\Lib\\site-packages\\azure\\ai\\inference\\_patch.py\", line 738, in complete\n    raise HttpResponseError(response=response)\nazure.core.exceptions.HttpResponseError: (invalid_function_parameters) Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.\nCode: invalid_function_parameters\nMessage: Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.\n"
+    },
+    "traj": [],
+    "trial": 86,
+    "records": {}
+  },
+  {
+    "task_id": 87,
+    "reward": 0.0,
+    "info": {
+      "error": "(invalid_function_parameters) Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.\nCode: invalid_function_parameters\nMessage: Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.",
+      "traceback": "Traceback (most recent call last):\n  File \"C:\\Users\\t-avalsingh\\tau-bench\\tau_bench\\run.py\", line 118, in _run\n    res = agent.solve(\n        env=isolated_env,\n        task_index=idx,\n    )\n  File \"C:\\Users\\t-avalsingh\\tau-bench\\tau_bench\\agents\\tool_calling_agent.py\", line 44, in solve\n    res = completion(\n        messages=messages,\n    ...<3 lines>...\n        temperature=self.temperature,\n    )\n  File \"C:\\Users\\t-avalsingh\\tau-bench\\tau_bench\\trapi_infer.py\", line 106, in completion\n    res = client.complete(*args, **filtered_kwargs)\n  File \"C:\\Users\\t-avalsingh\\AppData\\Local\\miniconda3\\Lib\\site-packages\\azure\\ai\\inference\\_patch.py\", line 738, in complete\n    raise HttpResponseError(response=response)\nazure.core.exceptions.HttpResponseError: (invalid_function_parameters) Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.\nCode: invalid_function_parameters\nMessage: Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.\n"
+    },
+    "traj": [],
+    "trial": 87,
+    "records": {}
+  },
+  {
+    "task_id": 88,
+    "reward": 0.0,
+    "info": {
+      "error": "(invalid_function_parameters) Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.\nCode: invalid_function_parameters\nMessage: Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.",
+      "traceback": "Traceback (most recent call last):\n  File \"C:\\Users\\t-avalsingh\\tau-bench\\tau_bench\\run.py\", line 118, in _run\n    res = agent.solve(\n        env=isolated_env,\n        task_index=idx,\n    )\n  File \"C:\\Users\\t-avalsingh\\tau-bench\\tau_bench\\agents\\tool_calling_agent.py\", line 44, in solve\n    res = completion(\n        messages=messages,\n    ...<3 lines>...\n        temperature=self.temperature,\n    )\n  File \"C:\\Users\\t-avalsingh\\tau-bench\\tau_bench\\trapi_infer.py\", line 106, in completion\n    res = client.complete(*args, **filtered_kwargs)\n  File \"C:\\Users\\t-avalsingh\\AppData\\Local\\miniconda3\\Lib\\site-packages\\azure\\ai\\inference\\_patch.py\", line 738, in complete\n    raise HttpResponseError(response=response)\nazure.core.exceptions.HttpResponseError: (invalid_function_parameters) Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.\nCode: invalid_function_parameters\nMessage: Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.\n"
+    },
+    "traj": [],
+    "trial": 88,
+    "records": {}
+  },
+  {
+    "task_id": 89,
+    "reward": 0.0,
+    "info": {
+      "error": "(invalid_function_parameters) Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.\nCode: invalid_function_parameters\nMessage: Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.",
+      "traceback": "Traceback (most recent call last):\n  File \"C:\\Users\\t-avalsingh\\tau-bench\\tau_bench\\run.py\", line 118, in _run\n    res = agent.solve(\n        env=isolated_env,\n        task_index=idx,\n    )\n  File \"C:\\Users\\t-avalsingh\\tau-bench\\tau_bench\\agents\\tool_calling_agent.py\", line 44, in solve\n    res = completion(\n        messages=messages,\n    ...<3 lines>...\n        temperature=self.temperature,\n    )\n  File \"C:\\Users\\t-avalsingh\\tau-bench\\tau_bench\\trapi_infer.py\", line 106, in completion\n    res = client.complete(*args, **filtered_kwargs)\n  File \"C:\\Users\\t-avalsingh\\AppData\\Local\\miniconda3\\Lib\\site-packages\\azure\\ai\\inference\\_patch.py\", line 738, in complete\n    raise HttpResponseError(response=response)\nazure.core.exceptions.HttpResponseError: (invalid_function_parameters) Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.\nCode: invalid_function_parameters\nMessage: Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.\n"
+    },
+    "traj": [],
+    "trial": 89,
+    "records": {}
+  },
+  {
+    "task_id": 90,
+    "reward": 0.0,
+    "info": {
+      "error": "(invalid_function_parameters) Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.\nCode: invalid_function_parameters\nMessage: Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.",
+      "traceback": "Traceback (most recent call last):\n  File \"C:\\Users\\t-avalsingh\\tau-bench\\tau_bench\\run.py\", line 118, in _run\n    res = agent.solve(\n        env=isolated_env,\n        task_index=idx,\n    )\n  File \"C:\\Users\\t-avalsingh\\tau-bench\\tau_bench\\agents\\tool_calling_agent.py\", line 44, in solve\n    res = completion(\n        messages=messages,\n    ...<3 lines>...\n        temperature=self.temperature,\n    )\n  File \"C:\\Users\\t-avalsingh\\tau-bench\\tau_bench\\trapi_infer.py\", line 106, in completion\n    res = client.complete(*args, **filtered_kwargs)\n  File \"C:\\Users\\t-avalsingh\\AppData\\Local\\miniconda3\\Lib\\site-packages\\azure\\ai\\inference\\_patch.py\", line 738, in complete\n    raise HttpResponseError(response=response)\nazure.core.exceptions.HttpResponseError: (invalid_function_parameters) Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.\nCode: invalid_function_parameters\nMessage: Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.\n"
+    },
+    "traj": [],
+    "trial": 90,
+    "records": {}
+  },
+  {
+    "task_id": 91,
+    "reward": 0.0,
+    "info": {
+      "error": "(invalid_function_parameters) Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.\nCode: invalid_function_parameters\nMessage: Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.",
+      "traceback": "Traceback (most recent call last):\n  File \"C:\\Users\\t-avalsingh\\tau-bench\\tau_bench\\run.py\", line 118, in _run\n    res = agent.solve(\n        env=isolated_env,\n        task_index=idx,\n    )\n  File \"C:\\Users\\t-avalsingh\\tau-bench\\tau_bench\\agents\\tool_calling_agent.py\", line 44, in solve\n    res = completion(\n        messages=messages,\n    ...<3 lines>...\n        temperature=self.temperature,\n    )\n  File \"C:\\Users\\t-avalsingh\\tau-bench\\tau_bench\\trapi_infer.py\", line 106, in completion\n    res = client.complete(*args, **filtered_kwargs)\n  File \"C:\\Users\\t-avalsingh\\AppData\\Local\\miniconda3\\Lib\\site-packages\\azure\\ai\\inference\\_patch.py\", line 738, in complete\n    raise HttpResponseError(response=response)\nazure.core.exceptions.HttpResponseError: (invalid_function_parameters) Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.\nCode: invalid_function_parameters\nMessage: Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.\n"
+    },
+    "traj": [],
+    "trial": 91,
+    "records": {}
+  },
+  {
+    "task_id": 92,
+    "reward": 0.0,
+    "info": {
+      "error": "(invalid_function_parameters) Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.\nCode: invalid_function_parameters\nMessage: Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.",
+      "traceback": "Traceback (most recent call last):\n  File \"C:\\Users\\t-avalsingh\\tau-bench\\tau_bench\\run.py\", line 118, in _run\n    res = agent.solve(\n        env=isolated_env,\n        task_index=idx,\n    )\n  File \"C:\\Users\\t-avalsingh\\tau-bench\\tau_bench\\agents\\tool_calling_agent.py\", line 44, in solve\n    res = completion(\n        messages=messages,\n    ...<3 lines>...\n        temperature=self.temperature,\n    )\n  File \"C:\\Users\\t-avalsingh\\tau-bench\\tau_bench\\trapi_infer.py\", line 106, in completion\n    res = client.complete(*args, **filtered_kwargs)\n  File \"C:\\Users\\t-avalsingh\\AppData\\Local\\miniconda3\\Lib\\site-packages\\azure\\ai\\inference\\_patch.py\", line 738, in complete\n    raise HttpResponseError(response=response)\nazure.core.exceptions.HttpResponseError: (invalid_function_parameters) Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.\nCode: invalid_function_parameters\nMessage: Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.\n"
+    },
+    "traj": [],
+    "trial": 92,
+    "records": {}
+  },
+  {
+    "task_id": 93,
+    "reward": 0.0,
+    "info": {
+      "error": "(invalid_function_parameters) Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.\nCode: invalid_function_parameters\nMessage: Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.",
+      "traceback": "Traceback (most recent call last):\n  File \"C:\\Users\\t-avalsingh\\tau-bench\\tau_bench\\run.py\", line 118, in _run\n    res = agent.solve(\n        env=isolated_env,\n        task_index=idx,\n    )\n  File \"C:\\Users\\t-avalsingh\\tau-bench\\tau_bench\\agents\\tool_calling_agent.py\", line 44, in solve\n    res = completion(\n        messages=messages,\n    ...<3 lines>...\n        temperature=self.temperature,\n    )\n  File \"C:\\Users\\t-avalsingh\\tau-bench\\tau_bench\\trapi_infer.py\", line 106, in completion\n    res = client.complete(*args, **filtered_kwargs)\n  File \"C:\\Users\\t-avalsingh\\AppData\\Local\\miniconda3\\Lib\\site-packages\\azure\\ai\\inference\\_patch.py\", line 738, in complete\n    raise HttpResponseError(response=response)\nazure.core.exceptions.HttpResponseError: (invalid_function_parameters) Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.\nCode: invalid_function_parameters\nMessage: Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.\n"
+    },
+    "traj": [],
+    "trial": 93,
+    "records": {}
+  },
+  {
+    "task_id": 94,
+    "reward": 0.0,
+    "info": {
+      "error": "(invalid_function_parameters) Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.\nCode: invalid_function_parameters\nMessage: Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.",
+      "traceback": "Traceback (most recent call last):\n  File \"C:\\Users\\t-avalsingh\\tau-bench\\tau_bench\\run.py\", line 118, in _run\n    res = agent.solve(\n        env=isolated_env,\n        task_index=idx,\n    )\n  File \"C:\\Users\\t-avalsingh\\tau-bench\\tau_bench\\agents\\tool_calling_agent.py\", line 44, in solve\n    res = completion(\n        messages=messages,\n    ...<3 lines>...\n        temperature=self.temperature,\n    )\n  File \"C:\\Users\\t-avalsingh\\tau-bench\\tau_bench\\trapi_infer.py\", line 106, in completion\n    res = client.complete(*args, **filtered_kwargs)\n  File \"C:\\Users\\t-avalsingh\\AppData\\Local\\miniconda3\\Lib\\site-packages\\azure\\ai\\inference\\_patch.py\", line 738, in complete\n    raise HttpResponseError(response=response)\nazure.core.exceptions.HttpResponseError: (invalid_function_parameters) Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.\nCode: invalid_function_parameters\nMessage: Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.\n"
+    },
+    "traj": [],
+    "trial": 94,
+    "records": {}
+  },
+  {
+    "task_id": 95,
+    "reward": 0.0,
+    "info": {
+      "error": "(invalid_function_parameters) Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.\nCode: invalid_function_parameters\nMessage: Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.",
+      "traceback": "Traceback (most recent call last):\n  File \"C:\\Users\\t-avalsingh\\tau-bench\\tau_bench\\run.py\", line 118, in _run\n    res = agent.solve(\n        env=isolated_env,\n        task_index=idx,\n    )\n  File \"C:\\Users\\t-avalsingh\\tau-bench\\tau_bench\\agents\\tool_calling_agent.py\", line 44, in solve\n    res = completion(\n        messages=messages,\n    ...<3 lines>...\n        temperature=self.temperature,\n    )\n  File \"C:\\Users\\t-avalsingh\\tau-bench\\tau_bench\\trapi_infer.py\", line 106, in completion\n    res = client.complete(*args, **filtered_kwargs)\n  File \"C:\\Users\\t-avalsingh\\AppData\\Local\\miniconda3\\Lib\\site-packages\\azure\\ai\\inference\\_patch.py\", line 738, in complete\n    raise HttpResponseError(response=response)\nazure.core.exceptions.HttpResponseError: (invalid_function_parameters) Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.\nCode: invalid_function_parameters\nMessage: Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.\n"
+    },
+    "traj": [],
+    "trial": 95,
+    "records": {}
+  },
+  {
+    "task_id": 96,
+    "reward": 0.0,
+    "info": {
+      "error": "(invalid_function_parameters) Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.\nCode: invalid_function_parameters\nMessage: Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.",
+      "traceback": "Traceback (most recent call last):\n  File \"C:\\Users\\t-avalsingh\\tau-bench\\tau_bench\\run.py\", line 118, in _run\n    res = agent.solve(\n        env=isolated_env,\n        task_index=idx,\n    )\n  File \"C:\\Users\\t-avalsingh\\tau-bench\\tau_bench\\agents\\tool_calling_agent.py\", line 44, in solve\n    res = completion(\n        messages=messages,\n    ...<3 lines>...\n        temperature=self.temperature,\n    )\n  File \"C:\\Users\\t-avalsingh\\tau-bench\\tau_bench\\trapi_infer.py\", line 106, in completion\n    res = client.complete(*args, **filtered_kwargs)\n  File \"C:\\Users\\t-avalsingh\\AppData\\Local\\miniconda3\\Lib\\site-packages\\azure\\ai\\inference\\_patch.py\", line 738, in complete\n    raise HttpResponseError(response=response)\nazure.core.exceptions.HttpResponseError: (invalid_function_parameters) Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.\nCode: invalid_function_parameters\nMessage: Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.\n"
+    },
+    "traj": [],
+    "trial": 96,
+    "records": {}
+  },
+  {
+    "task_id": 97,
+    "reward": 0.0,
+    "info": {
+      "error": "(invalid_function_parameters) Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.\nCode: invalid_function_parameters\nMessage: Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.",
+      "traceback": "Traceback (most recent call last):\n  File \"C:\\Users\\t-avalsingh\\tau-bench\\tau_bench\\run.py\", line 118, in _run\n    res = agent.solve(\n        env=isolated_env,\n        task_index=idx,\n    )\n  File \"C:\\Users\\t-avalsingh\\tau-bench\\tau_bench\\agents\\tool_calling_agent.py\", line 44, in solve\n    res = completion(\n        messages=messages,\n    ...<3 lines>...\n        temperature=self.temperature,\n    )\n  File \"C:\\Users\\t-avalsingh\\tau-bench\\tau_bench\\trapi_infer.py\", line 106, in completion\n    res = client.complete(*args, **filtered_kwargs)\n  File \"C:\\Users\\t-avalsingh\\AppData\\Local\\miniconda3\\Lib\\site-packages\\azure\\ai\\inference\\_patch.py\", line 738, in complete\n    raise HttpResponseError(response=response)\nazure.core.exceptions.HttpResponseError: (invalid_function_parameters) Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.\nCode: invalid_function_parameters\nMessage: Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.\n"
+    },
+    "traj": [],
+    "trial": 97,
+    "records": {}
+  },
+  {
+    "task_id": 98,
+    "reward": 0.0,
+    "info": {
+      "error": "(invalid_function_parameters) Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.\nCode: invalid_function_parameters\nMessage: Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.",
+      "traceback": "Traceback (most recent call last):\n  File \"C:\\Users\\t-avalsingh\\tau-bench\\tau_bench\\run.py\", line 118, in _run\n    res = agent.solve(\n        env=isolated_env,\n        task_index=idx,\n    )\n  File \"C:\\Users\\t-avalsingh\\tau-bench\\tau_bench\\agents\\tool_calling_agent.py\", line 44, in solve\n    res = completion(\n        messages=messages,\n    ...<3 lines>...\n        temperature=self.temperature,\n    )\n  File \"C:\\Users\\t-avalsingh\\tau-bench\\tau_bench\\trapi_infer.py\", line 106, in completion\n    res = client.complete(*args, **filtered_kwargs)\n  File \"C:\\Users\\t-avalsingh\\AppData\\Local\\miniconda3\\Lib\\site-packages\\azure\\ai\\inference\\_patch.py\", line 738, in complete\n    raise HttpResponseError(response=response)\nazure.core.exceptions.HttpResponseError: (invalid_function_parameters) Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.\nCode: invalid_function_parameters\nMessage: Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.\n"
+    },
+    "traj": [],
+    "trial": 98,
+    "records": {}
+  },
+  {
+    "task_id": 99,
+    "reward": 0.0,
+    "info": {
+      "error": "(invalid_function_parameters) Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.\nCode: invalid_function_parameters\nMessage: Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.",
+      "traceback": "Traceback (most recent call last):\n  File \"C:\\Users\\t-avalsingh\\tau-bench\\tau_bench\\run.py\", line 118, in _run\n    res = agent.solve(\n        env=isolated_env,\n        task_index=idx,\n    )\n  File \"C:\\Users\\t-avalsingh\\tau-bench\\tau_bench\\agents\\tool_calling_agent.py\", line 44, in solve\n    res = completion(\n        messages=messages,\n    ...<3 lines>...\n        temperature=self.temperature,\n    )\n  File \"C:\\Users\\t-avalsingh\\tau-bench\\tau_bench\\trapi_infer.py\", line 106, in completion\n    res = client.complete(*args, **filtered_kwargs)\n  File \"C:\\Users\\t-avalsingh\\AppData\\Local\\miniconda3\\Lib\\site-packages\\azure\\ai\\inference\\_patch.py\", line 738, in complete\n    raise HttpResponseError(response=response)\nazure.core.exceptions.HttpResponseError: (invalid_function_parameters) Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.\nCode: invalid_function_parameters\nMessage: Invalid schema for function 'list_order_items': 'string or integer' is not valid under any of the given schemas.\n"
+    },
+    "traj": [],
+    "trial": 99,
+    "records": {}
+  }
+]

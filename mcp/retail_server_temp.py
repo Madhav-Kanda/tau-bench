@@ -913,5 +913,174 @@ def modify_user_address(user_id: str, address1: str, address2: str, city: str, s
     return json.dumps(user)
 
 
+@mcp.tool()
+def list_user_orders(user_id):
+    '''
+    {
+      "type": "function",
+      "function": {
+        "name": "list_user_orders",
+        "description": "Retrieves and summarizes all orders associated with a specified user. For the given user ID, this function accesses user details to obtain the list of order IDs associated with the user. For each order ID, it gathers order details, including the order's status and its creation date (from order metadata or associated fulfillments if available). Returns a JSON-encoded list of summarized information for each order, enabling a quick overview of all orders belonging to the user.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "user_id": {
+              "type": "string",
+              "description": "The identifier of the user whose orders should be listed."
+            }
+          },
+          "required": ["user_id"]
+        }
+      }
+    }
+    '''
+    import json
+    try:
+        # Try to ensure user_id is a string
+        if not isinstance(user_id, str):
+            user_id = str(user_id)
+    except Exception as e:
+        return json.dumps({"error": f"Could not convert user_id to string: {str(e)}"})
+
+    try:
+        # Get user details (includes a list of order ids)
+        user_details_raw = get_user_details(user_id)
+        if isinstance(user_details_raw, str):
+            try:
+                user_details = json.loads(user_details_raw)
+            except Exception as e:
+                return json.dumps({"error": f"Failed to parse user details JSON: {str(e)}"})
+        elif isinstance(user_details_raw, dict):
+            user_details = user_details_raw
+        else:
+            return json.dumps({"error": "user_details_raw was neither string nor dict"})
+        order_ids = user_details.get('orders', [])
+    except Exception as e:
+        return json.dumps({"error": f"Error retrieving user details: {str(e)}"})
+    order_list = []
+    for oid in order_ids:
+        try:
+            # Convert order id to string in case the LLM passes numbers
+            order_id_str = str(oid)
+            order_details_raw = get_order_details(order_id_str)
+            if isinstance(order_details_raw, str):
+                try:
+                    details = json.loads(order_details_raw)
+                except Exception as e:
+                    order_list.append({"order_id": order_id_str, "error": f"Failed to parse order details JSON: {str(e)}"})
+                    continue
+            elif isinstance(order_details_raw, dict):
+                details = order_details_raw
+            else:
+                order_list.append({"order_id": order_id_str, "error": "order_details_raw was neither string nor dict"})
+                continue
+
+            summary = {
+                'order_id': details.get('order_id', order_id_str),
+                'status': details.get('status', ''),
+            }
+            # Try to extract a date. If not present, skip.
+            if 'created_at' in details:
+                summary['created_at'] = details['created_at']
+            elif 'fulfillments' in details and isinstance(details['fulfillments'], list) and details['fulfillments']:
+                # Look for shipment/tracking creation date if possible
+                fulfillment = details['fulfillments'][0]
+                if isinstance(fulfillment, dict) and 'created_at' in fulfillment:
+                    summary['created_at'] = fulfillment['created_at']
+            order_list.append(summary)
+        except Exception as e:
+            order_list.append({"order_id": oid, "error": f"Failed to retrieve order details: {str(e)}"})
+    try:
+        return json.dumps(order_list)
+    except Exception as e:
+        return json.dumps({"error": f"Failed to serialize order list to JSON: {str(e)}"})
+@mcp.tool()
+def list_order_items(order_id):
+    """
+    {
+      "type": "function",
+      "function": {
+        "name": "list_order_items",
+        "description": "Retrieves a list of all items included in a specific order, using the order's unique identifier. For each item, the function returns detailed information including the item's ID, associated product ID, product name, selected options, and price. This allows for item-level identification and processing within an order, which is useful for targeted return, exchange, or modification operations when only product name or description is supplied instead of an item ID.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "order_id": {
+              "type": "string",
+              "description": "The unique identifier of the order (e.g., '#W2378156')."
+            }
+          },
+          "required": ["order_id"]
+        }
+      }
+    }
+    """
+    import json
+    try:
+        # If input is a JSON string with order_id, parse it
+        if isinstance(order_id, str):
+            if order_id.strip().startswith('{'):
+                try:
+                    order_id_parsed = json.loads(order_id)
+                    if isinstance(order_id_parsed, dict) and 'order_id' in order_id_parsed:
+                        order_id = order_id_parsed['order_id']
+                except Exception:
+                    pass
+        # If input is a dict with order_id, extract
+        if isinstance(order_id, dict) and 'order_id' in order_id:
+            order_id = order_id['order_id']
+        # Try to coerce order_id to string if possible
+        if not isinstance(order_id, str):
+            try:
+                order_id = str(order_id)
+            except Exception as e:
+                return {
+                    "error": f"Could not convert order_id to string. Type received: {type(order_id)}. Error: {str(e)}. Please check logs."
+                }
+        # Validate order_id format - should start with '#'
+        if not order_id.startswith('#'):
+            return {
+                "error": f"Invalid order_id '{order_id}'. This should be a real order (e.g., '#W6247578'), not a product id. Please provide a valid order_id."
+            }
+        order = get_order_details(order_id)
+        # If response is a string (serialized), try to parse as dict
+        if isinstance(order, str):
+            try:
+                order = json.loads(order)
+            except Exception as e:
+                return {
+                    "error": f"Order details response could not be parsed as JSON. Raw value: {order}. Error: {str(e)}. Please check logs."
+                }
+        # Ensure order is dict
+        if not isinstance(order, dict):
+            return {
+                "error": f"Order details is not a dict. Type: {type(order)}. Value: {order}. Please check logs."
+            }
+        items = order.get('items', [])
+        # Try to be robust in case items is not a list
+        if not isinstance(items, list):
+            try:
+                items = json.loads(items)
+            except Exception:
+                items = []
+        result = []
+        for it in items:
+            if not isinstance(it, dict):
+                try:
+                    it = json.loads(it)
+                except Exception:
+                    it = {}
+            result.append({
+                'item_id': it.get('item_id',''),
+                'product_id': it.get('product_id',''),
+                'name': it.get('name',''),
+                'options': it.get('options',{}) if isinstance(it.get('options', {}), dict) else {},
+                'price': it.get('price','')
+            })
+        return {'items': result}
+    except Exception as e:
+        return {
+            "error": f"Unexpected error in list_order_items: {str(e)}. Please check logs."
+        }
 if __name__ == "__main__":
     mcp.run(transport='stdio')

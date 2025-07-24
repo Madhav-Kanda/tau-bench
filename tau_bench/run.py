@@ -35,13 +35,16 @@ def run(config: RunConfig) -> List[EnvRunResult]:
     assert config.env in ["retail", "airline"], "Only retail and airline envs are supported"
     assert config.model_provider in provider_list, "Invalid model provider"
     assert config.user_model_provider in provider_list, "Invalid user model provider"
-    assert config.agent_strategy in ["tool-calling", "act", "react", "few-shot", "one-shot", "assertions-agent", "orchestrator", "tool-calling-with-preconditions", "tool-calling-with-preconditions-and-python", "tool-calling-with-subtasks-check", "tool-calling-with-subtasks-feedback", "tool-calling-with-dynamic-subtasks"], "Invalid agent strategy"
+    assert config.agent_strategy in ["tool-calling", "act", "react", "few-shot", "one-shot", "assertions-agent", "orchestrator", "tool-calling-with-preconditions", "tool-calling-with-preconditions-and-python", "tool-calling-with-subtasks-check", "tool-calling-with-subtasks-feedback", "tool-calling-with-dynamic-subtasks", "tool-calling-with-reference"], "Invalid agent strategy"
     assert config.task_split in ["train", "test", "dev"], "Invalid task split"
     assert config.user_strategy in [item.value for item in UserStrategy], "Invalid user strategy"
 
     random.seed(config.seed)
     time_str = datetime.now().strftime("%m%d%H%M%S")
-    ckpt_path = f"{config.log_dir}/{config.agent_strategy}-{config.model.split('/')[-1]}-{config.temperature}_range_{config.start_index}-{config.end_index}_user-{config.user_model}-{config.user_strategy}_{time_str}.json"
+    if config.ckpt_path == "":  
+        ckpt_path = f"{config.log_dir}/{config.agent_strategy}-{config.model.split('/')[-1]}-{config.temperature}_range_{config.start_index}-{config.end_index}_user-{config.user_model}-{config.user_strategy}_{time_str}.json"
+    else:
+        ckpt_path = config.ckpt_path
     if not os.path.exists(config.log_dir):
         os.makedirs(config.log_dir)
 
@@ -52,6 +55,7 @@ def run(config: RunConfig) -> List[EnvRunResult]:
         user_model=config.user_model,
         user_provider=config.user_model_provider,
         task_split=config.task_split,
+        mcp_server=config.mcp_server
     )
     agent = agent_factory(
         tools_info=env.tools_info,
@@ -85,6 +89,7 @@ def run(config: RunConfig) -> List[EnvRunResult]:
                 task_split=config.task_split,
                 user_provider=config.user_model_provider,
                 task_index=idx,
+                mcp_server=config.mcp_server,
             )
 
             print(f"Running task {idx}")
@@ -101,10 +106,19 @@ def run(config: RunConfig) -> List[EnvRunResult]:
             #     records=res.records,
             # )
             try:
-                res = agent.solve(
-                    env=isolated_env,
-                    task_index=idx,
-                )
+                # print(agent)
+                # print(config.new_func)
+                if config.new_func is not None:
+                    res = agent.solve(
+                        env=isolated_env,
+                        new_func_name=config.new_func,
+                        task_index=idx,
+                    )
+                else:
+                    res = agent.solve(
+                        env=isolated_env,
+                        task_index=idx,
+                    )
                 result = EnvRunResult(
                     task_id=idx,
                     reward=res.reward,
@@ -131,14 +145,17 @@ def run(config: RunConfig) -> List[EnvRunResult]:
             # print(result.records)
             with lock:
                 data = []
-                if os.path.exists(ckpt_path):
+                if os.path.exists(ckpt_path) and os.path.getsize(ckpt_path) > 0:
                     with open(ckpt_path, "r") as f:
-                        data = json.load(f)
+                        try:
+                            data = json.load(f)
+                        except json.JSONDecodeError:
+                            print(f"Warning: Failed to decode JSON from {ckpt_path}. Starting fresh.")
+                            data = []
                 with open(ckpt_path, "w") as f:
                     temp = make_serializable(result.model_dump())
-                    # print(temp)
                     json.dump(data + [temp], f, indent=2)
-            return result
+                return result
 
         # with ThreadPoolExecutor(max_workers=config.max_concurrency) as executor:
         #     res = list(executor.map(_run, idxs))
@@ -174,6 +191,17 @@ def agent_factory(
         from tau_bench.agents.tool_calling_with_preconditions import ToolCallingAgentWithPreconditions
 
         return ToolCallingAgentWithPreconditions(
+            tools_info=tools_info,
+            wiki=wiki,
+            model=config.model,
+            provider=config.model_provider,
+            temperature=config.temperature,
+        )
+    elif config.agent_strategy == "tool-calling-with-reference":
+        # tool calling with reference
+        from tau_bench.agents.tool_calling_with_reference import ToolCallingAgentWithReference
+
+        return ToolCallingAgentWithReference(
             tools_info=tools_info,
             wiki=wiki,
             model=config.model,

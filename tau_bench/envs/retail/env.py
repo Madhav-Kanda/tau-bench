@@ -1,5 +1,6 @@
 # Copyright Sierra
 
+from logging import config
 from tau_bench.envs.base import Env
 from tau_bench.envs.retail.data import load_data
 from tau_bench.envs.retail.rules import RULES
@@ -17,6 +18,7 @@ class MockRetailDomainEnv(Env):
         user_provider: Optional[str] = None,
         task_split: str = "test",
         task_index: Optional[int] = None,
+        mcp_server: str = None,
     ):
         match task_split:
             case "test":
@@ -37,5 +39,6 @@ class MockRetailDomainEnv(Env):
             user_model=user_model,
             user_provider=user_provider,
             task_index=task_index,
+            mcp_server=mcp_server,
         )
         self.terminate_tools = ["transfer_to_human_agents"]

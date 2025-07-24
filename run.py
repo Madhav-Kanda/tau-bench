@@ -14,6 +14,12 @@ def parse_args() -> RunConfig:
         "--env", type=str, choices=["retail", "airline"], default="retail"
     )
     parser.add_argument(
+        "--new-func", type=str, default=None
+    )
+    parser.add_argument(
+        "--mcp-server", type=str, default="mcp/retail_server.py"
+    )
+    parser.add_argument(
         "--model",
         type=str,
         help="The model to use for the agent",
@@ -40,7 +46,7 @@ def parse_args() -> RunConfig:
         "--agent-strategy",
         type=str,
         default="tool-calling",
-        choices=["tool-calling", "act", "react", "few-shot", "one-shot", "assertions-agent", "orchestrator", "tool-calling-with-preconditions", "tool-calling-with-preconditions-and-python", "tool-calling-with-subtasks-check", "tool-calling-with-subtasks-feedback", "tool-calling-with-dynamic-subtasks"],
+        choices=["tool-calling", "act", "react", "few-shot", "one-shot", "assertions-agent", "orchestrator", "tool-calling-with-preconditions", "tool-calling-with-preconditions-and-python", "tool-calling-with-subtasks-check", "tool-calling-with-subtasks-feedback", "tool-calling-with-dynamic-subtasks", 'tool-calling-with-reference'],
     )
     parser.add_argument(
         "--temperature",
@@ -66,6 +72,7 @@ def parse_args() -> RunConfig:
         help="Number of tasks to run in parallel",
     )
     parser.add_argument("--seed", type=int, default=10)
+    parser.add_argument("--ckpt-path", type=str, default="")
     parser.add_argument("--shuffle", type=int, default=0)
     parser.add_argument("--user-strategy", type=str, default="llm", choices=[item.value for item in UserStrategy])
     parser.add_argument("--few-shot-displays-path", type=str, help="Path to a jsonlines file containing few shot displays")
@@ -89,6 +96,9 @@ def parse_args() -> RunConfig:
         shuffle=args.shuffle,
         user_strategy=args.user_strategy,
         few_shot_displays_path=args.few_shot_displays_path,
+        mcp_server=args.mcp_server,
+        ckpt_path=args.ckpt_path,
+        new_func=args.new_func,
     )
 
 

@@ -90,3 +90,6 @@ class RunConfig(BaseModel):
     shuffle: int = 0
     user_strategy: str = "llm"
     few_shot_displays_path: Optional[str] = None
+    mcp_server: str = None
+    ckpt_path: str = ""
+    new_func: Optional[str] = None

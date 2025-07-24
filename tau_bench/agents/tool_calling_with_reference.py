@@ -9,10 +9,16 @@ from tau_bench.agents.base import Agent
 from tau_bench.envs.base import Env
 from tau_bench.types import SolveResult, Action, RESPOND_ACTION_NAME
 from termcolor import colored
-
+import os
 from tau_bench.globals import *
 
-class ToolCallingAgent(Agent):
+def get_old_trajectory(task_id):
+    old_logs_folder = "final_results/tool-calling-none-0.1_range_0-100_user-none-llm_06232025.json"
+    logs = json.load(open(old_logs_folder, 'r'))
+    trajectory = logs[int(task_id)]['traj'][1:]
+    return trajectory
+
+class ToolCallingAgentWithReference(Agent):
     def __init__(
         self,
         tools_info: List[Dict[str, Any]],
@@ -28,17 +34,22 @@ class ToolCallingAgent(Agent):
         self.temperature = temperature
 
     def solve(
-        self, env: Env, task_index: Optional[int] = None, max_num_steps: int = 30
+        self, env: Env, new_func_name, task_index: Optional[int] = None, max_num_steps: int = 30
     ) -> SolveResult:
+        self.old_trajectory = get_old_trajectory(task_index)
         total_cost = 0.0
         env_reset_res = env.reset(task_index=task_index)
         obs = env_reset_res.observation
         info = env_reset_res.info.model_dump()
         reward = 0.0
+        self.new_func_name = new_func_name
+        system_prompt = f'''You are also given the trajectory of the user's interaction with another agent. But now, we have a new function added to the tool set. You need to use this new function to improve the trajectory. Hopefully, this new function can combine several steps in the original trajectory into a single step. So, you should prioritise using this function. The new function is: {new_func_name}. Along with each invocation of this tool, also output the steps in the older trajectory that you combine. The older trajectory is: {self.old_trajectory}'''
+        system_prompt = self.wiki + "\n" + system_prompt
         messages: List[Dict[str, Any]] = [
-            {"role": "system", "content": self.wiki},
+            {"role": "system", "content": system_prompt},
             {"role": "user", "content": obs},
         ]
+        # print(colored(self.tools_info, 'red'))
         for k in range(max_num_steps):
             start_time = time.time()
             res = completion(
@@ -57,7 +68,9 @@ class ToolCallingAgent(Agent):
             action_agent_time.record_time(time.time() - start_time)
             start_time = time.time()
             env_response = env.step(action)
-            # print(env_response)
+            # print("Action\n", action)
+            # print("Env Response\n", env_response)
+            # print()
             env_time.record_time(time.time() - start_time)
             reward = env_response.reward
             info = {**info, **env_response.info.model_dump()}

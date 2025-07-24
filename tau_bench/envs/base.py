@@ -1,12 +1,21 @@
 # Copyright Sierra
 
-from termcolor import colored
 import asyncio
+from logging import config
 import random
+import os
+import json
+import inspect
+import re
+import importlib.util
+import builtins
+
 from hashlib import sha256
 from tau_bench.envs.tool import Tool
 from typing import Any, Callable, Dict, List, Type, Optional, Set, Union, Tuple
 from fastmcp import Client
+from termcolor import colored
+
 
 from tau_bench.envs.user import load_user, UserStrategy
 from tau_bench.types import (
@@ -20,11 +29,63 @@ from tau_bench.types import (
     RewardActionInfo,
     RESPOND_ACTION_NAME,
 )
+from tau_bench.envs.my_data import global_data
 
 ToHashable = Union[
     str, int, float, Dict[str, "ToHashable"], List["ToHashable"], Set["ToHashable"]
 ]
 Hashable = Union[str, int, float, Tuple["Hashable"], Tuple[Tuple[str, "Hashable"]]]
+
+import logging
+
+logging.getLogger("azure").setLevel(logging.WARNING)
+logging.getLogger("azure.core.pipeline.policies.http_logging_policy").setLevel(logging.WARNING)
+
+
+
+
+def load_module_from_file(filepath):
+    """Dynamically load a module from a file path."""
+    module_name = os.path.splitext(os.path.basename(filepath))[0]
+    spec = importlib.util.spec_from_file_location(module_name, filepath)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+def extract_registered_tools(filepath):
+    module = load_module_from_file(filepath)
+    mcp_instance = getattr(module, "mcp", None)
+    if mcp_instance is None:
+        raise RuntimeError("No FastMCP instance found in the file.")
+    
+    # Await the coroutine synchronously
+    tool_names = asyncio.run(mcp_instance.list_tools())
+
+    tools_descriptions = []
+    for tool in tool_names:  # 'tool_names' is a list of Tool objects
+        tool_name = getattr(tool, "name", None)
+        if tool_name is None:
+            continue
+        func = getattr(module, tool_name, None)
+        if func is None:
+            continue
+        doc = inspect.getdoc(func)
+        if not doc:
+            continue
+        def clean_trailing_commas(s):
+            # Remove trailing commas before } or ]
+            s = re.sub(r',(\s*[}\]])', r'\1', s)
+            return s
+
+        doc_cleaned = clean_trailing_commas(doc)
+
+        try:
+            description_json = json.loads(doc_cleaned)
+            tools_descriptions.append(description_json)
+        except json.JSONDecodeError as e:
+            print(f"JSON decode error: {e}")
+    return tools_descriptions
+
 
 
 def to_hashable(item: ToHashable) -> Hashable:
@@ -56,14 +117,20 @@ class Env(object):
         user_model: str,
         user_provider: Optional[str] = None,
         task_index: Optional[int] = None,
+        mcp_server = None,
     ) -> None:
         super().__init__()
+        self.mcp_server = os.path.normpath(mcp_server)
         self.data_load_func = data_load_func
         self.data = data_load_func()
-        self.tools_map: Dict[str, Type[Tool]] = {
-            tool.get_info()["function"]["name"]: tool for tool in tools
-        }
-        self.tools_info = [tool.get_info() for tool in tools]
+        with open("data.json", "w") as f:
+            json.dump(self.data, f, indent=2)
+        # self.tools_map: Dict[str, Type[Tool]] = {
+        #     tool.get_info()["function"]["name"]: tool for tool in tools
+        # }
+        # self.tools_info = [tool.get_info() for tool in tools]
+        self.tools_info = extract_registered_tools(self.mcp_server)
+        self.new_tools_list = [tool['function']['name'] for tool in self.tools_info]
         self.terminate_tools = []
         self.tasks = tasks
         if task_index is not None:
@@ -91,8 +158,7 @@ class Env(object):
         )
 
     async def tool_call(self, function, function_args):
-        mcp_server = "mcp/retail_server.py"
-        mcp_client = Client(mcp_server)
+        mcp_client = Client(self.mcp_server)
         async with mcp_client:
             func_response = await mcp_client.call_tool(function, function_args)
             res = func_response.content[0].text
@@ -108,7 +174,12 @@ class Env(object):
             observation = self.user.step(action.kwargs["content"])
             info.source = "user"
             done = "###STOP###" in observation
-        elif action.name in self.tools_map:
+        # elif action.name in self.tools_map:
+        elif action.name in self.new_tools_list:
+            # args = action.kwargs.copy()
+            # observation = asyncio.run(self.tool_call(action.name, args))
+            # print(observation)
+            # dmb
             try:
                 # observation = self.tools_map[action.name].invoke(
                 #     data=self.data, **action.kwargs
