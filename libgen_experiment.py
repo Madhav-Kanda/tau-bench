@@ -129,10 +129,10 @@ def validation_phase(task_ids, mcp_server, new_funcs, output_folder):
     num_calls = {func: 0 for func in new_funcs}
     for res in results:
         for func in new_funcs:
-            if res.func_called[func]:
+            if res['func_called'][func]:
                 func_called[func] = True
-                num_calls[func] += res.num_calls[func]
-                if res.error_in_func[func]:
+                num_calls[func] += res['num_calls'][func]
+                if res['error_in_func'][func]:
                     error_in_func[func] = True
 
     res_new_funcs = []
@@ -157,7 +157,7 @@ def test_phase(task_ids, mcp_server, new_funcs, output_folder):
 
 def main2():
     original_logs = "final_results/tool-calling-none-0.1_range_0-100_user-none-llm_06232025.json"
-    lib_gen_experiment_output_folder = "libgen_experiment_output_trial_3"
+    lib_gen_experiment_output_folder = "libgen_experiment_output_trial_4"
     original_mcp_server = os.path.normpath('mcp/retail_server.py')
     mcp_server_before_generation = os.path.normpath('mcp/retail_server_initial.py')
     open(mcp_server_before_generation, 'w').close()
@@ -196,7 +196,7 @@ def main2():
             print("Running validation phase")
             validation_output_folder = os.path.join(output_folder, "validation")
             os.makedirs(validation_output_folder, exist_ok=True)
-            filtered_funcs = validation_phase(validation_ids, mcp_server_before_generation, new_funcs, validation_output_folder)
+            filtered_funcs = validation_phase(validation_ids, mcp_server_after_generation, new_funcs, validation_output_folder)
             if len(filtered_funcs) == 0:
                 continue
 

@@ -26509,12 +26509,12 @@
         {
           "name": "Water Bottle",
           "product_id": "8310926033",
-          "item_id": "3453331371",
-          "price": 52.79,
+          "item_id": "2439754078",
+          "price": 49.51,
           "options": {
-            "capacity": "500ml",
+            "capacity": "1000ml",
             "material": "stainless steel",
-            "color": "black"
+            "color": "red"
           }
         },
         {
@@ -26531,11 +26531,16 @@
         }
       ],
       "fulfillments": [],
-      "status": "pending",
+      "status": "pending (item modified)",
       "payment_history": [
         {
           "transaction_type": "payment",
           "amount": 2550.63,
+          "payment_method_id": "credit_card_7239357"
+        },
+        {
+          "transaction_type": "refund",
+          "amount": 3.280000000000001,
           "payment_method_id": "credit_card_7239357"
         }
       ]
@@ -40485,12 +40490,12 @@
         {
           "name": "Water Bottle",
           "product_id": "8310926033",
-          "item_id": "1434748144",
-          "price": 49.72,
+          "item_id": "7661609223",
+          "price": 46.51,
           "options": {
             "capacity": "1000ml",
-            "material": "glass",
-            "color": "red"
+            "material": "stainless steel",
+            "color": "black"
           }
         },
         {
@@ -40528,11 +40533,16 @@
         }
       ],
       "fulfillments": [],
-      "status": "pending",
+      "status": "pending (item modified)",
       "payment_history": [
         {
           "transaction_type": "payment",
           "amount": 3930.54,
+          "payment_method_id": "credit_card_7239357"
+        },
+        {
+          "transaction_type": "refund",
+          "amount": 3.210000000000001,
           "payment_method_id": "credit_card_7239357"
         }
       ]
