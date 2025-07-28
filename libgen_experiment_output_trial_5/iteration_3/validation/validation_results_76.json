@@ -1,0 +1,174 @@
+[
+  {
+    "task_id": 76,
+    "reward": 0.0,
+    "info": {
+      "task": {
+        "user_id": "ava_nguyen_6646",
+        "actions": [
+          {
+            "name": "cancel_pending_order",
+            "kwargs": {
+              "order_id": "#W8367380",
+              "reason": "ordered by mistake"
+            }
+          },
+          {
+            "name": "cancel_pending_order",
+            "kwargs": {
+              "order_id": "#W1242543",
+              "reason": "no longer needed"
+            }
+          }
+        ],
+        "instruction": "You name is Ava Nguyen and your zip code is 94128. You are polite, optimistic, busy. You ordered a fleece jacket by mistake and want to remove it from your pending order. If removing one item is not possible, cancel the whole order. You also want to modify the skateboard to maple material, 34 inch, graphic. If not availabe, cancel the order so that you can order again. You also want to know the total prices for the grills you have paid for.",
+        "outputs": [
+          "1939.05"
+        ]
+      },
+      "source": "user",
+      "user_cost": 1209,
+      "reward_info": {
+        "reward": 0.0,
+        "info": {
+          "r_outputs": 0.0,
+          "outputs": {
+            "1939.05": false
+          }
+        },
+        "actions": [
+          {
+            "name": "cancel_pending_order",
+            "kwargs": {
+              "order_id": "#W8367380",
+              "reason": "ordered by mistake"
+            }
+          },
+          {
+            "name": "cancel_pending_order",
+            "kwargs": {
+              "order_id": "#W1242543",
+              "reason": "no longer needed"
+            }
+          }
+        ]
+      }
+    },
+    "traj": [
+      {
+        "role": "system",
+        "content": "# Retail agent policy\n\nAs a retail agent, you can help users cancel or modify pending orders, return or exchange delivered orders, modify their default user address, or provide information about their own profile, orders, and related products.\n\n- At the beginning of the conversation, you have to authenticate the user identity by locating their user id via email, or via name + zip code. This has to be done even when the user already provides the user id.\n\n- Once the user has been authenticated, you can provide the user with information about order, product, profile information, e.g. help the user look up order id.\n\n- You can only help one user per conversation (but you can handle multiple requests from the same user), and must deny any requests for tasks related to any other user.\n\n- Before taking consequential actions that update the database (cancel, modify, return, exchange), you have to list the action detail and obtain explicit user confirmation (yes) to proceed.\n\n- You should not make up any information or knowledge or procedures not provided from the user or the tools, or give subjective recommendations or comments.\n\n- You should at most make one tool call at a time, and if you take a tool call, you should not respond to the user at the same time. If you respond to the user, you should not make a tool call.\n\n- You should transfer the user to a human agent if and only if the request cannot be handled within the scope of your actions.\n\n## Domain basic\n\n- All times in the database are EST and 24 hour based. For example \"02:30:00\" means 2:30 AM EST.\n\n- Each user has a profile of its email, default address, user id, and payment methods. Each payment method is either a gift card, a paypal account, or a credit card.\n\n- Our retail store has 50 types of products. For each type of product, there are variant items of different options. For example, for a 't shirt' product, there could be an item with option 'color blue size M', and another item with option 'color red size L'.\n\n- Each product has an unique product id, and each item has an unique item id. They have no relations and should not be confused.\n\n- Each order can be in status 'pending', 'processed', 'delivered', or 'cancelled'. Generally, you can only take action on pending or delivered orders.\n\n- Exchange or modify order tools can only be called once. Be sure that all items to be changed are collected into a list before making the tool call!!!\n\n## Cancel pending order\n\n- An order can only be cancelled if its status is 'pending', and you should check its status before taking the action.\n\n- The user needs to confirm the order id and the reason (either 'no longer needed' or 'ordered by mistake') for cancellation.\n\n- After user confirmation, the order status will be changed to 'cancelled', and the total will be refunded via the original payment method immediately if it is gift card, otherwise in 5 to 7 business days.\n\n## Modify pending order\n\n- An order can only be modified if its status is 'pending', and you should check its status before taking the action.\n\n- For a pending order, you can take actions to modify its shipping address, payment method, or product item options, but nothing else.\n\n### Modify payment\n\n- The user can only choose a single payment method different from the original payment method.\n\n- If the user wants the modify the payment method to gift card, it must have enough balance to cover the total amount.\n\n- After user confirmation, the order status will be kept 'pending'. The original payment method will be refunded immediately if it is a gift card, otherwise in 5 to 7 business days.\n\n### Modify items\n\n- This action can only be called once, and will change the order status to 'pending (items modifed)', and the agent will not be able to modify or cancel the order anymore. So confirm all the details are right and be cautious before taking this action. In particular, remember to remind the customer to confirm they have provided all items to be modified.\n\n- For a pending order, each item can be modified to an available new item of the same product but of different product option. There cannot be any change of product types, e.g. modify shirt to shoe.\n\n- The user must provide a payment method to pay or receive refund of the price difference. If the user provides a gift card, it must have enough balance to cover the price difference.\n\n## Return delivered order\n\n- An order can only be returned if its status is 'delivered', and you should check its status before taking the action.\n\n- The user needs to confirm the order id, the list of items to be returned, and a payment method to receive the refund.\n\n- The refund must either go to the original payment method, or an existing gift card.\n\n- After user confirmation, the order status will be changed to 'return requested', and the user will receive an email regarding how to return items.\n\n## Exchange delivered order\n\n- An order can only be exchanged if its status is 'delivered', and you should check its status before taking the action. In particular, remember to remind the customer to confirm they have provided all items to be exchanged.\n\n- For a delivered order, each item can be exchanged to an available new item of the same product but of different product option. There cannot be any change of product types, e.g. modify shirt to shoe.\n\n- The user must provide a payment method to pay or receive refund of the price difference. If the user provides a gift card, it must have enough balance to cover the price difference.\n\n- After user confirmation, the order status will be changed to 'exchange requested', and the user will receive an email regarding how to return items. There is no need to place a new order.\n"
+      },
+      {
+        "role": "user",
+        "content": "Hi! I actually need to remove a fleece jacket from my pending order, since I ordered it by mistake. Can you help me with that?"
+      },
+      {
+        "role": "assistant",
+        "content": "I\u2019d be happy to help you with that! To get started, I need to authenticate your identity. Could you please provide the email address associated with your account? If you don\u2019t remember your email, let me know and I can use your name and zip code instead.",
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "user",
+        "content": "Sure! You can use my name, Ava Nguyen, and my zip code, 94128."
+      },
+      {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_xjJEDV6d8RX02vRZkshyCHJJ",
+            "type": "function",
+            "function": {
+              "name": "find_user_id_by_name_zip",
+              "arguments": "{\"first_name\":\"Ava\",\"last_name\":\"Nguyen\",\"zip\":\"94128\"}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_xjJEDV6d8RX02vRZkshyCHJJ",
+        "name": "find_user_id_by_name_zip",
+        "content": "ava_nguyen_6646"
+      },
+      {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_6LvQ5eLYeSgfWZgqbwsuENNx",
+            "type": "function",
+            "function": {
+              "name": "list_user_orders_and_statuses",
+              "arguments": "{\"user_id\":\"ava_nguyen_6646\"}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_6LvQ5eLYeSgfWZgqbwsuENNx",
+        "name": "list_user_orders_and_statuses",
+        "content": "["
+      },
+      {
+        "role": "assistant",
+        "content": "It appears that there are no orders currently associated with your account under the name Ava Nguyen and zip code 94128. Could you please confirm if you have used a different name, zip code, or email for your order? If you remember the email address or any other details, please provide them so I can assist you further.",
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "user",
+        "content": "Oh, I always use Ava Nguyen and 94128. I don\u2019t remember using a different name or zip code, and I can\u2019t recall which email I used for this order. Is there another way to look up my pending order?"
+      },
+      {
+        "role": "assistant",
+        "content": "Currently, I can only look up your orders by verifying your identity through your email or by your name and zip code. Since you confirmed your name is Ava Nguyen and your zip code is 94128, but there are no orders found, it\u2019s possible that the order was placed under a different account or with a different combination of details.\n\nIf you have any order confirmation email, it might contain your order ID or the email address used. Could you check your email inbox for any order confirmation from our store and provide either the order ID or the email address it was sent to? This will help me locate your pending order and assist you with removing the fleece jacket.",
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "user",
+        "content": "I\u2019m actually at work right now and can\u2019t access my email easily. Is there a way to check using my phone number or any other detail?"
+      },
+      {
+        "role": "assistant",
+        "content": "I\u2019m sorry, but at this time, I can only look up your account and orders using your email address or your name and zip code. Phone number lookup is not supported.\n\nIf you\u2019re able to access your email later, you can provide the email address or order confirmation details, and I\u2019ll be able to assist you right away. If you have any other details related to your order (such as an order ID or the exact name and address used), please let me know. Otherwise, I recommend checking your email when you have a chance for the fastest resolution.\n\nIf you need further assistance or want to be transferred to a human agent, let me know!",
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "user",
+        "content": "Thanks for explaining! I\u2019ll check my email and get back to you about the fleece jacket.\n\nMeanwhile, can you help me modify the skateboard in my order? I\u2019d like to change it to maple material, 34 inch, with a graphic design if possible."
+      },
+      {
+        "role": "assistant",
+        "content": "I\u2019d be happy to help you modify the skateboard in your order! However, I still need to locate your order in our system to proceed. Since I couldn\u2019t find any orders under your name and zip code, and you don\u2019t have access to your email right now, I\u2019m unable to view your order details or make modifications at this moment.\n\nOnce you\u2019re able to provide your email address or an order confirmation (with order ID or the email used), I\u2019ll be able to assist you with modifying the skateboard and removing the fleece jacket from your order.\n\nPlease let me know if you have any other questions or if you\u2019d like to be transferred to a human agent for further assistance.",
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "user",
+        "content": "Okay, I understand. I\u2019ll try to find my order info as soon as I can. \n\nBefore I go, could you tell me the total prices for grills I\u2019ve already paid for?"
+      },
+      {
+        "role": "assistant",
+        "content": "At this time, I\u2019m unable to locate any orders under your name and zip code, so I cannot access information about any grills you may have purchased or their total prices.\n\nOnce you\u2019re able to provide your email address or order confirmation details, I\u2019ll be able to look up your account and provide you with the total prices for any grills you\u2019ve already paid for.\n\nIf you have any other questions or need assistance in the future, feel free to reach out!",
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "user",
+        "content": "Alright, thank you for letting me know. I\u2019ll reach out again when I have my order details handy. Have a great day! \n\n###STOP###"
+      }
+    ],
+    "trial": 76,
+    "records": {}
+  }
+]

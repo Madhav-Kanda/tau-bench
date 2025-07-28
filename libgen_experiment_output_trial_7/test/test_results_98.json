@@ -1,0 +1,390 @@
+[
+  {
+    "task_id": 98,
+    "reward": 1.0,
+    "info": {
+      "task": {
+        "user_id": "yusuf_li_7255",
+        "actions": [
+          {
+            "name": "modify_pending_order_address",
+            "kwargs": {
+              "order_id": "#W6750959",
+              "address1": "476 Maple Drive",
+              "address2": "Suite 432",
+              "city": "New York",
+              "country": "USA",
+              "state": "NY",
+              "zip": "10093"
+            }
+          },
+          {
+            "name": "modify_pending_order_items",
+            "kwargs": {
+              "order_id": "#W6750959",
+              "item_ids": [
+                "3254583681"
+              ],
+              "new_item_ids": [
+                "9440686670"
+              ],
+              "payment_method_id": "paypal_8080730"
+            }
+          }
+        ],
+        "instruction": "You name is Yusuf Li and your zip code is 91148. You are cautious, insecure, organized. You want to change your LA order to your NYC address (you prefer not to reveal it but it is in your other order). You also want to exchange Bluetooth Speaker to be the cheapest green type. Make sure you mention the two requests at the same time to the agent, but mention the exchange first.",
+        "outputs": []
+      },
+      "source": "user",
+      "user_cost": 1210,
+      "reward_info": {
+        "reward": 1.0,
+        "info": {
+          "r_actions": 1.0,
+          "gt_data_hash": "5a4b2cb59f4d12dea7e4adff24a7f8fada510ead49372ea4a729a82bbb5f49b5"
+        },
+        "actions": [
+          {
+            "name": "modify_pending_order_address",
+            "kwargs": {
+              "order_id": "#W6750959",
+              "address1": "476 Maple Drive",
+              "address2": "Suite 432",
+              "city": "New York",
+              "country": "USA",
+              "state": "NY",
+              "zip": "10093"
+            }
+          },
+          {
+            "name": "modify_pending_order_items",
+            "kwargs": {
+              "order_id": "#W6750959",
+              "item_ids": [
+                "3254583681"
+              ],
+              "new_item_ids": [
+                "9440686670"
+              ],
+              "payment_method_id": "paypal_8080730"
+            }
+          }
+        ]
+      }
+    },
+    "traj": [
+      {
+        "role": "system",
+        "content": "# Retail agent policy\n\nAs a retail agent, you can help users cancel or modify pending orders, return or exchange delivered orders, modify their default user address, or provide information about their own profile, orders, and related products.\n\n- At the beginning of the conversation, you have to authenticate the user identity by locating their user id via email, or via name + zip code. This has to be done even when the user already provides the user id.\n\n- Once the user has been authenticated, you can provide the user with information about order, product, profile information, e.g. help the user look up order id.\n\n- You can only help one user per conversation (but you can handle multiple requests from the same user), and must deny any requests for tasks related to any other user.\n\n- Before taking consequential actions that update the database (cancel, modify, return, exchange), you have to list the action detail and obtain explicit user confirmation (yes) to proceed.\n\n- You should not make up any information or knowledge or procedures not provided from the user or the tools, or give subjective recommendations or comments.\n\n- You should at most make one tool call at a time, and if you take a tool call, you should not respond to the user at the same time. If you respond to the user, you should not make a tool call.\n\n- You should transfer the user to a human agent if and only if the request cannot be handled within the scope of your actions.\n\n## Domain basic\n\n- All times in the database are EST and 24 hour based. For example \"02:30:00\" means 2:30 AM EST.\n\n- Each user has a profile of its email, default address, user id, and payment methods. Each payment method is either a gift card, a paypal account, or a credit card.\n\n- Our retail store has 50 types of products. For each type of product, there are variant items of different options. For example, for a 't shirt' product, there could be an item with option 'color blue size M', and another item with option 'color red size L'.\n\n- Each product has an unique product id, and each item has an unique item id. They have no relations and should not be confused.\n\n- Each order can be in status 'pending', 'processed', 'delivered', or 'cancelled'. Generally, you can only take action on pending or delivered orders.\n\n- Exchange or modify order tools can only be called once. Be sure that all items to be changed are collected into a list before making the tool call!!!\n\n## Cancel pending order\n\n- An order can only be cancelled if its status is 'pending', and you should check its status before taking the action.\n\n- The user needs to confirm the order id and the reason (either 'no longer needed' or 'ordered by mistake') for cancellation.\n\n- After user confirmation, the order status will be changed to 'cancelled', and the total will be refunded via the original payment method immediately if it is gift card, otherwise in 5 to 7 business days.\n\n## Modify pending order\n\n- An order can only be modified if its status is 'pending', and you should check its status before taking the action.\n\n- For a pending order, you can take actions to modify its shipping address, payment method, or product item options, but nothing else.\n\n### Modify payment\n\n- The user can only choose a single payment method different from the original payment method.\n\n- If the user wants the modify the payment method to gift card, it must have enough balance to cover the total amount.\n\n- After user confirmation, the order status will be kept 'pending'. The original payment method will be refunded immediately if it is a gift card, otherwise in 5 to 7 business days.\n\n### Modify items\n\n- This action can only be called once, and will change the order status to 'pending (items modifed)', and the agent will not be able to modify or cancel the order anymore. So confirm all the details are right and be cautious before taking this action. In particular, remember to remind the customer to confirm they have provided all items to be modified.\n\n- For a pending order, each item can be modified to an available new item of the same product but of different product option. There cannot be any change of product types, e.g. modify shirt to shoe.\n\n- The user must provide a payment method to pay or receive refund of the price difference. If the user provides a gift card, it must have enough balance to cover the price difference.\n\n## Return delivered order\n\n- An order can only be returned if its status is 'delivered', and you should check its status before taking the action.\n\n- The user needs to confirm the order id, the list of items to be returned, and a payment method to receive the refund.\n\n- The refund must either go to the original payment method, or an existing gift card.\n\n- After user confirmation, the order status will be changed to 'return requested', and the user will receive an email regarding how to return items.\n\n## Exchange delivered order\n\n- An order can only be exchanged if its status is 'delivered', and you should check its status before taking the action. In particular, remember to remind the customer to confirm they have provided all items to be exchanged.\n\n- For a delivered order, each item can be exchanged to an available new item of the same product but of different product option. There cannot be any change of product types, e.g. modify shirt to shoe.\n\n- The user must provide a payment method to pay or receive refund of the price difference. If the user provides a gift card, it must have enough balance to cover the price difference.\n\n- After user confirmation, the order status will be changed to 'exchange requested', and the user will receive an email regarding how to return items. There is no need to place a new order.\n"
+      },
+      {
+        "role": "user",
+        "content": "Hi, I have a couple of requests about my recent order. First, I\u2019d like to exchange the Bluetooth Speaker in my order for the cheapest green option available. Also, I need to update the shipping address from my LA one to my NYC address. Can you help with both?"
+      },
+      {
+        "role": "assistant",
+        "content": "I\u2019d be happy to help with your requests! Before we proceed, I need to authenticate your identity. Could you please provide the email address associated with your account? If you don\u2019t remember your email, I can verify your identity using your first name, last name, and zip code.",
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "user",
+        "content": "Sure, my name is Yusuf Li and my zip code is 91148."
+      },
+      {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_Bedq87NTCHVvcu9CPQYjhSBS",
+            "type": "function",
+            "function": {
+              "name": "find_user_id_by_name_zip",
+              "arguments": "{\"first_name\":\"Yusuf\",\"last_name\":\"Li\",\"zip\":\"91148\"}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_Bedq87NTCHVvcu9CPQYjhSBS",
+        "name": "find_user_id_by_name_zip",
+        "content": "yusuf_li_7255"
+      },
+      {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_HjLZ1mRiK0hQolPjnmM3b2K3",
+            "type": "function",
+            "function": {
+              "name": "get_user_details",
+              "arguments": "{\"user_id\":\"yusuf_li_7255\"}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_HjLZ1mRiK0hQolPjnmM3b2K3",
+        "name": "get_user_details",
+        "content": "{\"name\": {\"first_name\": \"Yusuf\", \"last_name\": \"Li\"}, \"address\": {\"address1\": \"909 Spruce Street\", \"address2\": \"Suite 599\", \"city\": \"Los Angeles\", \"country\": \"USA\", \"state\": \"CA\", \"zip\": \"91148\"}, \"email\": \"yusuf.li3523@example.com\", \"payment_methods\": {\"paypal_8080730\": {\"source\": \"paypal\", \"id\": \"paypal_8080730\"}}, \"orders\": [\"#W6750959\", \"#W3407479\"]}"
+      },
+      {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_beGMIg1tip3WZDpL8xZkv0Md",
+            "type": "function",
+            "function": {
+              "name": "list_user_orders_and_statuses",
+              "arguments": "{\"user_id\": \"yusuf_li_7255\"}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_beGMIg1tip3WZDpL8xZkv0Md",
+        "name": "list_user_orders_and_statuses",
+        "content": "["
+      },
+      {
+        "role": "assistant",
+        "content": "You are authenticated, Yusuf. To assist with your requests, I need a bit more information:\n\n1. Could you confirm which order contains the Bluetooth Speaker you want to exchange? If you\u2019re not sure, I can list your recent orders and their items for you.\n2. Please provide the full details of your NYC address (street, city, state, zip code, etc.) so I can update the shipping address.\n\nOnce I have this information, I\u2019ll guide you through the exchange and address update process.",
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "user",
+        "content": "I honestly don\u2019t remember the order number, so listing my recent orders with their items would be helpful. Regarding the NYC address, I already have an order under that address\u2014can you just use the same shipping details from there for this change? I\u2019d rather not retype it."
+      },
+      {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_eUmFtLz3QVPSL2wxis3paefz",
+            "type": "function",
+            "function": {
+              "name": "find_orders_by_user",
+              "arguments": "{\"user_id\": \"yusuf_li_7255\"}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_eUmFtLz3QVPSL2wxis3paefz",
+        "name": "find_orders_by_user",
+        "content": "[{\"order_id\": \"#W6750959\", \"status\": \"pending\", \"items\": [\"Bluetooth Speaker\", \"E-Reader\"]}, {\"order_id\": \"#W3407479\", \"status\": \"processed\", \"items\": [\"E-Reader\", \"Jigsaw Puzzle\", \"Skateboard\", \"Running Shoes\"]}]"
+      },
+      {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_6cZD4J734DFGOqNJWHVckNNL",
+            "type": "function",
+            "function": {
+              "name": "list_order_items",
+              "arguments": "{\"order_id\":\"#W6750959\"}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_6cZD4J734DFGOqNJWHVckNNL",
+        "name": "list_order_items",
+        "content": "{\n  \"name\": \"Bluetooth Speaker\",\n  \"product_id\": \"4768869376\",\n  \"item_id\": \"3254583681\",\n  \"price\": 302.67,\n  \"options\": {\n    \"color\": \"blue\",\n    \"battery life\": \"20 hours\",\n    \"water resistance\": \"yes\"\n  }\n}"
+      },
+      {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_YB0jtSIvZuiEbZ1QvqgKqSCG",
+            "type": "function",
+            "function": {
+              "name": "list_product_variants",
+              "arguments": "{\"product_id\":\"4768869376\"}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_YB0jtSIvZuiEbZ1QvqgKqSCG",
+        "name": "list_product_variants",
+        "content": "{\n  \"item_id\": \"5967152432\",\n  \"options\": {\n    \"color\": \"green\",\n    \"battery life\": \"10 hours\",\n    \"water resistance\": \"yes\"\n  },\n  \"available\": false,\n  \"price\": 292.71\n}"
+      },
+      {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_2f58GfECuX6K6Wc3yqnxuwMF",
+            "type": "function",
+            "function": {
+              "name": "list_order_items",
+              "arguments": "{\"order_id\":\"#W3407479\"}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_2f58GfECuX6K6Wc3yqnxuwMF",
+        "name": "list_order_items",
+        "content": "{\n  \"name\": \"E-Reader\",\n  \"product_id\": \"3801771308\",\n  \"item_id\": \"5510402676\",\n  \"price\": 267.07,\n  \"options\": {\n    \"screen size\": \"6-inch\",\n    \"connectivity\": \"Wi-Fi\",\n    \"storage\": \"8GB\"\n  }\n}"
+      },
+      {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_mydonyV9SNdYp4AZKS04J9kf",
+            "type": "function",
+            "function": {
+              "name": "get_user_details",
+              "arguments": "{\"user_id\":\"yusuf_li_7255\"}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_mydonyV9SNdYp4AZKS04J9kf",
+        "name": "get_user_details",
+        "content": "{\"name\": {\"first_name\": \"Yusuf\", \"last_name\": \"Li\"}, \"address\": {\"address1\": \"909 Spruce Street\", \"address2\": \"Suite 599\", \"city\": \"Los Angeles\", \"country\": \"USA\", \"state\": \"CA\", \"zip\": \"91148\"}, \"email\": \"yusuf.li3523@example.com\", \"payment_methods\": {\"paypal_8080730\": {\"source\": \"paypal\", \"id\": \"paypal_8080730\"}}, \"orders\": [\"#W6750959\", \"#W3407479\"]}"
+      },
+      {
+        "role": "assistant",
+        "content": "Here\u2019s what I found:\n\n- Your recent order #W6750959 (status: pending) contains a Bluetooth Speaker and an E-Reader.\n- Your other order #W3407479 (status: processed) contains an E-Reader, Jigsaw Puzzle, Skateboard, and Running Shoes.\n\nCurrently, your default address is in Los Angeles. However, I do not see a NYC address on file or in your orders. If you have previously used a NYC address, could you clarify which order it was under, or provide any part of that address to help me identify it? Otherwise, I\u2019ll need the full NYC address details to proceed with the update.\n\nFor the Bluetooth Speaker exchange: The only green variant available is currently out of stock. Would you like to choose another color or option, or would you like to wait until the green option is available? Please let me know how you\u2019d like to proceed with both the address and the exchange.",
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "user",
+        "content": "Oh, I was pretty sure my other order was shipped to NYC. Is there any chance you could double-check that, maybe based on the shipping history or archived addresses? I\u2019m hesitant to type out the full address here for privacy reasons.\n\nAs for the speaker, I\u2019d prefer to wait until the cheapest green one is back in stock, if that\u2019s not too much trouble."
+      },
+      {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_Vhu3QMo4o9W694PS88lzp0Kw",
+            "type": "function",
+            "function": {
+              "name": "get_order_fulfillment_status",
+              "arguments": "{\"order_id\":\"#W3407479\"}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_Vhu3QMo4o9W694PS88lzp0Kw",
+        "name": "get_order_fulfillment_status",
+        "content": "{\n  \"status\": \"processed\",\n  \"fulfillments\": [\n    {\n      \"tracking_id\": [\n        \"758121863229\"\n      ],\n      \"item_ids\": [\n        \"5510402676\",\n        \"9370300555\",\n        \"3232433601\",\n        \"9791469541\"\n      ]\n    }\n  ]\n}"
+      },
+      {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_OvUSb0oPFDBiFvqqSJ4gIb1P",
+            "type": "function",
+            "function": {
+              "name": "get_order_details",
+              "arguments": "{\"order_id\":\"#W3407479\"}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_OvUSb0oPFDBiFvqqSJ4gIb1P",
+        "name": "get_order_details",
+        "content": "{\"order_id\": \"#W3407479\", \"user_id\": \"yusuf_li_7255\", \"address\": {\"address1\": \"476 Maple Drive\", \"address2\": \"Suite 432\", \"city\": \"New York\", \"country\": \"USA\", \"state\": \"NY\", \"zip\": \"10093\"}, \"items\": [{\"name\": \"E-Reader\", \"product_id\": \"3801771308\", \"item_id\": \"5510402676\", \"price\": 267.07, \"options\": {\"screen size\": \"6-inch\", \"connectivity\": \"Wi-Fi\", \"storage\": \"8GB\"}}, {\"name\": \"Jigsaw Puzzle\", \"product_id\": \"1808611083\", \"item_id\": \"9370300555\", \"price\": 45.9, \"options\": {\"pieces\": \"1000\", \"theme\": \"art\", \"difficulty level\": \"expert\"}}, {\"name\": \"Skateboard\", \"product_id\": \"1968349452\", \"item_id\": \"3232433601\", \"price\": 204.14, \"options\": {\"deck material\": \"maple\", \"length\": \"28 inch\", \"design\": \"plain\"}}, {\"name\": \"Running Shoes\", \"product_id\": \"6938111410\", \"item_id\": \"9791469541\", \"price\": 147.05, \"options\": {\"size\": \"9\", \"color\": \"yellow\", \"material\": \"synthetic\", \"sole\": \"rubber\"}}], \"fulfillments\": [{\"tracking_id\": [\"758121863229\"], \"item_ids\": [\"5510402676\", \"9370300555\", \"3232433601\", \"9791469541\"]}], \"status\": \"processed\", \"payment_history\": [{\"transaction_type\": \"payment\", \"amount\": 664.16, \"payment_method_id\": \"paypal_8080730\"}]}"
+      },
+      {
+        "role": "assistant",
+        "content": "Thank you for your patience. I\u2019ve confirmed that your previous order (#W3407479) was shipped to your NYC address:\n\n476 Maple Drive, Suite 432, New York, NY 10093, USA\n\nI can update your pending order\u2019s shipping address to this NYC address.\n\nRegarding the Bluetooth Speaker exchange: The cheapest green variant is currently out of stock. I will not proceed with the exchange at this time and will monitor for restock if you wish, or you can check back later.\n\nTo confirm, I am ready to update the shipping address for your pending order (#W6750959) to your NYC address. Would you like me to proceed with this address update now? (Please reply \u201cyes\u201d to confirm.)",
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "user",
+        "content": "Yes, please go ahead and update the shipping address to my NYC address. And thank you for being patient about the speaker exchange\u2014I\u2019ll wait for the green variant to come back in stock."
+      },
+      {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_mJpyw2mFgtCiKF4XuP5SZ8it",
+            "type": "function",
+            "function": {
+              "name": "modify_pending_order_address",
+              "arguments": "{\"order_id\":\"#W6750959\",\"address1\":\"476 Maple Drive\",\"address2\":\"Suite 432\",\"city\":\"New York\",\"state\":\"NY\",\"country\":\"USA\",\"zip\":\"10093\"}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_mJpyw2mFgtCiKF4XuP5SZ8it",
+        "name": "modify_pending_order_address",
+        "content": "{\"order_id\": \"#W6750959\", \"user_id\": \"yusuf_li_7255\", \"address\": {\"address1\": \"476 Maple Drive\", \"address2\": \"Suite 432\", \"city\": \"New York\", \"state\": \"NY\", \"country\": \"USA\", \"zip\": \"10093\"}, \"items\": [{\"name\": \"Bluetooth Speaker\", \"product_id\": \"4768869376\", \"item_id\": \"3254583681\", \"price\": 302.67, \"options\": {\"color\": \"blue\", \"battery life\": \"20 hours\", \"water resistance\": \"yes\"}}, {\"name\": \"E-Reader\", \"product_id\": \"3801771308\", \"item_id\": \"4273929280\", \"price\": 244.95, \"options\": {\"screen size\": \"7-inch\", \"connectivity\": \"Wi-Fi + Cellular\", \"storage\": \"32GB\"}}], \"fulfillments\": [], \"status\": \"pending\", \"payment_history\": [{\"transaction_type\": \"payment\", \"amount\": 547.62, \"payment_method_id\": \"paypal_8080730\"}]}"
+      },
+      {
+        "role": "assistant",
+        "content": "Your pending order (#W6750959) shipping address has been updated to your NYC address:\n\n476 Maple Drive, Suite 432, New York, NY 10093, USA.\n\nNo changes have been made to your Bluetooth Speaker exchange request; you can check back anytime for the green variant\u2019s availability.\n\nIf you need any further assistance or want to monitor the speaker\u2019s stock status, just let me know!",
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "user",
+        "content": "Thank you, that covers everything for now."
+      },
+      {
+        "role": "assistant",
+        "content": "You\u2019re welcome, Yusuf! Your shipping address update is complete, and I\u2019ll hold off on the speaker exchange until you\u2019re ready. If you need any more help in the future, feel free to reach out. Have a great day!",
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "user",
+        "content": "###STOP###"
+      }
+    ],
+    "trial": 98,
+    "records": {}
+  }
+]

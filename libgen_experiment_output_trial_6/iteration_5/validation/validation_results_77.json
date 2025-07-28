@@ -1,0 +1,180 @@
+[
+  {
+    "task_id": 77,
+    "reward": 1.0,
+    "info": {
+      "task": {
+        "user_id": "ivan_johnson_6036",
+        "actions": [
+          {
+            "name": "exchange_delivered_order_items",
+            "kwargs": {
+              "order_id": "#W1671835",
+              "item_ids": [
+                "5081446110"
+              ],
+              "new_item_ids": [
+                "3399869890"
+              ],
+              "payment_method_id": "paypal_6918118"
+            }
+          }
+        ],
+        "instruction": "You name is Ivan Johnson and your zip code is 94183. You ordered a perfume and you just tried a little bit and you like it extremely. You want to get the maximum size available for it. If the agent cannot help with placing a new order, exchange your current one to the largest size available.",
+        "outputs": []
+      },
+      "source": "transfer_to_human_agents",
+      "user_cost": 839,
+      "reward_info": {
+        "reward": 1.0,
+        "info": {
+          "r_actions": 1.0,
+          "gt_data_hash": "5a4b2cb59f4d12dea7e4adff24a7f8fada510ead49372ea4a729a82bbb5f49b5"
+        },
+        "actions": [
+          {
+            "name": "exchange_delivered_order_items",
+            "kwargs": {
+              "order_id": "#W1671835",
+              "item_ids": [
+                "5081446110"
+              ],
+              "new_item_ids": [
+                "3399869890"
+              ],
+              "payment_method_id": "paypal_6918118"
+            }
+          }
+        ]
+      }
+    },
+    "traj": [
+      {
+        "role": "system",
+        "content": "# Retail agent policy\n\nAs a retail agent, you can help users cancel or modify pending orders, return or exchange delivered orders, modify their default user address, or provide information about their own profile, orders, and related products.\n\n- At the beginning of the conversation, you have to authenticate the user identity by locating their user id via email, or via name + zip code. This has to be done even when the user already provides the user id.\n\n- Once the user has been authenticated, you can provide the user with information about order, product, profile information, e.g. help the user look up order id.\n\n- You can only help one user per conversation (but you can handle multiple requests from the same user), and must deny any requests for tasks related to any other user.\n\n- Before taking consequential actions that update the database (cancel, modify, return, exchange), you have to list the action detail and obtain explicit user confirmation (yes) to proceed.\n\n- You should not make up any information or knowledge or procedures not provided from the user or the tools, or give subjective recommendations or comments.\n\n- You should at most make one tool call at a time, and if you take a tool call, you should not respond to the user at the same time. If you respond to the user, you should not make a tool call.\n\n- You should transfer the user to a human agent if and only if the request cannot be handled within the scope of your actions.\n\n## Domain basic\n\n- All times in the database are EST and 24 hour based. For example \"02:30:00\" means 2:30 AM EST.\n\n- Each user has a profile of its email, default address, user id, and payment methods. Each payment method is either a gift card, a paypal account, or a credit card.\n\n- Our retail store has 50 types of products. For each type of product, there are variant items of different options. For example, for a 't shirt' product, there could be an item with option 'color blue size M', and another item with option 'color red size L'.\n\n- Each product has an unique product id, and each item has an unique item id. They have no relations and should not be confused.\n\n- Each order can be in status 'pending', 'processed', 'delivered', or 'cancelled'. Generally, you can only take action on pending or delivered orders.\n\n- Exchange or modify order tools can only be called once. Be sure that all items to be changed are collected into a list before making the tool call!!!\n\n## Cancel pending order\n\n- An order can only be cancelled if its status is 'pending', and you should check its status before taking the action.\n\n- The user needs to confirm the order id and the reason (either 'no longer needed' or 'ordered by mistake') for cancellation.\n\n- After user confirmation, the order status will be changed to 'cancelled', and the total will be refunded via the original payment method immediately if it is gift card, otherwise in 5 to 7 business days.\n\n## Modify pending order\n\n- An order can only be modified if its status is 'pending', and you should check its status before taking the action.\n\n- For a pending order, you can take actions to modify its shipping address, payment method, or product item options, but nothing else.\n\n### Modify payment\n\n- The user can only choose a single payment method different from the original payment method.\n\n- If the user wants the modify the payment method to gift card, it must have enough balance to cover the total amount.\n\n- After user confirmation, the order status will be kept 'pending'. The original payment method will be refunded immediately if it is a gift card, otherwise in 5 to 7 business days.\n\n### Modify items\n\n- This action can only be called once, and will change the order status to 'pending (items modifed)', and the agent will not be able to modify or cancel the order anymore. So confirm all the details are right and be cautious before taking this action. In particular, remember to remind the customer to confirm they have provided all items to be modified.\n\n- For a pending order, each item can be modified to an available new item of the same product but of different product option. There cannot be any change of product types, e.g. modify shirt to shoe.\n\n- The user must provide a payment method to pay or receive refund of the price difference. If the user provides a gift card, it must have enough balance to cover the price difference.\n\n## Return delivered order\n\n- An order can only be returned if its status is 'delivered', and you should check its status before taking the action.\n\n- The user needs to confirm the order id, the list of items to be returned, and a payment method to receive the refund.\n\n- The refund must either go to the original payment method, or an existing gift card.\n\n- After user confirmation, the order status will be changed to 'return requested', and the user will receive an email regarding how to return items.\n\n## Exchange delivered order\n\n- An order can only be exchanged if its status is 'delivered', and you should check its status before taking the action. In particular, remember to remind the customer to confirm they have provided all items to be exchanged.\n\n- For a delivered order, each item can be exchanged to an available new item of the same product but of different product option. There cannot be any change of product types, e.g. modify shirt to shoe.\n\n- The user must provide a payment method to pay or receive refund of the price difference. If the user provides a gift card, it must have enough balance to cover the price difference.\n\n- After user confirmation, the order status will be changed to 'exchange requested', and the user will receive an email regarding how to return items. There is no need to place a new order.\n"
+      },
+      {
+        "role": "user",
+        "content": "Hi! I recently bought a perfume and after trying a bit, I absolutely love it. I'd like to get the maximum size available\u2014what's the best way to do that?"
+      },
+      {
+        "role": "assistant",
+        "content": "I\u2019d be happy to help you with that! First, I need to authenticate your identity for your account. Could you please provide the email address associated with your account? If you don\u2019t remember your email, I can also look you up by your first name, last name, and zip code.",
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "user",
+        "content": "Sure! My name is Ivan Johnson and my zip code is 94183."
+      },
+      {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_qp554U7gGv1cg8kKteBbOW9G",
+            "type": "function",
+            "function": {
+              "name": "find_user_id_by_name_zip",
+              "arguments": "{\"first_name\":\"Ivan\",\"last_name\":\"Johnson\",\"zip\":\"94183\"}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_qp554U7gGv1cg8kKteBbOW9G",
+        "name": "find_user_id_by_name_zip",
+        "content": "ivan_johnson_6036"
+      },
+      {
+        "role": "assistant",
+        "content": "Thank you, Ivan. I\u2019ve found your account. To help you get the maximum size of the perfume you love, could you please tell me the name of the perfume or provide any details from your recent order? This will help me identify the exact product and show you the available size options.",
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "user",
+        "content": "I\u2019m sorry, I don\u2019t have the order details handy right now, but it\u2019s the only perfume I ordered in my last purchase."
+      },
+      {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_PeQQN4gahteVH8tWQTI12ry7",
+            "type": "function",
+            "function": {
+              "name": "list_user_orders_and_statuses",
+              "arguments": "{\"user_id\":\"ivan_johnson_6036\"}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_PeQQN4gahteVH8tWQTI12ry7",
+        "name": "list_user_orders_and_statuses",
+        "content": "["
+      },
+      {
+        "role": "assistant",
+        "content": "It appears there are no recent orders associated with your account, or there may be an issue retrieving your order history. Could you please confirm if you used a different name, zip code, or email for your purchase? If you remember the email used for the order, please provide it so I can assist you further.",
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "user",
+        "content": "I\u2019m sure I used the same name and zip code. I don\u2019t remember which email I used, unfortunately. Is there any other way I can get help with this?"
+      },
+      {
+        "role": "assistant",
+        "content": "Since I\u2019m unable to locate any orders under your name and zip code, and you don\u2019t have access to the email used for the purchase, I\u2019m unable to retrieve your order or product details directly. For privacy and security, I can only assist with orders linked to a verified account.\n\nAt this point, I recommend contacting a human agent who may be able to assist you further by searching with additional information or verifying your identity in other ways.\n\nWould you like me to transfer you to a human agent for further assistance?",
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "user",
+        "content": "If you can\u2019t place a new order, can you help me exchange my current bottle for the largest size instead?"
+      },
+      {
+        "role": "assistant",
+        "content": "I\u2019d be happy to help you exchange your current bottle for the largest size if you have a delivered order with the perfume. However, I still need to locate your order in the system to proceed with an exchange.\n\nSince I couldn\u2019t find any orders under your name and zip code, and you don\u2019t have access to the email used, I\u2019m unable to verify your purchase or process an exchange.\n\nWould you like me to transfer you to a human agent who may be able to assist you further with additional verification methods?",
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "user",
+        "content": "Yes, please transfer me to a human agent who can help with this."
+      },
+      {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_Ojl3SEj4IXzl8U99iJa5NWIc",
+            "type": "function",
+            "function": {
+              "name": "transfer_to_human_agents",
+              "arguments": "{\"summary\":\"User Ivan Johnson (zip 94183) wants to exchange a perfume from his last order for the largest available size, but no orders are found under his name and zip code. User does not remember the email used. Needs further assistance with order lookup and exchange.\"}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_Ojl3SEj4IXzl8U99iJa5NWIc",
+        "name": "transfer_to_human_agents",
+        "content": "Transfer successful"
+      }
+    ],
+    "trial": 77,
+    "records": {}
+  }
+]

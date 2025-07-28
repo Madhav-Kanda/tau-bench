@@ -1,0 +1,354 @@
+[
+  {
+    "task_id": 56,
+    "reward": 1.0,
+    "info": {
+      "task": {
+        "user_id": "ivan_hernandez_6923",
+        "actions": [
+          {
+            "name": "find_user_id_by_name_zip",
+            "kwargs": {
+              "first_name": "Ivan",
+              "last_name": "Hernandez",
+              "zip": "92133"
+            }
+          },
+          {
+            "name": "get_user_details",
+            "kwargs": {
+              "user_id": "ivan_hernandez_6923"
+            }
+          },
+          {
+            "name": "get_order_details",
+            "kwargs": {
+              "order_id": "#W5838674"
+            }
+          },
+          {
+            "name": "get_order_details",
+            "kwargs": {
+              "order_id": "#W4284542"
+            }
+          },
+          {
+            "name": "get_order_details",
+            "kwargs": {
+              "order_id": "#W2782744"
+            }
+          },
+          {
+            "name": "get_product_details",
+            "kwargs": {
+              "product_id": "3821016478"
+            }
+          },
+          {
+            "name": "modify_pending_order_items",
+            "kwargs": {
+              "order_id": "#W4284542",
+              "item_ids": [
+                "8302289002"
+              ],
+              "new_item_ids": [
+                "9534205511"
+              ],
+              "payment_method_id": "gift_card_9368765"
+            }
+          }
+        ],
+        "instruction": "You are ivan_hernandez_6923 living in San Diego, 92133. You wonder when is your air purifier is arriving. If it has not been shipped yet, you want to cancel the air purifier inside it. If you cannot cancel just the air purifier, you want to modify it to the cheapest possible air purifier, and refund to the gift card. You do not remember your gift card id but it should be in your user account. If you cannot modify it or refund to the gift card, no action. You are polite but brief and firm.",
+        "outputs": []
+      },
+      "source": "user",
+      "user_cost": 972,
+      "reward_info": {
+        "reward": 1.0,
+        "info": {
+          "r_actions": 1.0,
+          "gt_data_hash": "5a4b2cb59f4d12dea7e4adff24a7f8fada510ead49372ea4a729a82bbb5f49b5"
+        },
+        "actions": [
+          {
+            "name": "find_user_id_by_name_zip",
+            "kwargs": {
+              "first_name": "Ivan",
+              "last_name": "Hernandez",
+              "zip": "92133"
+            }
+          },
+          {
+            "name": "get_user_details",
+            "kwargs": {
+              "user_id": "ivan_hernandez_6923"
+            }
+          },
+          {
+            "name": "get_order_details",
+            "kwargs": {
+              "order_id": "#W5838674"
+            }
+          },
+          {
+            "name": "get_order_details",
+            "kwargs": {
+              "order_id": "#W4284542"
+            }
+          },
+          {
+            "name": "get_order_details",
+            "kwargs": {
+              "order_id": "#W2782744"
+            }
+          },
+          {
+            "name": "get_product_details",
+            "kwargs": {
+              "product_id": "3821016478"
+            }
+          },
+          {
+            "name": "modify_pending_order_items",
+            "kwargs": {
+              "order_id": "#W4284542",
+              "item_ids": [
+                "8302289002"
+              ],
+              "new_item_ids": [
+                "9534205511"
+              ],
+              "payment_method_id": "gift_card_9368765"
+            }
+          }
+        ]
+      }
+    },
+    "traj": [
+      {
+        "role": "system",
+        "content": "# Retail agent policy\n\nAs a retail agent, you can help users cancel or modify pending orders, return or exchange delivered orders, modify their default user address, or provide information about their own profile, orders, and related products.\n\n- At the beginning of the conversation, you have to authenticate the user identity by locating their user id via email, or via name + zip code. This has to be done even when the user already provides the user id.\n\n- Once the user has been authenticated, you can provide the user with information about order, product, profile information, e.g. help the user look up order id.\n\n- You can only help one user per conversation (but you can handle multiple requests from the same user), and must deny any requests for tasks related to any other user.\n\n- Before taking consequential actions that update the database (cancel, modify, return, exchange), you have to list the action detail and obtain explicit user confirmation (yes) to proceed.\n\n- You should not make up any information or knowledge or procedures not provided from the user or the tools, or give subjective recommendations or comments.\n\n- You should at most make one tool call at a time, and if you take a tool call, you should not respond to the user at the same time. If you respond to the user, you should not make a tool call.\n\n- You should transfer the user to a human agent if and only if the request cannot be handled within the scope of your actions.\n\n## Domain basic\n\n- All times in the database are EST and 24 hour based. For example \"02:30:00\" means 2:30 AM EST.\n\n- Each user has a profile of its email, default address, user id, and payment methods. Each payment method is either a gift card, a paypal account, or a credit card.\n\n- Our retail store has 50 types of products. For each type of product, there are variant items of different options. For example, for a 't shirt' product, there could be an item with option 'color blue size M', and another item with option 'color red size L'.\n\n- Each product has an unique product id, and each item has an unique item id. They have no relations and should not be confused.\n\n- Each order can be in status 'pending', 'processed', 'delivered', or 'cancelled'. Generally, you can only take action on pending or delivered orders.\n\n- Exchange or modify order tools can only be called once. Be sure that all items to be changed are collected into a list before making the tool call!!!\n\n## Cancel pending order\n\n- An order can only be cancelled if its status is 'pending', and you should check its status before taking the action.\n\n- The user needs to confirm the order id and the reason (either 'no longer needed' or 'ordered by mistake') for cancellation.\n\n- After user confirmation, the order status will be changed to 'cancelled', and the total will be refunded via the original payment method immediately if it is gift card, otherwise in 5 to 7 business days.\n\n## Modify pending order\n\n- An order can only be modified if its status is 'pending', and you should check its status before taking the action.\n\n- For a pending order, you can take actions to modify its shipping address, payment method, or product item options, but nothing else.\n\n### Modify payment\n\n- The user can only choose a single payment method different from the original payment method.\n\n- If the user wants the modify the payment method to gift card, it must have enough balance to cover the total amount.\n\n- After user confirmation, the order status will be kept 'pending'. The original payment method will be refunded immediately if it is a gift card, otherwise in 5 to 7 business days.\n\n### Modify items\n\n- This action can only be called once, and will change the order status to 'pending (items modifed)', and the agent will not be able to modify or cancel the order anymore. So confirm all the details are right and be cautious before taking this action. In particular, remember to remind the customer to confirm they have provided all items to be modified.\n\n- For a pending order, each item can be modified to an available new item of the same product but of different product option. There cannot be any change of product types, e.g. modify shirt to shoe.\n\n- The user must provide a payment method to pay or receive refund of the price difference. If the user provides a gift card, it must have enough balance to cover the price difference.\n\n## Return delivered order\n\n- An order can only be returned if its status is 'delivered', and you should check its status before taking the action.\n\n- The user needs to confirm the order id, the list of items to be returned, and a payment method to receive the refund.\n\n- The refund must either go to the original payment method, or an existing gift card.\n\n- After user confirmation, the order status will be changed to 'return requested', and the user will receive an email regarding how to return items.\n\n## Exchange delivered order\n\n- An order can only be exchanged if its status is 'delivered', and you should check its status before taking the action. In particular, remember to remind the customer to confirm they have provided all items to be exchanged.\n\n- For a delivered order, each item can be exchanged to an available new item of the same product but of different product option. There cannot be any change of product types, e.g. modify shirt to shoe.\n\n- The user must provide a payment method to pay or receive refund of the price difference. If the user provides a gift card, it must have enough balance to cover the price difference.\n\n- After user confirmation, the order status will be changed to 'exchange requested', and the user will receive an email regarding how to return items. There is no need to place a new order.\n"
+      },
+      {
+        "role": "user",
+        "content": "Hi, I\u2019d like to know when my air purifier will arrive."
+      },
+      {
+        "role": "assistant",
+        "content": "I can help you with that! To assist you, I need to verify your identity first. Could you please provide the email address associated with your account? If you don\u2019t remember your email, I can also look you up by your first name, last name, and zip code.",
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "user",
+        "content": "My name is Ivan Hernandez, and my zip code is 92133."
+      },
+      {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_bU4dxLGNFXVB9bPpRe7JTvBp",
+            "type": "function",
+            "function": {
+              "name": "find_user_id_by_name_zip",
+              "arguments": "{\"first_name\":\"Ivan\",\"last_name\":\"Hernandez\",\"zip\":\"92133\"}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_bU4dxLGNFXVB9bPpRe7JTvBp",
+        "name": "find_user_id_by_name_zip",
+        "content": "ivan_hernandez_6923"
+      },
+      {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_mavrgfG76bSf7rotxCWRvnMU",
+            "type": "function",
+            "function": {
+              "name": "get_user_details",
+              "arguments": "{\"user_id\":\"ivan_hernandez_6923\"}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_mavrgfG76bSf7rotxCWRvnMU",
+        "name": "get_user_details",
+        "content": "{\"name\": {\"first_name\": \"Ivan\", \"last_name\": \"Hernandez\"}, \"address\": {\"address1\": \"894 Hickory Lane\", \"address2\": \"Suite 665\", \"city\": \"San Diego\", \"country\": \"USA\", \"state\": \"CA\", \"zip\": \"92133\"}, \"email\": \"ivan.hernandez1120@example.com\", \"payment_methods\": {\"gift_card_9368765\": {\"source\": \"gift_card\", \"balance\": 85, \"id\": \"gift_card_9368765\"}, \"credit_card_7455506\": {\"source\": \"credit_card\", \"brand\": \"mastercard\", \"last_four\": \"4127\", \"id\": \"credit_card_7455506\"}}, \"orders\": [\"#W5838674\", \"#W4284542\", \"#W2782744\"]}"
+      },
+      {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_0FfKYxjKbr08t9cXZexTS1nr",
+            "type": "function",
+            "function": {
+              "name": "get_order_details",
+              "arguments": "{\"order_id\": \"#W5838674\"}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_0FfKYxjKbr08t9cXZexTS1nr",
+        "name": "get_order_details",
+        "content": "{\"order_id\": \"#W5838674\", \"user_id\": \"ivan_hernandez_6923\", \"address\": {\"address1\": \"894 Hickory Lane\", \"address2\": \"Suite 665\", \"city\": \"San Diego\", \"country\": \"USA\", \"state\": \"CA\", \"zip\": \"92133\"}, \"items\": [{\"name\": \"Espresso Machine\", \"product_id\": \"4354588079\", \"item_id\": \"7441167885\", \"price\": 2866.37, \"options\": {\"pressure\": \"15 bar\", \"capacity\": \"1.5L\", \"type\": \"capsule\"}}, {\"name\": \"Vacuum Cleaner\", \"product_id\": \"1762337868\", \"item_id\": \"1304426904\", \"price\": 565.79, \"options\": {\"type\": \"canister\", \"bagged/bagless\": \"bagless\", \"features\": \"HEPA filter\"}}, {\"name\": \"Wall Clock\", \"product_id\": \"2344688344\", \"item_id\": \"6534134392\", \"price\": 196.15, \"options\": {\"diameter\": \"10 inches\", \"color\": \"wood\", \"type\": \"analog\"}}, {\"name\": \"Desk Lamp\", \"product_id\": \"6817146515\", \"item_id\": \"7453605304\", \"price\": 150.01, \"options\": {\"color\": \"silver\", \"brightness\": \"low\", \"power source\": \"battery\"}}, {\"name\": \"Laptop\", \"product_id\": \"4760268021\", \"item_id\": \"3478699712\", \"price\": 2291.87, \"options\": {\"screen size\": \"15-inch\", \"processor\": \"i5\", \"ram\": \"16GB\", \"storage\": \"512GB SSD\", \"color\": \"space grey\"}}], \"fulfillments\": [{\"tracking_id\": [\"495912972743\"], \"item_ids\": [\"7441167885\", \"1304426904\", \"6534134392\", \"7453605304\", \"3478699712\"]}], \"status\": \"delivered\", \"payment_history\": [{\"transaction_type\": \"payment\", \"amount\": 6070.19, \"payment_method_id\": \"credit_card_7455506\"}]}"
+      },
+      {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_SWGMUwdE7naPUfZLVJbl0UOJ",
+            "type": "function",
+            "function": {
+              "name": "get_order_details",
+              "arguments": "{\"order_id\":\"#W4284542\"}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_SWGMUwdE7naPUfZLVJbl0UOJ",
+        "name": "get_order_details",
+        "content": "{\"order_id\": \"#W4284542\", \"user_id\": \"ivan_hernandez_6923\", \"address\": {\"address1\": \"659 Broadway\", \"address2\": \"Suite 690\", \"city\": \"Dallas\", \"country\": \"USA\", \"state\": \"TX\", \"zip\": \"75322\"}, \"items\": [{\"name\": \"Bluetooth Speaker\", \"product_id\": \"4768869376\", \"item_id\": \"1689914594\", \"price\": 315.2, \"options\": {\"color\": \"red\", \"battery life\": \"10 hours\", \"water resistance\": \"no\"}}, {\"name\": \"Smartphone\", \"product_id\": \"1801728040\", \"item_id\": \"1507389580\", \"price\": 1157.86, \"options\": {\"color\": \"black\", \"storage\": \"128GB\", \"RAM\": \"8GB\", \"screen size\": \"5.8-inch\"}}, {\"name\": \"Air Purifier\", \"product_id\": \"3821016478\", \"item_id\": \"8302289002\", \"price\": 547.55, \"options\": {\"room size\": \"large\", \"filter type\": \"HEPA\", \"features\": \"night mode\"}}], \"fulfillments\": [], \"status\": \"pending\", \"payment_history\": [{\"transaction_type\": \"payment\", \"amount\": 2020.61, \"payment_method_id\": \"credit_card_7455506\"}]}"
+      },
+      {
+        "role": "assistant",
+        "content": "Thank you for verifying your information.\n\nYour air purifier is part of order #W4284542, which is currently in \"pending\" status. This means it has not shipped yet, so there is no delivery date or tracking information available at this time.\n\nWould you like to modify or cancel this order, or do you want to check on anything else?",
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "user",
+        "content": "Please cancel just the air purifier from that order."
+      },
+      {
+        "role": "assistant",
+        "content": "I\u2019m sorry, but I can only cancel the entire order if it is still pending. Partial cancellations (removing just one item) are not supported. Would you like to cancel the entire order #W4284542, or would you like to proceed differently?",
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "user",
+        "content": "If possible, please change the air purifier in my order to the cheapest air purifier instead, and refund the difference to my gift card. I don\u2019t remember my gift card ID, but it should be in my account."
+      },
+      {
+        "role": "assistant",
+        "content": "Thank you for your request. Here\u2019s what I can do:\n\n- I can modify your pending order #W4284542 to replace your current air purifier with the cheapest available air purifier.\n- The price difference will be refunded to your gift card (I will use the gift card saved in your account).\n\nBefore I proceed, I need to:\n1. Find the cheapest air purifier available.\n2. Confirm that you want to change only the air purifier in your order and keep the other items as they are.\n3. Remind you that after this modification, no further changes or cancellations can be made to this order.\n\nCould you please confirm that you want to proceed with changing only the air purifier to the cheapest available option and refunding the difference to your gift card? If you want to modify any other items, please let me know now.",
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "user",
+        "content": "Yes, please proceed with just changing the air purifier to the cheapest one and refunding the difference to my gift card. Keep everything else the same."
+      },
+      {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_fiwQEvhieg3QnTeDFSZ8fiEL",
+            "type": "function",
+            "function": {
+              "name": "list_product_variants",
+              "arguments": "{\"product_id\":\"3821016478\"}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_fiwQEvhieg3QnTeDFSZ8fiEL",
+        "name": "list_product_variants",
+        "content": "{\n  \"item_id\": \"8302289002\",\n  \"options\": {\n    \"room size\": \"large\",\n    \"filter type\": \"HEPA\",\n    \"features\": \"night mode\"\n  },\n  \"available\": true,\n  \"price\": 547.55\n}"
+      },
+      {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_RzJxjXpW47DEBpu2946JHKks",
+            "type": "function",
+            "function": {
+              "name": "list_all_product_types",
+              "arguments": "{}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_RzJxjXpW47DEBpu2946JHKks",
+        "name": "list_all_product_types",
+        "content": "{\"Action Camera\": \"3377618313\", \"Air Purifier\": \"3821016478\", \"Backpack\": \"2524789262\", \"Bicycle\": \"9783735446\", \"Bluetooth Speaker\": \"4768869376\", \"Bookshelf\": \"8600330539\", \"Coffee Maker\": \"7996920482\", \"Cycling Helmet\": \"7765186836\", \"Desk Lamp\": \"6817146515\", \"Digital Camera\": \"8940227892\", \"Dumbbell Set\": \"7233192239\", \"E-Reader\": \"3801771308\", \"Electric Kettle\": \"1075968781\", \"Electric Toothbrush\": \"7352963235\", \"Espresso Machine\": \"4354588079\", \"Fleece Jacket\": \"8560156827\", \"Gaming Mouse\": \"5713490933\", \"Garden Hose\": \"6679515468\", \"Grill\": \"6819683148\", \"Headphones\": \"6992792935\", \"Hiking Boots\": \"7363354090\", \"Indoor Security Camera\": \"2985987096\", \"Jigsaw Puzzle\": \"1808611083\", \"LED Light Bulb\": \"2696197613\", \"Laptop\": \"4760268021\", \"Luggage Set\": \"5426915165\", \"Makeup Kit\": \"5149340237\", \"Mechanical Keyboard\": \"1656367028\", \"Notebook\": \"2892623495\", \"Office Chair\": \"4794339885\", \"Patio Umbrella\": \"9743693396\", \"Perfume\": \"6858788497\", \"Pet Bed\": \"2747247837\", \"Portable Charger\": \"6942297802\", \"Running Shoes\": \"6938111410\", \"Skateboard\": \"1968349452\", \"Smart Thermostat\": \"4896585277\", \"Smart Watch\": \"6945232052\", \"Smartphone\": \"1801728040\", \"Sneakers\": \"7471004230\", \"Sunglasses\": \"7314138884\", \"T-Shirt\": \"9523456873\", \"Tablet\": \"8024098596\", \"Tea Kettle\": \"9832717871\", \"Vacuum Cleaner\": \"1762337868\", \"Wall Clock\": \"2344688344\", \"Water Bottle\": \"8310926033\", \"Wireless Earbuds\": \"9924732112\", \"Wristwatch\": \"6066914160\", \"Yoga Mat\": \"4635925001\"}"
+      },
+      {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_iBDcQtDiciLgwa5x6IgEjO4P",
+            "type": "function",
+            "function": {
+              "name": "list_product_variants",
+              "arguments": "{\"product_id\":\"3821016478\"}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_iBDcQtDiciLgwa5x6IgEjO4P",
+        "name": "list_product_variants",
+        "content": "{\n  \"item_id\": \"8302289002\",\n  \"options\": {\n    \"room size\": \"large\",\n    \"filter type\": \"HEPA\",\n    \"features\": \"night mode\"\n  },\n  \"available\": true,\n  \"price\": 547.55\n}"
+      },
+      {
+        "role": "assistant",
+        "content": "It appears that there is currently only one air purifier variant available in our inventory, which is the same model already in your order (large room size, HEPA filter, night mode, price $547.55). There are no cheaper air purifier options listed at this time.\n\nWould you like to keep your current air purifier, or would you like to take another action (such as canceling the order or modifying something else)? Please let me know how you\u2019d like to proceed.",
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "user",
+        "content": "I\u2019ll keep the current air purifier in my order. Thank you."
+      },
+      {
+        "role": "assistant",
+        "content": "You\u2019re welcome! Your order will remain unchanged, and the air purifier will stay as originally selected. If you have any other questions or need assistance with your orders or account, feel free to ask.",
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "user",
+        "content": "###STOP###"
+      }
+    ],
+    "trial": 56,
+    "records": {}
+  }
+]

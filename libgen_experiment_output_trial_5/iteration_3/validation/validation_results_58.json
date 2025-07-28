@@ -1,0 +1,398 @@
+[
+  {
+    "task_id": 58,
+    "reward": 1.0,
+    "info": {
+      "task": {
+        "user_id": "ivan_hernandez_6923",
+        "actions": [
+          {
+            "name": "find_user_id_by_name_zip",
+            "kwargs": {
+              "first_name": "Ivan",
+              "last_name": "Hernandez",
+              "zip": "92133"
+            }
+          },
+          {
+            "name": "get_user_details",
+            "kwargs": {
+              "user_id": "ivan_hernandez_6923"
+            }
+          },
+          {
+            "name": "get_order_details",
+            "kwargs": {
+              "order_id": "#W5838674"
+            }
+          },
+          {
+            "name": "get_product_details",
+            "kwargs": {
+              "product_id": "4354588079"
+            }
+          },
+          {
+            "name": "get_product_details",
+            "kwargs": {
+              "product_id": "4760268021"
+            }
+          },
+          {
+            "name": "exchange_delivered_order_items",
+            "kwargs": {
+              "order_id": "#W5838674",
+              "item_ids": [
+                "7441167885",
+                "3478699712"
+              ],
+              "new_item_ids": [
+                "3815173328",
+                "6017636844"
+              ],
+              "payment_method_id": "gift_card_9368765"
+            }
+          }
+        ],
+        "instruction": "You are ivan_hernandez_6923 living in San Diego, 92133. You want to modify two items in an order you just received: a coffee machine and a laptop. For the coffee machine, you want to keep the capacity and type but change the pressure lower to 8 bar. If 8 bar is not possible, you want 9 bar. If 9 bar is not possible, you want 7 bar. If 7, 8, 9 are not possible, no exchange for the coffee machine. For the laptop, you want to exchange to the cheapest i7 or above, and you do not care about other specs. If a price difference is needed to pay, you would be angry but prefer gift card payment. If that is not possible, you would use the credit card. You are polite but brief and firm.",
+        "outputs": []
+      },
+      "source": "user",
+      "user_cost": 1263,
+      "reward_info": {
+        "reward": 1.0,
+        "info": {
+          "r_actions": 1.0,
+          "gt_data_hash": "5a4b2cb59f4d12dea7e4adff24a7f8fada510ead49372ea4a729a82bbb5f49b5"
+        },
+        "actions": [
+          {
+            "name": "find_user_id_by_name_zip",
+            "kwargs": {
+              "first_name": "Ivan",
+              "last_name": "Hernandez",
+              "zip": "92133"
+            }
+          },
+          {
+            "name": "get_user_details",
+            "kwargs": {
+              "user_id": "ivan_hernandez_6923"
+            }
+          },
+          {
+            "name": "get_order_details",
+            "kwargs": {
+              "order_id": "#W5838674"
+            }
+          },
+          {
+            "name": "get_product_details",
+            "kwargs": {
+              "product_id": "4354588079"
+            }
+          },
+          {
+            "name": "get_product_details",
+            "kwargs": {
+              "product_id": "4760268021"
+            }
+          },
+          {
+            "name": "exchange_delivered_order_items",
+            "kwargs": {
+              "order_id": "#W5838674",
+              "item_ids": [
+                "7441167885",
+                "3478699712"
+              ],
+              "new_item_ids": [
+                "3815173328",
+                "6017636844"
+              ],
+              "payment_method_id": "gift_card_9368765"
+            }
+          }
+        ]
+      }
+    },
+    "traj": [
+      {
+        "role": "system",
+        "content": "# Retail agent policy\n\nAs a retail agent, you can help users cancel or modify pending orders, return or exchange delivered orders, modify their default user address, or provide information about their own profile, orders, and related products.\n\n- At the beginning of the conversation, you have to authenticate the user identity by locating their user id via email, or via name + zip code. This has to be done even when the user already provides the user id.\n\n- Once the user has been authenticated, you can provide the user with information about order, product, profile information, e.g. help the user look up order id.\n\n- You can only help one user per conversation (but you can handle multiple requests from the same user), and must deny any requests for tasks related to any other user.\n\n- Before taking consequential actions that update the database (cancel, modify, return, exchange), you have to list the action detail and obtain explicit user confirmation (yes) to proceed.\n\n- You should not make up any information or knowledge or procedures not provided from the user or the tools, or give subjective recommendations or comments.\n\n- You should at most make one tool call at a time, and if you take a tool call, you should not respond to the user at the same time. If you respond to the user, you should not make a tool call.\n\n- You should transfer the user to a human agent if and only if the request cannot be handled within the scope of your actions.\n\n## Domain basic\n\n- All times in the database are EST and 24 hour based. For example \"02:30:00\" means 2:30 AM EST.\n\n- Each user has a profile of its email, default address, user id, and payment methods. Each payment method is either a gift card, a paypal account, or a credit card.\n\n- Our retail store has 50 types of products. For each type of product, there are variant items of different options. For example, for a 't shirt' product, there could be an item with option 'color blue size M', and another item with option 'color red size L'.\n\n- Each product has an unique product id, and each item has an unique item id. They have no relations and should not be confused.\n\n- Each order can be in status 'pending', 'processed', 'delivered', or 'cancelled'. Generally, you can only take action on pending or delivered orders.\n\n- Exchange or modify order tools can only be called once. Be sure that all items to be changed are collected into a list before making the tool call!!!\n\n## Cancel pending order\n\n- An order can only be cancelled if its status is 'pending', and you should check its status before taking the action.\n\n- The user needs to confirm the order id and the reason (either 'no longer needed' or 'ordered by mistake') for cancellation.\n\n- After user confirmation, the order status will be changed to 'cancelled', and the total will be refunded via the original payment method immediately if it is gift card, otherwise in 5 to 7 business days.\n\n## Modify pending order\n\n- An order can only be modified if its status is 'pending', and you should check its status before taking the action.\n\n- For a pending order, you can take actions to modify its shipping address, payment method, or product item options, but nothing else.\n\n### Modify payment\n\n- The user can only choose a single payment method different from the original payment method.\n\n- If the user wants the modify the payment method to gift card, it must have enough balance to cover the total amount.\n\n- After user confirmation, the order status will be kept 'pending'. The original payment method will be refunded immediately if it is a gift card, otherwise in 5 to 7 business days.\n\n### Modify items\n\n- This action can only be called once, and will change the order status to 'pending (items modifed)', and the agent will not be able to modify or cancel the order anymore. So confirm all the details are right and be cautious before taking this action. In particular, remember to remind the customer to confirm they have provided all items to be modified.\n\n- For a pending order, each item can be modified to an available new item of the same product but of different product option. There cannot be any change of product types, e.g. modify shirt to shoe.\n\n- The user must provide a payment method to pay or receive refund of the price difference. If the user provides a gift card, it must have enough balance to cover the price difference.\n\n## Return delivered order\n\n- An order can only be returned if its status is 'delivered', and you should check its status before taking the action.\n\n- The user needs to confirm the order id, the list of items to be returned, and a payment method to receive the refund.\n\n- The refund must either go to the original payment method, or an existing gift card.\n\n- After user confirmation, the order status will be changed to 'return requested', and the user will receive an email regarding how to return items.\n\n## Exchange delivered order\n\n- An order can only be exchanged if its status is 'delivered', and you should check its status before taking the action. In particular, remember to remind the customer to confirm they have provided all items to be exchanged.\n\n- For a delivered order, each item can be exchanged to an available new item of the same product but of different product option. There cannot be any change of product types, e.g. modify shirt to shoe.\n\n- The user must provide a payment method to pay or receive refund of the price difference. If the user provides a gift card, it must have enough balance to cover the price difference.\n\n- After user confirmation, the order status will be changed to 'exchange requested', and the user will receive an email regarding how to return items. There is no need to place a new order.\n"
+      },
+      {
+        "role": "user",
+        "content": "Hi, I\u2019d like to modify two items from an order I just received. Can you help?"
+      },
+      {
+        "role": "assistant",
+        "content": "I can help you with that! To get started, I need to verify your identity. Could you please provide the email address associated with your account?",
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "user",
+        "content": "Sure, it\u2019s ivan_hernandez_6923@gmail.com."
+      },
+      {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_pkhNcx8qYfiVrRTFC24bogfV",
+            "type": "function",
+            "function": {
+              "name": "find_user_id_by_email",
+              "arguments": "{\"email\":\"ivan_hernandez_6923@gmail.com\"}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_pkhNcx8qYfiVrRTFC24bogfV",
+        "name": "find_user_id_by_email",
+        "content": "Error: user not found"
+      },
+      {
+        "role": "assistant",
+        "content": "It looks like I couldn't find a user with that email address. If you have another email, please provide it. Otherwise, I can try to locate your account using your first name, last name, and zip code. Which would you prefer?",
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "user",
+        "content": "Let\u2019s try with my name and zip code: Ivan Hernandez, 92133."
+      },
+      {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_bY2CHzllDYETBNYH0cjYYiAj",
+            "type": "function",
+            "function": {
+              "name": "find_user_id_by_name_zip",
+              "arguments": "{\"first_name\":\"Ivan\",\"last_name\":\"Hernandez\",\"zip\":\"92133\"}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_bY2CHzllDYETBNYH0cjYYiAj",
+        "name": "find_user_id_by_name_zip",
+        "content": "ivan_hernandez_6923"
+      },
+      {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_mcYGO8qEkkLPlzte8tqQEhQg",
+            "type": "function",
+            "function": {
+              "name": "get_user_details",
+              "arguments": "{\"user_id\":\"ivan_hernandez_6923\"}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_mcYGO8qEkkLPlzte8tqQEhQg",
+        "name": "get_user_details",
+        "content": "{\"name\": {\"first_name\": \"Ivan\", \"last_name\": \"Hernandez\"}, \"address\": {\"address1\": \"894 Hickory Lane\", \"address2\": \"Suite 665\", \"city\": \"San Diego\", \"country\": \"USA\", \"state\": \"CA\", \"zip\": \"92133\"}, \"email\": \"ivan.hernandez1120@example.com\", \"payment_methods\": {\"gift_card_9368765\": {\"source\": \"gift_card\", \"balance\": 85, \"id\": \"gift_card_9368765\"}, \"credit_card_7455506\": {\"source\": \"credit_card\", \"brand\": \"mastercard\", \"last_four\": \"4127\", \"id\": \"credit_card_7455506\"}}, \"orders\": [\"#W5838674\", \"#W4284542\", \"#W2782744\"]}"
+      },
+      {
+        "role": "assistant",
+        "content": "Thank you, Ivan. I\u2019ve found your account. To help you modify two items from your order, could you please provide the order ID or let me know which order you\u2019d like to modify? If you\u2019re not sure, I can list your recent orders for you.",
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "user",
+        "content": "I don\u2019t have the order ID handy. Can you list my recent orders?"
+      },
+      {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_73684fYEdmkOs3p4Q0AbwuBc",
+            "type": "function",
+            "function": {
+              "name": "list_user_orders_and_statuses",
+              "arguments": "{\"user_id\":\"ivan_hernandez_6923\"}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_73684fYEdmkOs3p4Q0AbwuBc",
+        "name": "list_user_orders_and_statuses",
+        "content": "["
+      },
+      {
+        "role": "assistant",
+        "content": "It appears there was an issue retrieving your order summaries. Could you please confirm if you recently placed the order, or provide any details about the items or the date of the order? This will help me identify the correct order to assist you with modifying the items.",
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "user",
+        "content": "I just received the order today. The items I want to modify are a coffee machine and a laptop."
+      },
+      {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_KvTLRufDfOpsjRjUSxVqBJNq",
+            "type": "function",
+            "function": {
+              "name": "get_order_details",
+              "arguments": "{\"order_id\": \"#W5838674\"}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_KvTLRufDfOpsjRjUSxVqBJNq",
+        "name": "get_order_details",
+        "content": "{\"order_id\": \"#W5838674\", \"user_id\": \"ivan_hernandez_6923\", \"address\": {\"address1\": \"894 Hickory Lane\", \"address2\": \"Suite 665\", \"city\": \"San Diego\", \"country\": \"USA\", \"state\": \"CA\", \"zip\": \"92133\"}, \"items\": [{\"name\": \"Espresso Machine\", \"product_id\": \"4354588079\", \"item_id\": \"7441167885\", \"price\": 2866.37, \"options\": {\"pressure\": \"15 bar\", \"capacity\": \"1.5L\", \"type\": \"capsule\"}}, {\"name\": \"Vacuum Cleaner\", \"product_id\": \"1762337868\", \"item_id\": \"1304426904\", \"price\": 565.79, \"options\": {\"type\": \"canister\", \"bagged/bagless\": \"bagless\", \"features\": \"HEPA filter\"}}, {\"name\": \"Wall Clock\", \"product_id\": \"2344688344\", \"item_id\": \"6534134392\", \"price\": 196.15, \"options\": {\"diameter\": \"10 inches\", \"color\": \"wood\", \"type\": \"analog\"}}, {\"name\": \"Desk Lamp\", \"product_id\": \"6817146515\", \"item_id\": \"7453605304\", \"price\": 150.01, \"options\": {\"color\": \"silver\", \"brightness\": \"low\", \"power source\": \"battery\"}}, {\"name\": \"Laptop\", \"product_id\": \"4760268021\", \"item_id\": \"3478699712\", \"price\": 2291.87, \"options\": {\"screen size\": \"15-inch\", \"processor\": \"i5\", \"ram\": \"16GB\", \"storage\": \"512GB SSD\", \"color\": \"space grey\"}}], \"fulfillments\": [{\"tracking_id\": [\"495912972743\"], \"item_ids\": [\"7441167885\", \"1304426904\", \"6534134392\", \"7453605304\", \"3478699712\"]}], \"status\": \"delivered\", \"payment_history\": [{\"transaction_type\": \"payment\", \"amount\": 6070.19, \"payment_method_id\": \"credit_card_7455506\"}]}"
+      },
+      {
+        "role": "assistant",
+        "content": "Your most recent order (#W5838674) was delivered today and includes an Espresso Machine and a Laptop, among other items. Since the order is already delivered, you cannot modify the items, but you can request an exchange for different variants of the same products.\n\nWould you like to proceed with exchanging the Espresso Machine and the Laptop for different options? If so, please specify the new options you want for each item (for example, different color, capacity, processor, etc.). If you need to see the available options for these products, let me know!",
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "user",
+        "content": "For the coffee machine, I want to keep the same capacity and type, but I want to exchange it for one with lower pressure\u2014specifically 8 bar. If 8 bar is not available, please check for 9 bar. If not, 7 bar. If none of these are possible, I\u2019ll just keep my current one."
+      },
+      {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_dnMezqHE12KDcJG9Uc7GY6Wb",
+            "type": "function",
+            "function": {
+              "name": "list_product_variants",
+              "arguments": "{\"product_id\":\"4354588079\"}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_dnMezqHE12KDcJG9Uc7GY6Wb",
+        "name": "list_product_variants",
+        "content": "{\n  \"item_id\": \"3709608322\",\n  \"options\": {\n    \"pressure\": \"9 bar\",\n    \"capacity\": \"2L\",\n    \"type\": \"automatic\"\n  },\n  \"available\": true,\n  \"price\": 2744.7\n}"
+      },
+      {
+        "role": "assistant",
+        "content": "There is a coffee machine variant available with 9 bar pressure, but it has a 2L capacity and is automatic, which differs from your current selection of 1.5L capacity and capsule type. There are no variants matching your requested pressure (8 or 7 bar) with the same capacity and type as your current machine.\n\nWould you like to exchange your current Espresso Machine for the 9 bar, 2L, automatic variant, or would you prefer to keep your current one? Please let me know how you\u2019d like to proceed.",
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "user",
+        "content": "No, I don\u2019t want to change other specs, so I\u2019ll keep my current coffee machine. Let\u2019s move on to the laptop."
+      },
+      {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_akHMihSUFrDUkjUOjocMbAXH",
+            "type": "function",
+            "function": {
+              "name": "list_product_variants",
+              "arguments": "{\"product_id\":\"4760268021\"}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_akHMihSUFrDUkjUOjocMbAXH",
+        "name": "list_product_variants",
+        "content": "{\n  \"item_id\": \"8997785118\",\n  \"options\": {\n    \"screen size\": \"13-inch\",\n    \"processor\": \"i7\",\n    \"ram\": \"32GB\",\n    \"storage\": \"256GB SSD\",\n    \"color\": \"space grey\"\n  },\n  \"available\": false,\n  \"price\": 2674.4\n}"
+      },
+      {
+        "role": "assistant",
+        "content": "It appears there is only one laptop variant listed, but it is currently unavailable. Would you like to specify the options you\u2019re looking for in a laptop (such as screen size, processor, RAM, storage, or color), or would you like to keep your current laptop?\n\nLet me know how you\u2019d like to proceed.",
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "user",
+        "content": "I want to exchange it for the cheapest model available with an i7 or better processor. I don\u2019t care about any other specs."
+      },
+      {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_3mg2FD1r29vUvTdNpWDeXbWL",
+            "type": "function",
+            "function": {
+              "name": "list_product_variants",
+              "arguments": "{\"product_id\":\"4760268021\"}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_3mg2FD1r29vUvTdNpWDeXbWL",
+        "name": "list_product_variants",
+        "content": "{\n  \"item_id\": \"8997785118\",\n  \"options\": {\n    \"screen size\": \"13-inch\",\n    \"processor\": \"i7\",\n    \"ram\": \"32GB\",\n    \"storage\": \"256GB SSD\",\n    \"color\": \"space grey\"\n  },\n  \"available\": false,\n  \"price\": 2674.4\n}"
+      },
+      {
+        "role": "assistant",
+        "content": "Currently, there are no available laptop variants with an i7 or better processor for exchange. Would you like to keep your current laptop, or would you like to be notified if a suitable model becomes available in the future? Let me know how you\u2019d like to proceed.",
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "user",
+        "content": "Please notify me if one becomes available. That\u2019s all for now."
+      },
+      {
+        "role": "assistant",
+        "content": "Thank you for your request, Ivan. While I can\u2019t set up notifications directly, I recommend checking back periodically or contacting us again to see if a laptop with an i7 or better processor becomes available for exchange.\n\nIf you need any further assistance in the future, feel free to reach out. Have a great day!",
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "user",
+        "content": "###STOP###"
+      }
+    ],
+    "trial": 58,
+    "records": {}
+  }
+]

@@ -1,0 +1,366 @@
+[
+  {
+    "task_id": 74,
+    "reward": 1.0,
+    "info": {
+      "task": {
+        "user_id": "lei_li_6575",
+        "actions": [
+          {
+            "name": "cancel_pending_order",
+            "kwargs": {
+              "order_id": "#W3189752",
+              "reason": "no longer needed"
+            }
+          },
+          {
+            "name": "modify_pending_order_items",
+            "kwargs": {
+              "order_id": "#W5166363",
+              "item_ids": [
+                "3334537816"
+              ],
+              "new_item_ids": [
+                "3265035808"
+              ],
+              "payment_method_id": "credit_card_4466831"
+            }
+          }
+        ],
+        "instruction": "You name is Lei Li and your zip code is 85033. You are insecure, shy. You recently bought a laptop, but you want to exchange it to i9 CPU. If multiple storage options are available, you prefer 256GB SSD. If multiple colors are available, you prefer silver. You also have a pending order with five items (you don't remember order ID), and you want to cancel it because you no longer need them.",
+        "outputs": []
+      },
+      "source": "user",
+      "user_cost": 1431,
+      "reward_info": {
+        "reward": 1.0,
+        "info": {
+          "r_actions": 1.0,
+          "gt_data_hash": "5a4b2cb59f4d12dea7e4adff24a7f8fada510ead49372ea4a729a82bbb5f49b5"
+        },
+        "actions": [
+          {
+            "name": "cancel_pending_order",
+            "kwargs": {
+              "order_id": "#W3189752",
+              "reason": "no longer needed"
+            }
+          },
+          {
+            "name": "modify_pending_order_items",
+            "kwargs": {
+              "order_id": "#W5166363",
+              "item_ids": [
+                "3334537816"
+              ],
+              "new_item_ids": [
+                "3265035808"
+              ],
+              "payment_method_id": "credit_card_4466831"
+            }
+          }
+        ]
+      }
+    },
+    "traj": [
+      {
+        "role": "system",
+        "content": "# Retail agent policy\n\nAs a retail agent, you can help users cancel or modify pending orders, return or exchange delivered orders, modify their default user address, or provide information about their own profile, orders, and related products.\n\n- At the beginning of the conversation, you have to authenticate the user identity by locating their user id via email, or via name + zip code. This has to be done even when the user already provides the user id.\n\n- Once the user has been authenticated, you can provide the user with information about order, product, profile information, e.g. help the user look up order id.\n\n- You can only help one user per conversation (but you can handle multiple requests from the same user), and must deny any requests for tasks related to any other user.\n\n- Before taking consequential actions that update the database (cancel, modify, return, exchange), you have to list the action detail and obtain explicit user confirmation (yes) to proceed.\n\n- You should not make up any information or knowledge or procedures not provided from the user or the tools, or give subjective recommendations or comments.\n\n- You should at most make one tool call at a time, and if you take a tool call, you should not respond to the user at the same time. If you respond to the user, you should not make a tool call.\n\n- You should transfer the user to a human agent if and only if the request cannot be handled within the scope of your actions.\n\n## Domain basic\n\n- All times in the database are EST and 24 hour based. For example \"02:30:00\" means 2:30 AM EST.\n\n- Each user has a profile of its email, default address, user id, and payment methods. Each payment method is either a gift card, a paypal account, or a credit card.\n\n- Our retail store has 50 types of products. For each type of product, there are variant items of different options. For example, for a 't shirt' product, there could be an item with option 'color blue size M', and another item with option 'color red size L'.\n\n- Each product has an unique product id, and each item has an unique item id. They have no relations and should not be confused.\n\n- Each order can be in status 'pending', 'processed', 'delivered', or 'cancelled'. Generally, you can only take action on pending or delivered orders.\n\n- Exchange or modify order tools can only be called once. Be sure that all items to be changed are collected into a list before making the tool call!!!\n\n## Cancel pending order\n\n- An order can only be cancelled if its status is 'pending', and you should check its status before taking the action.\n\n- The user needs to confirm the order id and the reason (either 'no longer needed' or 'ordered by mistake') for cancellation.\n\n- After user confirmation, the order status will be changed to 'cancelled', and the total will be refunded via the original payment method immediately if it is gift card, otherwise in 5 to 7 business days.\n\n## Modify pending order\n\n- An order can only be modified if its status is 'pending', and you should check its status before taking the action.\n\n- For a pending order, you can take actions to modify its shipping address, payment method, or product item options, but nothing else.\n\n### Modify payment\n\n- The user can only choose a single payment method different from the original payment method.\n\n- If the user wants the modify the payment method to gift card, it must have enough balance to cover the total amount.\n\n- After user confirmation, the order status will be kept 'pending'. The original payment method will be refunded immediately if it is a gift card, otherwise in 5 to 7 business days.\n\n### Modify items\n\n- This action can only be called once, and will change the order status to 'pending (items modifed)', and the agent will not be able to modify or cancel the order anymore. So confirm all the details are right and be cautious before taking this action. In particular, remember to remind the customer to confirm they have provided all items to be modified.\n\n- For a pending order, each item can be modified to an available new item of the same product but of different product option. There cannot be any change of product types, e.g. modify shirt to shoe.\n\n- The user must provide a payment method to pay or receive refund of the price difference. If the user provides a gift card, it must have enough balance to cover the price difference.\n\n## Return delivered order\n\n- An order can only be returned if its status is 'delivered', and you should check its status before taking the action.\n\n- The user needs to confirm the order id, the list of items to be returned, and a payment method to receive the refund.\n\n- The refund must either go to the original payment method, or an existing gift card.\n\n- After user confirmation, the order status will be changed to 'return requested', and the user will receive an email regarding how to return items.\n\n## Exchange delivered order\n\n- An order can only be exchanged if its status is 'delivered', and you should check its status before taking the action. In particular, remember to remind the customer to confirm they have provided all items to be exchanged.\n\n- For a delivered order, each item can be exchanged to an available new item of the same product but of different product option. There cannot be any change of product types, e.g. modify shirt to shoe.\n\n- The user must provide a payment method to pay or receive refund of the price difference. If the user provides a gift card, it must have enough balance to cover the price difference.\n\n- After user confirmation, the order status will be changed to 'exchange requested', and the user will receive an email regarding how to return items. There is no need to place a new order.\n"
+      },
+      {
+        "role": "user",
+        "content": "Um, hi... I wanted to ask about exchanging a laptop I just bought."
+      },
+      {
+        "role": "assistant",
+        "content": "I\u2019d be happy to help you with your laptop exchange request! To get started, I need to verify your identity. Could you please provide the email address associated with your account? If you don\u2019t remember your email, let me know and I can verify your identity using your name and zip code instead.",
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "user",
+        "content": "Oh, um, I don\u2019t remember which email I used, but my name is Lei Li and my zip code is 85033."
+      },
+      {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_Q9bb4GhyxrPjykijDNcTJDiE",
+            "type": "function",
+            "function": {
+              "name": "find_user_id_by_name_zip",
+              "arguments": "{\"first_name\":\"Lei\",\"last_name\":\"Li\",\"zip\":\"85033\"}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_Q9bb4GhyxrPjykijDNcTJDiE",
+        "name": "find_user_id_by_name_zip",
+        "content": "lei_li_6575"
+      },
+      {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_B7dfvZbfLz17H28w3g8CUO7J",
+            "type": "function",
+            "function": {
+              "name": "get_user_details",
+              "arguments": "{\"user_id\":\"lei_li_6575\"}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_B7dfvZbfLz17H28w3g8CUO7J",
+        "name": "get_user_details",
+        "content": "{\"name\": {\"first_name\": \"Lei\", \"last_name\": \"Li\"}, \"address\": {\"address1\": \"604 Pine Lane\", \"address2\": \"Suite 907\", \"city\": \"Phoenix\", \"country\": \"USA\", \"state\": \"AZ\", \"zip\": \"85033\"}, \"email\": \"lei.li8350@example.com\", \"payment_methods\": {\"credit_card_4466831\": {\"source\": \"credit_card\", \"brand\": \"visa\", \"last_four\": \"2697\", \"id\": \"credit_card_4466831\"}, \"gift_card_8049813\": {\"source\": \"gift_card\", \"balance\": 50, \"id\": \"gift_card_8049813\"}, \"paypal_5914760\": {\"source\": \"paypal\", \"id\": \"paypal_5914760\"}}, \"orders\": [\"#W5166363\", \"#W3414433\", \"#W6289770\", \"#W3189752\"]}"
+      },
+      {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_2yPFlO8UgqTPTmGcq8tMJpWI",
+            "type": "function",
+            "function": {
+              "name": "list_user_orders_and_statuses",
+              "arguments": "{\"user_id\":\"lei_li_6575\"}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_2yPFlO8UgqTPTmGcq8tMJpWI",
+        "name": "list_user_orders_and_statuses",
+        "content": "["
+      },
+      {
+        "role": "assistant",
+        "content": "Your identity has been verified as Lei Li from zip code 85033. To assist you with exchanging your laptop, could you please confirm if you know the order number or the approximate date of your laptop purchase? If not, I can list your recent orders so you can identify the correct one. Let me know how you\u2019d like to proceed!",
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "user",
+        "content": "I\u2019m sorry, I don\u2019t remember the order number, but if you could list my recent orders, that would help\u2026"
+      },
+      {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_p5A8tQ2CseZMpp9napknenVc",
+            "type": "function",
+            "function": {
+              "name": "find_orders_by_user",
+              "arguments": "{\"user_id\":\"lei_li_6575\"}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_p5A8tQ2CseZMpp9napknenVc",
+        "name": "find_orders_by_user",
+        "content": "[{\"order_id\": \"#W5166363\", \"status\": \"pending\", \"items\": [\"Laptop\"]}, {\"order_id\": \"#W3414433\", \"status\": \"pending\", \"items\": [\"Digital Camera\", \"Electric Kettle\", \"Wall Clock\"]}, {\"order_id\": \"#W6289770\", \"status\": \"delivered\", \"items\": [\"Electric Toothbrush\", \"Grill\", \"Water Bottle\", \"Luggage Set\", \"Sunglasses\"]}, {\"order_id\": \"#W3189752\", \"status\": \"pending\", \"items\": [\"Electric Kettle\", \"Bluetooth Speaker\", \"Water Bottle\", \"Office Chair\", \"Makeup Kit\"]}]"
+      },
+      {
+        "role": "assistant",
+        "content": "Here are your recent orders:\n\n1. Order #W5166363 \u2013 Status: Pending \u2013 Items: Laptop\n2. Order #W3414433 \u2013 Status: Pending \u2013 Items: Digital Camera, Electric Kettle, Wall Clock\n3. Order #W6289770 \u2013 Status: Delivered \u2013 Items: Electric Toothbrush, Grill, Water Bottle, Luggage Set, Sunglasses\n4. Order #W3189752 \u2013 Status: Pending \u2013 Items: Electric Kettle, Bluetooth Speaker, Water Bottle, Office Chair, Makeup Kit\n\nIt appears that the only order with a laptop is still pending and has not been delivered yet. Exchanges can only be processed for delivered orders. Would you like to modify or cancel this pending laptop order instead, or do you need help with something else?",
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "user",
+        "content": "Oh\u2026I see. Um, actually, I also want to cancel one of my pending orders with five items, because I don\u2019t need them anymore. I can\u2019t remember the order ID, though."
+      },
+      {
+        "role": "assistant",
+        "content": "Based on your recent orders, the only pending order with five items is:\n\nOrder #W3189752 \u2013 Items: Electric Kettle, Bluetooth Speaker, Water Bottle, Office Chair, Makeup Kit\n\nTo proceed with cancellation, I\u2019ll need to confirm the order ID (#W3189752) and the reason for cancellation. You mentioned you no longer need the items\u2014would you like to confirm this as your reason and proceed with cancelling order #W3189752? Please reply \u201cyes\u201d to confirm, or let me know if you have any questions.",
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "user",
+        "content": "Yes, please cancel it. I just don\u2019t need those things anymore."
+      },
+      {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_pdq1USJMRQa5rJBs4fu4Z6g0",
+            "type": "function",
+            "function": {
+              "name": "cancel_pending_order",
+              "arguments": "{\"order_id\":\"#W3189752\",\"reason\":\"no longer needed\"}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_pdq1USJMRQa5rJBs4fu4Z6g0",
+        "name": "cancel_pending_order",
+        "content": "{\"order_id\": \"#W3189752\", \"user_id\": \"lei_li_6575\", \"address\": {\"address1\": \"604 Pine Lane\", \"address2\": \"Suite 907\", \"city\": \"Phoenix\", \"country\": \"USA\", \"state\": \"AZ\", \"zip\": \"85033\"}, \"items\": [{\"name\": \"Electric Kettle\", \"product_id\": \"1075968781\", \"item_id\": \"5268233322\", \"price\": 155.99, \"options\": {\"capacity\": \"1L\", \"material\": \"glass\", \"color\": \"white\"}}, {\"name\": \"Bluetooth Speaker\", \"product_id\": \"4768869376\", \"item_id\": \"7617930199\", \"price\": 285.94, \"options\": {\"color\": \"red\", \"battery life\": \"20 hours\", \"water resistance\": \"yes\"}}, {\"name\": \"Water Bottle\", \"product_id\": \"8310926033\", \"item_id\": \"6777246137\", \"price\": 47.76, \"options\": {\"capacity\": \"750ml\", \"material\": \"stainless steel\", \"color\": \"red\"}}, {\"name\": \"Office Chair\", \"product_id\": \"4794339885\", \"item_id\": \"4648362606\", \"price\": 503.76, \"options\": {\"material\": \"leather\", \"color\": \"black\", \"armrest\": \"adjustable\", \"backrest height\": \"high-back\"}}, {\"name\": \"Makeup Kit\", \"product_id\": \"5149340237\", \"item_id\": \"5012998807\", \"price\": 258.71, \"options\": {\"skin tone\": \"dark\", \"kit size\": \"professional\", \"brand\": \"Brand B\"}}], \"fulfillments\": [], \"status\": \"cancelled\", \"payment_history\": [{\"transaction_type\": \"payment\", \"amount\": 1252.16, \"payment_method_id\": \"paypal_5914760\"}, {\"transaction_type\": \"refund\", \"amount\": 1252.16, \"payment_method_id\": \"paypal_5914760\"}], \"cancel_reason\": \"no longer needed\"}"
+      },
+      {
+        "role": "assistant",
+        "content": "Your order #W3189752, which included Electric Kettle, Bluetooth Speaker, Water Bottle, Office Chair, and Makeup Kit, has been cancelled as requested for the reason \"no longer needed.\" \n\nThe total amount of $1252.16 will be refunded to your original payment method (PayPal). Refunds to PayPal typically take 5 to 7 business days to process.\n\nIf you need help with anything else, please let me know!",
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "user",
+        "content": "Thank you\u2026 Actually, about the laptop order\u2026 is it possible to change it so it has an i9 CPU instead?"
+      },
+      {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_knWRbtBWGpz8kr1sbTIOP5ZV",
+            "type": "function",
+            "function": {
+              "name": "list_order_items",
+              "arguments": "{\"order_id\":\"#W5166363\"}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_knWRbtBWGpz8kr1sbTIOP5ZV",
+        "name": "list_order_items",
+        "content": "{\n  \"name\": \"Laptop\",\n  \"product_id\": \"4760268021\",\n  \"item_id\": \"3334537816\",\n  \"price\": 2749.56,\n  \"options\": {\n    \"screen size\": \"17-inch\",\n    \"processor\": \"i5\",\n    \"ram\": \"8GB\",\n    \"storage\": \"1TB SSD\",\n    \"color\": \"space grey\"\n  }\n}"
+      },
+      {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_1isI0k164jNRTXinRXOJ5pHk",
+            "type": "function",
+            "function": {
+              "name": "list_product_variants",
+              "arguments": "{\"product_id\":\"4760268021\"}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_1isI0k164jNRTXinRXOJ5pHk",
+        "name": "list_product_variants",
+        "content": "{\n  \"item_id\": \"8997785118\",\n  \"options\": {\n    \"screen size\": \"13-inch\",\n    \"processor\": \"i7\",\n    \"ram\": \"32GB\",\n    \"storage\": \"256GB SSD\",\n    \"color\": \"space grey\"\n  },\n  \"available\": false,\n  \"price\": 2674.4\n}"
+      },
+      {
+        "role": "assistant",
+        "content": "It looks like your current laptop order (#W5166363) is for a 17-inch, i5 processor model. I am checking for available variants with an i9 CPU, but I currently do not see any options listed for an i9 processor in the system.\n\nWould you like me to confirm all available laptop variants for you, or do you want to modify your order to another available configuration? Please let me know how you\u2019d like to proceed.",
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "user",
+        "content": "Um, yes, could you tell me all the available options with i9 CPU?"
+      },
+      {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_FcovqvBAouEYKt3rZY1dMSjl",
+            "type": "function",
+            "function": {
+              "name": "list_product_variants",
+              "arguments": "{\"product_id\":\"4760268021\"}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_FcovqvBAouEYKt3rZY1dMSjl",
+        "name": "list_product_variants",
+        "content": "{\n  \"item_id\": \"8997785118\",\n  \"options\": {\n    \"screen size\": \"13-inch\",\n    \"processor\": \"i7\",\n    \"ram\": \"32GB\",\n    \"storage\": \"256GB SSD\",\n    \"color\": \"space grey\"\n  },\n  \"available\": false,\n  \"price\": 2674.4\n}"
+      },
+      {
+        "role": "assistant",
+        "content": "At this time, there are no available laptop variants with an i9 CPU for the model you ordered. The only listed variant is a 13-inch model with an i7 processor, which is currently unavailable.\n\nIf you\u2019d like, I can help you check for other configurations (such as different screen sizes, RAM, or storage) or assist you with modifying or cancelling your current order. Please let me know how you\u2019d like to proceed.",
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "user",
+        "content": "Oh, okay\u2026 um, if there are storage options, I\u2019d like 256GB SSD, if that\u2019s possible. And, um, if there are colors, I like silver. Is that available?"
+      },
+      {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_q4T6AsTk8OoiQNyYlGUZKaMd",
+            "type": "function",
+            "function": {
+              "name": "list_product_variants",
+              "arguments": "{\"product_id\":\"4760268021\"}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_q4T6AsTk8OoiQNyYlGUZKaMd",
+        "name": "list_product_variants",
+        "content": "{\n  \"item_id\": \"8997785118\",\n  \"options\": {\n    \"screen size\": \"13-inch\",\n    \"processor\": \"i7\",\n    \"ram\": \"32GB\",\n    \"storage\": \"256GB SSD\",\n    \"color\": \"space grey\"\n  },\n  \"available\": false,\n  \"price\": 2674.4\n}"
+      },
+      {
+        "role": "assistant",
+        "content": "Currently, there are no available laptop variants for your model with a 256GB SSD or in silver color. The only other variant listed is a 13-inch, i7 processor, 32GB RAM, 256GB SSD, space grey model, but it is not available at this time.\n\nWould you like to keep your original order (17-inch, i5, 8GB RAM, 1TB SSD, space grey), or would you like to consider cancelling or modifying your order in another way? Let me know how you\u2019d like to proceed.",
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "user",
+        "content": "Um, I guess I\u2019ll just keep my original order then. Thank you for checking\u2026"
+      },
+      {
+        "role": "assistant",
+        "content": "You\u2019re welcome! Your original laptop order (17-inch, i5, 8GB RAM, 1TB SSD, space grey) will remain unchanged.\n\nIf you have any other questions or need help with your orders in the future, feel free to ask. Thank you for reaching out!",
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "user",
+        "content": "###STOP###"
+      }
+    ],
+    "trial": 74,
+    "records": {}
+  }
+]

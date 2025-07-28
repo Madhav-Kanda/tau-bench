@@ -1,0 +1,208 @@
+[
+  {
+    "task_id": 66,
+    "reward": 1.0,
+    "info": {
+      "task": {
+        "user_id": "aarav_lee_1982",
+        "actions": [
+          {
+            "name": "find_user_id_by_name_zip",
+            "kwargs": {
+              "first_name": "Aarav",
+              "last_name": "Lee",
+              "zip": "85025"
+            }
+          },
+          {
+            "name": "get_user_details",
+            "kwargs": {
+              "user_id": "aarav_lee_1982"
+            }
+          },
+          {
+            "name": "get_order_details",
+            "kwargs": {
+              "order_id": "#W3361211"
+            }
+          },
+          {
+            "name": "get_order_details",
+            "kwargs": {
+              "order_id": "#W3586556"
+            }
+          },
+          {
+            "name": "cancel_pending_order",
+            "kwargs": {
+              "order_id": "#W3361211",
+              "reason": "no longer needed"
+            }
+          }
+        ],
+        "instruction": "You are Aarav Lee. You want to change the luggage set in your order for a coat. You live in Phoenix, AZ 85025. Your goal is to change the order. If there is no way to do that, return the item specifically. If there are any issues, cancel the entire order.",
+        "outputs": []
+      },
+      "source": "user",
+      "user_cost": 1002,
+      "reward_info": {
+        "reward": 1.0,
+        "info": {
+          "r_actions": 1.0,
+          "gt_data_hash": "5a4b2cb59f4d12dea7e4adff24a7f8fada510ead49372ea4a729a82bbb5f49b5"
+        },
+        "actions": [
+          {
+            "name": "find_user_id_by_name_zip",
+            "kwargs": {
+              "first_name": "Aarav",
+              "last_name": "Lee",
+              "zip": "85025"
+            }
+          },
+          {
+            "name": "get_user_details",
+            "kwargs": {
+              "user_id": "aarav_lee_1982"
+            }
+          },
+          {
+            "name": "get_order_details",
+            "kwargs": {
+              "order_id": "#W3361211"
+            }
+          },
+          {
+            "name": "get_order_details",
+            "kwargs": {
+              "order_id": "#W3586556"
+            }
+          },
+          {
+            "name": "cancel_pending_order",
+            "kwargs": {
+              "order_id": "#W3361211",
+              "reason": "no longer needed"
+            }
+          }
+        ]
+      }
+    },
+    "traj": [
+      {
+        "role": "system",
+        "content": "# Retail agent policy\n\nAs a retail agent, you can help users cancel or modify pending orders, return or exchange delivered orders, modify their default user address, or provide information about their own profile, orders, and related products.\n\n- At the beginning of the conversation, you have to authenticate the user identity by locating their user id via email, or via name + zip code. This has to be done even when the user already provides the user id.\n\n- Once the user has been authenticated, you can provide the user with information about order, product, profile information, e.g. help the user look up order id.\n\n- You can only help one user per conversation (but you can handle multiple requests from the same user), and must deny any requests for tasks related to any other user.\n\n- Before taking consequential actions that update the database (cancel, modify, return, exchange), you have to list the action detail and obtain explicit user confirmation (yes) to proceed.\n\n- You should not make up any information or knowledge or procedures not provided from the user or the tools, or give subjective recommendations or comments.\n\n- You should at most make one tool call at a time, and if you take a tool call, you should not respond to the user at the same time. If you respond to the user, you should not make a tool call.\n\n- You should transfer the user to a human agent if and only if the request cannot be handled within the scope of your actions.\n\n## Domain basic\n\n- All times in the database are EST and 24 hour based. For example \"02:30:00\" means 2:30 AM EST.\n\n- Each user has a profile of its email, default address, user id, and payment methods. Each payment method is either a gift card, a paypal account, or a credit card.\n\n- Our retail store has 50 types of products. For each type of product, there are variant items of different options. For example, for a 't shirt' product, there could be an item with option 'color blue size M', and another item with option 'color red size L'.\n\n- Each product has an unique product id, and each item has an unique item id. They have no relations and should not be confused.\n\n- Each order can be in status 'pending', 'processed', 'delivered', or 'cancelled'. Generally, you can only take action on pending or delivered orders.\n\n- Exchange or modify order tools can only be called once. Be sure that all items to be changed are collected into a list before making the tool call!!!\n\n## Cancel pending order\n\n- An order can only be cancelled if its status is 'pending', and you should check its status before taking the action.\n\n- The user needs to confirm the order id and the reason (either 'no longer needed' or 'ordered by mistake') for cancellation.\n\n- After user confirmation, the order status will be changed to 'cancelled', and the total will be refunded via the original payment method immediately if it is gift card, otherwise in 5 to 7 business days.\n\n## Modify pending order\n\n- An order can only be modified if its status is 'pending', and you should check its status before taking the action.\n\n- For a pending order, you can take actions to modify its shipping address, payment method, or product item options, but nothing else.\n\n### Modify payment\n\n- The user can only choose a single payment method different from the original payment method.\n\n- If the user wants the modify the payment method to gift card, it must have enough balance to cover the total amount.\n\n- After user confirmation, the order status will be kept 'pending'. The original payment method will be refunded immediately if it is a gift card, otherwise in 5 to 7 business days.\n\n### Modify items\n\n- This action can only be called once, and will change the order status to 'pending (items modifed)', and the agent will not be able to modify or cancel the order anymore. So confirm all the details are right and be cautious before taking this action. In particular, remember to remind the customer to confirm they have provided all items to be modified.\n\n- For a pending order, each item can be modified to an available new item of the same product but of different product option. There cannot be any change of product types, e.g. modify shirt to shoe.\n\n- The user must provide a payment method to pay or receive refund of the price difference. If the user provides a gift card, it must have enough balance to cover the price difference.\n\n## Return delivered order\n\n- An order can only be returned if its status is 'delivered', and you should check its status before taking the action.\n\n- The user needs to confirm the order id, the list of items to be returned, and a payment method to receive the refund.\n\n- The refund must either go to the original payment method, or an existing gift card.\n\n- After user confirmation, the order status will be changed to 'return requested', and the user will receive an email regarding how to return items.\n\n## Exchange delivered order\n\n- An order can only be exchanged if its status is 'delivered', and you should check its status before taking the action. In particular, remember to remind the customer to confirm they have provided all items to be exchanged.\n\n- For a delivered order, each item can be exchanged to an available new item of the same product but of different product option. There cannot be any change of product types, e.g. modify shirt to shoe.\n\n- The user must provide a payment method to pay or receive refund of the price difference. If the user provides a gift card, it must have enough balance to cover the price difference.\n\n- After user confirmation, the order status will be changed to 'exchange requested', and the user will receive an email regarding how to return items. There is no need to place a new order.\n"
+      },
+      {
+        "role": "user",
+        "content": "Hi, I\u2019d like to swap the luggage set in my order for a coat instead."
+      },
+      {
+        "role": "assistant",
+        "content": "I can help you with that! To get started, I need to verify your identity. Could you please provide the email address associated with your account? If you don\u2019t remember your email, let me know and I can verify your identity using your name and zip code instead.",
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "user",
+        "content": "I\u2019d prefer to use my name and zip code for verification. My name is Aarav Lee and my zip code is 85025."
+      },
+      {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_7Tq3L4aACUmqFkKnKxPItpb4",
+            "type": "function",
+            "function": {
+              "name": "find_user_id_by_name_zip",
+              "arguments": "{\"first_name\":\"Aarav\",\"last_name\":\"Lee\",\"zip\":\"85025\"}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_7Tq3L4aACUmqFkKnKxPItpb4",
+        "name": "find_user_id_by_name_zip",
+        "content": "aarav_lee_1982"
+      },
+      {
+        "role": "assistant",
+        "content": "Thank you, Aarav. Your identity has been verified.\n\nTo proceed with swapping the luggage set in your order for a coat, could you please provide the order ID or let me know which order contains the luggage set? If you\u2019re not sure, I can look up your recent orders and help you identify the correct one. Would you like me to do that?",
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "user",
+        "content": "I\u2019m not sure of the order ID, so yes, please look up my recent orders."
+      },
+      {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_kPSmYVxkVRPkVYD9iVf2zFPH",
+            "type": "function",
+            "function": {
+              "name": "list_user_orders_and_statuses",
+              "arguments": "{\"user_id\":\"aarav_lee_1982\"}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_kPSmYVxkVRPkVYD9iVf2zFPH",
+        "name": "list_user_orders_and_statuses",
+        "content": "["
+      },
+      {
+        "role": "assistant",
+        "content": "It appears that there are no recent orders listed under your account. Could you please confirm if you may have used a different name, zip code, or email for your purchase? If you have any additional details about the order (such as the approximate order date or other items in the order), please let me know so I can assist you further.",
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "user",
+        "content": "I only used the name Aarav Lee and zip code 85025, so that should be correct. The order was placed fairly recently, probably within the last week, and the only item I remember is the luggage set."
+      },
+      {
+        "role": "assistant",
+        "content": "Thank you for confirming those details. Since there are no recent orders showing under your account with the name Aarav Lee and zip code 85025, it\u2019s possible that the order hasn\u2019t been processed yet, or there may have been a technical issue with the order placement.\n\nTo assist you further, could you please check if you received an order confirmation email? If so, providing the order ID or any other details from that email would be very helpful. If you did not receive a confirmation, the order may not have been completed.\n\nLet me know how you\u2019d like to proceed!",
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "user",
+        "content": "I don\u2019t have the order confirmation email or order ID. If there\u2019s no way to swap the item, I\u2019d like to just return the luggage set instead."
+      },
+      {
+        "role": "assistant",
+        "content": "Since there are no orders found under your account, I\u2019m unable to process a return or exchange for the luggage set. It\u2019s possible the order was not completed or was placed under a different account.\n\nIf you believe the order should exist, I recommend double-checking any other possible emails, names, or zip codes you might have used. If you still need help, I can transfer you to a human agent who may be able to assist further with your case.\n\nWould you like me to transfer you to a human agent for additional support?",
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "user",
+        "content": "If there\u2019s no way to help with this now, please just cancel the entire order."
+      },
+      {
+        "role": "assistant",
+        "content": "I understand your request to cancel the entire order. However, I currently do not see any orders under your account with the name Aarav Lee and zip code 85025, so I am unable to process a cancellation.\n\nIf you believe there is an order that should be visible, it may have been placed under a different account or there may be a technical issue. Would you like me to transfer you to a human agent who can investigate this further for you?",
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "user",
+        "content": "No, that\u2019s okay. I\u2019ll try to sort it out another way. Thanks anyway. \n\n###STOP###"
+      }
+    ],
+    "trial": 66,
+    "records": {}
+  }
+]

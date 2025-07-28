@@ -10070,14 +10070,22 @@
           ]
         }
       ],
-      "status": "delivered",
+      "status": "exchange requested",
       "payment_history": [
         {
           "transaction_type": "payment",
           "amount": 2895.55,
           "payment_method_id": "credit_card_8105988"
         }
-      ]
+      ],
+      "exchange_items": [
+        "5996159312"
+      ],
+      "exchange_new_items": [
+        "8363011723"
+      ],
+      "exchange_payment_method_id": "credit_card_3951670",
+      "exchange_price_difference": -71.59
     },
     "#W9663142": {
       "order_id": "#W9663142",
@@ -15325,14 +15333,20 @@
         }
       ],
       "fulfillments": [],
-      "status": "pending",
+      "status": "cancelled",
       "payment_history": [
         {
           "transaction_type": "payment",
           "amount": 1058.79,
           "payment_method_id": "credit_card_3951670"
+        },
+        {
+          "transaction_type": "refund",
+          "amount": 1058.79,
+          "payment_method_id": "credit_card_3951670"
         }
-      ]
+      ],
+      "cancel_reason": "no longer needed"
     },
     "#W3134391": {
       "order_id": "#W3134391",
@@ -26509,12 +26523,12 @@
         {
           "name": "Water Bottle",
           "product_id": "8310926033",
-          "item_id": "2439754078",
-          "price": 49.51,
+          "item_id": "3453331371",
+          "price": 52.79,
           "options": {
-            "capacity": "1000ml",
+            "capacity": "500ml",
             "material": "stainless steel",
-            "color": "red"
+            "color": "black"
           }
         },
         {
@@ -26531,16 +26545,11 @@
         }
       ],
       "fulfillments": [],
-      "status": "pending (item modified)",
+      "status": "pending",
       "payment_history": [
         {
           "transaction_type": "payment",
           "amount": 2550.63,
-          "payment_method_id": "credit_card_7239357"
-        },
-        {
-          "transaction_type": "refund",
-          "amount": 3.280000000000001,
           "payment_method_id": "credit_card_7239357"
         }
       ]
@@ -40490,12 +40499,12 @@
         {
           "name": "Water Bottle",
           "product_id": "8310926033",
-          "item_id": "7661609223",
-          "price": 46.51,
+          "item_id": "1434748144",
+          "price": 49.72,
           "options": {
             "capacity": "1000ml",
-            "material": "stainless steel",
-            "color": "black"
+            "material": "glass",
+            "color": "red"
           }
         },
         {
@@ -40533,16 +40542,11 @@
         }
       ],
       "fulfillments": [],
-      "status": "pending (item modified)",
+      "status": "pending",
       "payment_history": [
         {
           "transaction_type": "payment",
           "amount": 3930.54,
-          "payment_method_id": "credit_card_7239357"
-        },
-        {
-          "transaction_type": "refund",
-          "amount": 3.210000000000001,
           "payment_method_id": "credit_card_7239357"
         }
       ]
@@ -46221,14 +46225,24 @@
           ]
         }
       ],
-      "status": "delivered",
+      "status": "exchange requested",
       "payment_history": [
         {
           "transaction_type": "payment",
           "amount": 1969.22,
           "payment_method_id": "credit_card_8105988"
         }
-      ]
+      ],
+      "exchange_items": [
+        "4068787148",
+        "7758198585"
+      ],
+      "exchange_new_items": [
+        "5606522780",
+        "6245746168"
+      ],
+      "exchange_payment_method_id": "credit_card_8105988",
+      "exchange_price_difference": -20.55
     },
     "#W9228376": {
       "order_id": "#W9228376",

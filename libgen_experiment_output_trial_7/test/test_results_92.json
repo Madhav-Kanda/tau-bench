@@ -1,0 +1,316 @@
+[
+  {
+    "task_id": 92,
+    "reward": 1.0,
+    "info": {
+      "task": {
+        "user_id": "mei_ahmed_4909",
+        "actions": [
+          {
+            "name": "return_delivered_order_items",
+            "kwargs": {
+              "order_id": "#W7553978",
+              "item_ids": [
+                "4545791457",
+                "3098764622",
+                "1631806422"
+              ],
+              "payment_method_id": "credit_card_5902940"
+            }
+          },
+          {
+            "name": "return_delivered_order_items",
+            "kwargs": {
+              "order_id": "#W3239882",
+              "item_ids": [
+                "9494281769"
+              ],
+              "payment_method_id": "credit_card_5902940"
+            }
+          }
+        ],
+        "instruction": "You name is Mei Ahmed and your zip code is 78705. You are polite, outgoing. You are angry about the quality of the two skateboards you just bought. You want to return them and refund to credit card. If the agent asks for confirmation, do not say yes, because you also want to return the smart watch and e-reader.",
+        "outputs": []
+      },
+      "source": "user",
+      "user_cost": 1292,
+      "reward_info": {
+        "reward": 1.0,
+        "info": {
+          "r_actions": 1.0,
+          "gt_data_hash": "5a4b2cb59f4d12dea7e4adff24a7f8fada510ead49372ea4a729a82bbb5f49b5"
+        },
+        "actions": [
+          {
+            "name": "return_delivered_order_items",
+            "kwargs": {
+              "order_id": "#W7553978",
+              "item_ids": [
+                "4545791457",
+                "3098764622",
+                "1631806422"
+              ],
+              "payment_method_id": "credit_card_5902940"
+            }
+          },
+          {
+            "name": "return_delivered_order_items",
+            "kwargs": {
+              "order_id": "#W3239882",
+              "item_ids": [
+                "9494281769"
+              ],
+              "payment_method_id": "credit_card_5902940"
+            }
+          }
+        ]
+      }
+    },
+    "traj": [
+      {
+        "role": "system",
+        "content": "# Retail agent policy\n\nAs a retail agent, you can help users cancel or modify pending orders, return or exchange delivered orders, modify their default user address, or provide information about their own profile, orders, and related products.\n\n- At the beginning of the conversation, you have to authenticate the user identity by locating their user id via email, or via name + zip code. This has to be done even when the user already provides the user id.\n\n- Once the user has been authenticated, you can provide the user with information about order, product, profile information, e.g. help the user look up order id.\n\n- You can only help one user per conversation (but you can handle multiple requests from the same user), and must deny any requests for tasks related to any other user.\n\n- Before taking consequential actions that update the database (cancel, modify, return, exchange), you have to list the action detail and obtain explicit user confirmation (yes) to proceed.\n\n- You should not make up any information or knowledge or procedures not provided from the user or the tools, or give subjective recommendations or comments.\n\n- You should at most make one tool call at a time, and if you take a tool call, you should not respond to the user at the same time. If you respond to the user, you should not make a tool call.\n\n- You should transfer the user to a human agent if and only if the request cannot be handled within the scope of your actions.\n\n## Domain basic\n\n- All times in the database are EST and 24 hour based. For example \"02:30:00\" means 2:30 AM EST.\n\n- Each user has a profile of its email, default address, user id, and payment methods. Each payment method is either a gift card, a paypal account, or a credit card.\n\n- Our retail store has 50 types of products. For each type of product, there are variant items of different options. For example, for a 't shirt' product, there could be an item with option 'color blue size M', and another item with option 'color red size L'.\n\n- Each product has an unique product id, and each item has an unique item id. They have no relations and should not be confused.\n\n- Each order can be in status 'pending', 'processed', 'delivered', or 'cancelled'. Generally, you can only take action on pending or delivered orders.\n\n- Exchange or modify order tools can only be called once. Be sure that all items to be changed are collected into a list before making the tool call!!!\n\n## Cancel pending order\n\n- An order can only be cancelled if its status is 'pending', and you should check its status before taking the action.\n\n- The user needs to confirm the order id and the reason (either 'no longer needed' or 'ordered by mistake') for cancellation.\n\n- After user confirmation, the order status will be changed to 'cancelled', and the total will be refunded via the original payment method immediately if it is gift card, otherwise in 5 to 7 business days.\n\n## Modify pending order\n\n- An order can only be modified if its status is 'pending', and you should check its status before taking the action.\n\n- For a pending order, you can take actions to modify its shipping address, payment method, or product item options, but nothing else.\n\n### Modify payment\n\n- The user can only choose a single payment method different from the original payment method.\n\n- If the user wants the modify the payment method to gift card, it must have enough balance to cover the total amount.\n\n- After user confirmation, the order status will be kept 'pending'. The original payment method will be refunded immediately if it is a gift card, otherwise in 5 to 7 business days.\n\n### Modify items\n\n- This action can only be called once, and will change the order status to 'pending (items modifed)', and the agent will not be able to modify or cancel the order anymore. So confirm all the details are right and be cautious before taking this action. In particular, remember to remind the customer to confirm they have provided all items to be modified.\n\n- For a pending order, each item can be modified to an available new item of the same product but of different product option. There cannot be any change of product types, e.g. modify shirt to shoe.\n\n- The user must provide a payment method to pay or receive refund of the price difference. If the user provides a gift card, it must have enough balance to cover the price difference.\n\n## Return delivered order\n\n- An order can only be returned if its status is 'delivered', and you should check its status before taking the action.\n\n- The user needs to confirm the order id, the list of items to be returned, and a payment method to receive the refund.\n\n- The refund must either go to the original payment method, or an existing gift card.\n\n- After user confirmation, the order status will be changed to 'return requested', and the user will receive an email regarding how to return items.\n\n## Exchange delivered order\n\n- An order can only be exchanged if its status is 'delivered', and you should check its status before taking the action. In particular, remember to remind the customer to confirm they have provided all items to be exchanged.\n\n- For a delivered order, each item can be exchanged to an available new item of the same product but of different product option. There cannot be any change of product types, e.g. modify shirt to shoe.\n\n- The user must provide a payment method to pay or receive refund of the price difference. If the user provides a gift card, it must have enough balance to cover the price difference.\n\n- After user confirmation, the order status will be changed to 'exchange requested', and the user will receive an email regarding how to return items. There is no need to place a new order.\n"
+      },
+      {
+        "role": "user",
+        "content": "Hi there! I\u2019m actually pretty upset\u2014I just got two skateboards from you, and the quality is honestly terrible. I\u2019d like to return them and get a refund back to my credit card, please."
+      },
+      {
+        "role": "assistant",
+        "content": "I\u2019m here to help you with your return and refund request. To get started, I need to authenticate your identity for security purposes. Could you please provide the email address associated with your account? If you don\u2019t remember your email, I can also verify your identity using your first name, last name, and zip code.",
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "user",
+        "content": "Sure, my name is Mei Ahmed and my zip code is 78705."
+      },
+      {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_SZcWc3t0kNTRHoIvu3Sn3GwN",
+            "type": "function",
+            "function": {
+              "name": "find_user_id_by_name_zip",
+              "arguments": "{\"first_name\":\"Mei\",\"last_name\":\"Ahmed\",\"zip\":\"78705\"}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_SZcWc3t0kNTRHoIvu3Sn3GwN",
+        "name": "find_user_id_by_name_zip",
+        "content": "mei_ahmed_4909"
+      },
+      {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_PCkRf1fI6WcJ1wrZNLHNkSAc",
+            "type": "function",
+            "function": {
+              "name": "get_user_details",
+              "arguments": "{\"user_id\":\"mei_ahmed_4909\"}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_PCkRf1fI6WcJ1wrZNLHNkSAc",
+        "name": "get_user_details",
+        "content": "{\"name\": {\"first_name\": \"Mei\", \"last_name\": \"Ahmed\"}, \"address\": {\"address1\": \"572 Cedar Street\", \"address2\": \"Suite 469\", \"city\": \"Austin\", \"country\": \"USA\", \"state\": \"TX\", \"zip\": \"78705\"}, \"email\": \"mei.ahmed4901@example.com\", \"payment_methods\": {\"credit_card_5902940\": {\"source\": \"credit_card\", \"brand\": \"mastercard\", \"last_four\": \"9375\", \"id\": \"credit_card_5902940\"}}, \"orders\": [\"#W7553978\", \"#W3239882\", \"#W2598324\"]}"
+      },
+      {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_R2OCbynru051njbRH9tG9Loi",
+            "type": "function",
+            "function": {
+              "name": "get_order_details",
+              "arguments": "{\"order_id\": \"#W7553978\"}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_R2OCbynru051njbRH9tG9Loi",
+        "name": "get_order_details",
+        "content": "{\"order_id\": \"#W7553978\", \"user_id\": \"mei_ahmed_4909\", \"address\": {\"address1\": \"572 Cedar Street\", \"address2\": \"Suite 469\", \"city\": \"Austin\", \"country\": \"USA\", \"state\": \"TX\", \"zip\": \"78705\"}, \"items\": [{\"name\": \"Skateboard\", \"product_id\": \"1968349452\", \"item_id\": \"4545791457\", \"price\": 186.06, \"options\": {\"deck material\": \"plastic\", \"length\": \"28 inch\", \"design\": \"plain\"}}, {\"name\": \"Vacuum Cleaner\", \"product_id\": \"1762337868\", \"item_id\": \"1345513440\", \"price\": 655.59, \"options\": {\"type\": \"canister\", \"bagged/bagless\": \"bagged\", \"features\": \"cordless\"}}, {\"name\": \"Skateboard\", \"product_id\": \"1968349452\", \"item_id\": \"3098764622\", \"price\": 202.13, \"options\": {\"deck material\": \"plastic\", \"length\": \"34 inch\", \"design\": \"plain\"}}, {\"name\": \"Smart Watch\", \"product_id\": \"6945232052\", \"item_id\": \"1631806422\", \"price\": 339.85, \"options\": {\"color\": \"black\", \"band material\": \"metal\", \"display\": \"AMOLED\"}}], \"fulfillments\": [{\"tracking_id\": [\"873459681869\"], \"item_ids\": [\"4545791457\", \"1345513440\", \"3098764622\", \"1631806422\"]}], \"status\": \"delivered\", \"payment_history\": [{\"transaction_type\": \"payment\", \"amount\": 1383.63, \"payment_method_id\": \"credit_card_5902940\"}]}"
+      },
+      {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_te6bFzOsJ32rfW9huavjQY5e",
+            "type": "function",
+            "function": {
+              "name": "list_order_items",
+              "arguments": "{\"order_id\":\"#W7553978\"}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_te6bFzOsJ32rfW9huavjQY5e",
+        "name": "list_order_items",
+        "content": "{\n  \"name\": \"Skateboard\",\n  \"product_id\": \"1968349452\",\n  \"item_id\": \"4545791457\",\n  \"price\": 186.06,\n  \"options\": {\n    \"deck material\": \"plastic\",\n    \"length\": \"28 inch\",\n    \"design\": \"plain\"\n  }\n}"
+      },
+      {
+        "role": "assistant",
+        "content": "You have two skateboards in your most recent delivered order (#W7553978). To process your return and refund to your credit card, I\u2019ll need to confirm the following details:\n\n- Both skateboards (one 28-inch and one 34-inch, both plastic deck, plain design) will be returned.\n- The refund will be issued to your Mastercard ending in 9375.\n- After confirmation, your order status will change to \"return requested,\" and you\u2019ll receive an email with instructions on how to return the items.\n\nPlease confirm that you want to proceed with the return of both skateboards and the refund to your credit card. If you\u2019d like to return any other items or use a different refund method, let me know before confirming. Would you like to proceed? (yes/no)",
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "user",
+        "content": "Actually, I also want to return the smart watch and the e-reader from the same order. Can we include those in the return as well?"
+      },
+      {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_m2kTWlTs2jQw45q8e0HZrHyQ",
+            "type": "function",
+            "function": {
+              "name": "list_order_items",
+              "arguments": "{\"order_id\":\"#W7553978\"}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_m2kTWlTs2jQw45q8e0HZrHyQ",
+        "name": "list_order_items",
+        "content": "{\n  \"name\": \"Skateboard\",\n  \"product_id\": \"1968349452\",\n  \"item_id\": \"4545791457\",\n  \"price\": 186.06,\n  \"options\": {\n    \"deck material\": \"plastic\",\n    \"length\": \"28 inch\",\n    \"design\": \"plain\"\n  }\n}"
+      },
+      {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_PtcUjLrDM4ZQ33t9QW1Kqf1Z",
+            "type": "function",
+            "function": {
+              "name": "get_order_details",
+              "arguments": "{\"order_id\":\"#W7553978\"}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_PtcUjLrDM4ZQ33t9QW1Kqf1Z",
+        "name": "get_order_details",
+        "content": "{\"order_id\": \"#W7553978\", \"user_id\": \"mei_ahmed_4909\", \"address\": {\"address1\": \"572 Cedar Street\", \"address2\": \"Suite 469\", \"city\": \"Austin\", \"country\": \"USA\", \"state\": \"TX\", \"zip\": \"78705\"}, \"items\": [{\"name\": \"Skateboard\", \"product_id\": \"1968349452\", \"item_id\": \"4545791457\", \"price\": 186.06, \"options\": {\"deck material\": \"plastic\", \"length\": \"28 inch\", \"design\": \"plain\"}}, {\"name\": \"Vacuum Cleaner\", \"product_id\": \"1762337868\", \"item_id\": \"1345513440\", \"price\": 655.59, \"options\": {\"type\": \"canister\", \"bagged/bagless\": \"bagged\", \"features\": \"cordless\"}}, {\"name\": \"Skateboard\", \"product_id\": \"1968349452\", \"item_id\": \"3098764622\", \"price\": 202.13, \"options\": {\"deck material\": \"plastic\", \"length\": \"34 inch\", \"design\": \"plain\"}}, {\"name\": \"Smart Watch\", \"product_id\": \"6945232052\", \"item_id\": \"1631806422\", \"price\": 339.85, \"options\": {\"color\": \"black\", \"band material\": \"metal\", \"display\": \"AMOLED\"}}], \"fulfillments\": [{\"tracking_id\": [\"873459681869\"], \"item_ids\": [\"4545791457\", \"1345513440\", \"3098764622\", \"1631806422\"]}], \"status\": \"delivered\", \"payment_history\": [{\"transaction_type\": \"payment\", \"amount\": 1383.63, \"payment_method_id\": \"credit_card_5902940\"}]}"
+      },
+      {
+        "role": "assistant",
+        "content": "I\u2019ve checked your order, and it contains the following items:\n- Skateboard (28 inch, plastic deck, plain design)\n- Skateboard (34 inch, plastic deck, plain design)\n- Smart Watch (black, metal band, AMOLED display)\n- Vacuum Cleaner (canister, bagged, cordless)\n\nThere is no e-reader in this order. Would you like to return the two skateboards and the smart watch, or do you want to include the vacuum cleaner as well? Please confirm which items you want to return, and I\u2019ll proceed with the return and refund to your credit card.",
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "user",
+        "content": "Sorry, I must have confused the order\u2014just the two skateboards and the smart watch, please. I don\u2019t want to return the vacuum cleaner. Can you help me with those three items?"
+      },
+      {
+        "role": "assistant",
+        "content": "You\u2019d like to return the following items from your delivered order (#W7553978):\n\n- Skateboard (28 inch, plastic deck, plain design)\n- Skateboard (34 inch, plastic deck, plain design)\n- Smart Watch (black, metal band, AMOLED display)\n\nThe refund will be issued to your Mastercard ending in 9375. After confirmation, your order status will change to \"return requested,\" and you\u2019ll receive an email with instructions on how to return the items.\n\nPlease confirm that you want to proceed with the return of these three items and the refund to your credit card. (yes/no)",
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "user",
+        "content": "Before I confirm, can you tell me how long the refund will take to appear on my card after you process it?"
+      },
+      {
+        "role": "assistant",
+        "content": "Once your return is processed and approved, the refund to your credit card will typically appear within 5 to 7 business days. You will receive an email with return instructions after your request is submitted.\n\nWould you like to proceed with the return of the two skateboards and the smart watch for a refund to your credit card?",
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "user",
+        "content": "Thank you for explaining\u2014one more thing, do I need to pay return shipping for these items, or is it covered?"
+      },
+      {
+        "role": "assistant",
+        "content": "I don\u2019t have access to information about return shipping fees or whether they are covered. For details about return shipping costs, please refer to the return instructions in the email you\u2019ll receive after your request is submitted, or check our store\u2019s return policy on the website.\n\nWould you like to proceed with the return of the two skateboards and the smart watch for a refund to your credit card?",
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "user",
+        "content": "Alright, let\u2019s go ahead with the return for those three items. Please process it, and let me know if you need anything else from me."
+      },
+      {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_sWHNQN8crdksXjSN4UQVEHxO",
+            "type": "function",
+            "function": {
+              "name": "return_delivered_order_items",
+              "arguments": "{\"order_id\":\"#W7553978\",\"item_ids\":[\"4545791457\",\"3098764622\",\"1631806422\"],\"payment_method_id\":\"credit_card_5902940\"}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_sWHNQN8crdksXjSN4UQVEHxO",
+        "name": "return_delivered_order_items",
+        "content": "{\"order_id\": \"#W7553978\", \"user_id\": \"mei_ahmed_4909\", \"address\": {\"address1\": \"572 Cedar Street\", \"address2\": \"Suite 469\", \"city\": \"Austin\", \"country\": \"USA\", \"state\": \"TX\", \"zip\": \"78705\"}, \"items\": [{\"name\": \"Skateboard\", \"product_id\": \"1968349452\", \"item_id\": \"4545791457\", \"price\": 186.06, \"options\": {\"deck material\": \"plastic\", \"length\": \"28 inch\", \"design\": \"plain\"}}, {\"name\": \"Vacuum Cleaner\", \"product_id\": \"1762337868\", \"item_id\": \"1345513440\", \"price\": 655.59, \"options\": {\"type\": \"canister\", \"bagged/bagless\": \"bagged\", \"features\": \"cordless\"}}, {\"name\": \"Skateboard\", \"product_id\": \"1968349452\", \"item_id\": \"3098764622\", \"price\": 202.13, \"options\": {\"deck material\": \"plastic\", \"length\": \"34 inch\", \"design\": \"plain\"}}, {\"name\": \"Smart Watch\", \"product_id\": \"6945232052\", \"item_id\": \"1631806422\", \"price\": 339.85, \"options\": {\"color\": \"black\", \"band material\": \"metal\", \"display\": \"AMOLED\"}}], \"fulfillments\": [{\"tracking_id\": [\"873459681869\"], \"item_ids\": [\"4545791457\", \"1345513440\", \"3098764622\", \"1631806422\"]}], \"status\": \"return requested\", \"payment_history\": [{\"transaction_type\": \"payment\", \"amount\": 1383.63, \"payment_method_id\": \"credit_card_5902940\"}], \"return_items\": [\"1631806422\", \"3098764622\", \"4545791457\"], \"return_payment_method_id\": \"credit_card_5902940\"}"
+      },
+      {
+        "role": "assistant",
+        "content": "Your return request for the two skateboards and the smart watch from order #W7553978 has been submitted. The refund will be issued to your Mastercard ending in 9375 and should appear within 5 to 7 business days after your return is processed.\n\nYou will receive an email shortly with instructions on how to return the items. If you have any further questions or need additional assistance, please let me know!",
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "user",
+        "content": "Thank you for your help. I\u2019ll keep an eye out for the email."
+      },
+      {
+        "role": "assistant",
+        "content": "You\u2019re very welcome! If you have any more questions or need further assistance in the future, feel free to reach out. Keep an eye on your email for the return instructions. Have a great day!",
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "user",
+        "content": "###STOP###"
+      }
+    ],
+    "trial": 92,
+    "records": {}
+  }
+]

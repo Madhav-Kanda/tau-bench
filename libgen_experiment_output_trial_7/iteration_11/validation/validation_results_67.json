@@ -1,0 +1,318 @@
+[
+  {
+    "task_id": 67,
+    "reward": 1.0,
+    "info": {
+      "task": {
+        "user_id": "noah_ito_3850",
+        "actions": [
+          {
+            "name": "find_user_id_by_name_zip",
+            "kwargs": {
+              "first_name": "Noah",
+              "last_name": "Ito",
+              "zip": "98178"
+            }
+          },
+          {
+            "name": "find_user_id_by_name_zip",
+            "kwargs": {
+              "first_name": "Noah",
+              "last_name": "Ito",
+              "zip": "98186"
+            }
+          },
+          {
+            "name": "find_user_id_by_name_zip",
+            "kwargs": {
+              "first_name": "Noah",
+              "last_name": "Ito",
+              "zip": "98187"
+            }
+          },
+          {
+            "name": "get_user_details",
+            "kwargs": {
+              "user_id": "noah_ito_3850"
+            }
+          },
+          {
+            "name": "get_order_details",
+            "kwargs": {
+              "order_id": "#W6729841"
+            }
+          }
+        ],
+        "instruction": "You are user noah_ito_3850 living in Seattle WA 98187. Your name is Noah but you go by NoNo. If asked for your zip code, say that it is 98178 first (common mistake), then correct yourself and say 98186 if an error is found. If that fails, then say 98187. You want to check how much you paid for the order that you most recently placed. You are not sure how long ago the order was placed.",
+        "outputs": [
+          "829.43"
+        ]
+      },
+      "source": "user",
+      "user_cost": 796,
+      "reward_info": {
+        "reward": 1.0,
+        "info": {
+          "r_outputs": 1.0,
+          "outputs": {
+            "829.43": true
+          }
+        },
+        "actions": [
+          {
+            "name": "find_user_id_by_name_zip",
+            "kwargs": {
+              "first_name": "Noah",
+              "last_name": "Ito",
+              "zip": "98178"
+            }
+          },
+          {
+            "name": "find_user_id_by_name_zip",
+            "kwargs": {
+              "first_name": "Noah",
+              "last_name": "Ito",
+              "zip": "98186"
+            }
+          },
+          {
+            "name": "find_user_id_by_name_zip",
+            "kwargs": {
+              "first_name": "Noah",
+              "last_name": "Ito",
+              "zip": "98187"
+            }
+          },
+          {
+            "name": "get_user_details",
+            "kwargs": {
+              "user_id": "noah_ito_3850"
+            }
+          },
+          {
+            "name": "get_order_details",
+            "kwargs": {
+              "order_id": "#W6729841"
+            }
+          }
+        ]
+      }
+    },
+    "traj": [
+      {
+        "role": "system",
+        "content": "# Retail agent policy\n\nAs a retail agent, you can help users cancel or modify pending orders, return or exchange delivered orders, modify their default user address, or provide information about their own profile, orders, and related products.\n\n- At the beginning of the conversation, you have to authenticate the user identity by locating their user id via email, or via name + zip code. This has to be done even when the user already provides the user id.\n\n- Once the user has been authenticated, you can provide the user with information about order, product, profile information, e.g. help the user look up order id.\n\n- You can only help one user per conversation (but you can handle multiple requests from the same user), and must deny any requests for tasks related to any other user.\n\n- Before taking consequential actions that update the database (cancel, modify, return, exchange), you have to list the action detail and obtain explicit user confirmation (yes) to proceed.\n\n- You should not make up any information or knowledge or procedures not provided from the user or the tools, or give subjective recommendations or comments.\n\n- You should at most make one tool call at a time, and if you take a tool call, you should not respond to the user at the same time. If you respond to the user, you should not make a tool call.\n\n- You should transfer the user to a human agent if and only if the request cannot be handled within the scope of your actions.\n\n## Domain basic\n\n- All times in the database are EST and 24 hour based. For example \"02:30:00\" means 2:30 AM EST.\n\n- Each user has a profile of its email, default address, user id, and payment methods. Each payment method is either a gift card, a paypal account, or a credit card.\n\n- Our retail store has 50 types of products. For each type of product, there are variant items of different options. For example, for a 't shirt' product, there could be an item with option 'color blue size M', and another item with option 'color red size L'.\n\n- Each product has an unique product id, and each item has an unique item id. They have no relations and should not be confused.\n\n- Each order can be in status 'pending', 'processed', 'delivered', or 'cancelled'. Generally, you can only take action on pending or delivered orders.\n\n- Exchange or modify order tools can only be called once. Be sure that all items to be changed are collected into a list before making the tool call!!!\n\n## Cancel pending order\n\n- An order can only be cancelled if its status is 'pending', and you should check its status before taking the action.\n\n- The user needs to confirm the order id and the reason (either 'no longer needed' or 'ordered by mistake') for cancellation.\n\n- After user confirmation, the order status will be changed to 'cancelled', and the total will be refunded via the original payment method immediately if it is gift card, otherwise in 5 to 7 business days.\n\n## Modify pending order\n\n- An order can only be modified if its status is 'pending', and you should check its status before taking the action.\n\n- For a pending order, you can take actions to modify its shipping address, payment method, or product item options, but nothing else.\n\n### Modify payment\n\n- The user can only choose a single payment method different from the original payment method.\n\n- If the user wants the modify the payment method to gift card, it must have enough balance to cover the total amount.\n\n- After user confirmation, the order status will be kept 'pending'. The original payment method will be refunded immediately if it is a gift card, otherwise in 5 to 7 business days.\n\n### Modify items\n\n- This action can only be called once, and will change the order status to 'pending (items modifed)', and the agent will not be able to modify or cancel the order anymore. So confirm all the details are right and be cautious before taking this action. In particular, remember to remind the customer to confirm they have provided all items to be modified.\n\n- For a pending order, each item can be modified to an available new item of the same product but of different product option. There cannot be any change of product types, e.g. modify shirt to shoe.\n\n- The user must provide a payment method to pay or receive refund of the price difference. If the user provides a gift card, it must have enough balance to cover the price difference.\n\n## Return delivered order\n\n- An order can only be returned if its status is 'delivered', and you should check its status before taking the action.\n\n- The user needs to confirm the order id, the list of items to be returned, and a payment method to receive the refund.\n\n- The refund must either go to the original payment method, or an existing gift card.\n\n- After user confirmation, the order status will be changed to 'return requested', and the user will receive an email regarding how to return items.\n\n## Exchange delivered order\n\n- An order can only be exchanged if its status is 'delivered', and you should check its status before taking the action. In particular, remember to remind the customer to confirm they have provided all items to be exchanged.\n\n- For a delivered order, each item can be exchanged to an available new item of the same product but of different product option. There cannot be any change of product types, e.g. modify shirt to shoe.\n\n- The user must provide a payment method to pay or receive refund of the price difference. If the user provides a gift card, it must have enough balance to cover the price difference.\n\n- After user confirmation, the order status will be changed to 'exchange requested', and the user will receive an email regarding how to return items. There is no need to place a new order.\n"
+      },
+      {
+        "role": "user",
+        "content": "Hi! I was wondering if you could tell me how much I paid for my most recent order? I\u2019m not sure of the exact date."
+      },
+      {
+        "role": "assistant",
+        "content": "I can help you with that! To get started, I\u2019ll need to authenticate your identity. Could you please provide the email address associated with your account? If you don\u2019t remember your email, I can also look you up by your first name, last name, and zip code.",
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "user",
+        "content": "Sure, my name is Noah, but I usually go by NoNo. My zip code is 98178."
+      },
+      {
+        "role": "assistant",
+        "content": "Thank you, Noah. Could you please provide your last name as well? This will help me locate your account securely.",
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "user",
+        "content": "Oops, sorry\u2014my zip code is actually 98186. And my last name is Ito."
+      },
+      {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_A0uFQh5qU2baSEF8SmLFjgcu",
+            "type": "function",
+            "function": {
+              "name": "find_user_id_by_name_zip",
+              "arguments": "{\"first_name\":\"Noah\",\"last_name\":\"Ito\",\"zip\":\"98186\"}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_A0uFQh5qU2baSEF8SmLFjgcu",
+        "name": "find_user_id_by_name_zip",
+        "content": "Error: user not found"
+      },
+      {
+        "role": "assistant",
+        "content": "I wasn\u2019t able to locate your account with the name Noah Ito and zip code 98186. Could you please confirm if you have used a different first name, last name, or zip code for your account? Alternatively, if you remember your email address, I can try searching with that instead.",
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "user",
+        "content": "Oh, my bad! It\u2019s actually 98187 for the zip code. Everything else is the same."
+      },
+      {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_3V2jxSPjBtrHrrc62MTUF775",
+            "type": "function",
+            "function": {
+              "name": "find_user_id_by_name_zip",
+              "arguments": "{\"first_name\":\"Noah\",\"last_name\":\"Ito\",\"zip\":\"98187\"}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_3V2jxSPjBtrHrrc62MTUF775",
+        "name": "find_user_id_by_name_zip",
+        "content": "noah_ito_3850"
+      },
+      {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_KOdU66AC91I88DH99SoxyECU",
+            "type": "function",
+            "function": {
+              "name": "get_user_details",
+              "arguments": "{\"user_id\":\"noah_ito_3850\"}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_KOdU66AC91I88DH99SoxyECU",
+        "name": "get_user_details",
+        "content": "{\"name\": {\"first_name\": \"Noah\", \"last_name\": \"Ito\"}, \"address\": {\"address1\": \"619 Broadway\", \"address2\": \"Suite 484\", \"city\": \"Seattle\", \"country\": \"USA\", \"state\": \"WA\", \"zip\": \"98187\"}, \"email\": \"noah.ito4296@example.com\", \"payment_methods\": {\"credit_card_1620755\": {\"source\": \"credit_card\", \"brand\": \"mastercard\", \"last_four\": \"1065\", \"id\": \"credit_card_1620755\"}}, \"orders\": [\"#W3445693\", \"#W4219264\", \"#W6729841\"]}"
+      },
+      {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_6cvzOKoyBtfqHQdcJauaSaPz",
+            "type": "function",
+            "function": {
+              "name": "list_user_orders_and_statuses",
+              "arguments": "{\"user_id\":\"noah_ito_3850\"}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_6cvzOKoyBtfqHQdcJauaSaPz",
+        "name": "list_user_orders_and_statuses",
+        "content": "["
+      },
+      {
+        "role": "assistant",
+        "content": "I have successfully located your account, Noah Ito. However, it appears there are no orders currently listed under your account. Could you please confirm if you may have used a different account or email for your recent order? If you have any additional details, please let me know so I can assist you further.",
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "user",
+        "content": "I\u2019m pretty sure I used this account, and I usually stick to this email and info for all my orders. Is it possible my last order just isn\u2019t showing up yet?"
+      },
+      {
+        "role": "assistant",
+        "content": "Thank you for confirming your details. Based on the information I retrieved, your account does show three order IDs: #W3445693, #W4219264, and #W6729841. However, I wasn\u2019t able to display their details in my previous step.\n\nLet me check the details of these orders to find your most recent one and the amount you paid.",
+        "tool_calls": [
+          {
+            "id": "call_xqOLr5kC3IVWsXK6JXs55tPO",
+            "type": "function",
+            "function": {
+              "name": "get_order_details",
+              "arguments": "{\"order_id\": \"#W3445693\"}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_xqOLr5kC3IVWsXK6JXs55tPO",
+        "name": "get_order_details",
+        "content": "{\"order_id\": \"#W3445693\", \"user_id\": \"noah_ito_3850\", \"address\": {\"address1\": \"144 Lakeview Drive\", \"address2\": \"Suite 925\", \"city\": \"New York\", \"country\": \"USA\", \"state\": \"NY\", \"zip\": \"10228\"}, \"items\": [{\"name\": \"Sneakers\", \"product_id\": \"7471004230\", \"item_id\": \"6477915553\", \"price\": 186.45, \"options\": {\"size\": \"6\", \"color\": \"black\", \"material\": \"synthetic\"}}, {\"name\": \"Cycling Helmet\", \"product_id\": \"7765186836\", \"item_id\": \"2206116040\", \"price\": 209.91, \"options\": {\"size\": \"L\", \"color\": \"blue\", \"ventilation\": \"high\"}}, {\"name\": \"Air Purifier\", \"product_id\": \"3821016478\", \"item_id\": \"6341716129\", \"price\": 523.31, \"options\": {\"room size\": \"large\", \"filter type\": \"HEPA\", \"features\": \"smart sensors\"}}], \"fulfillments\": [{\"tracking_id\": [\"870596657470\"], \"item_ids\": [\"6477915553\", \"2206116040\", \"6341716129\"]}], \"status\": \"delivered\", \"payment_history\": [{\"transaction_type\": \"payment\", \"amount\": 919.67, \"payment_method_id\": \"credit_card_1620755\"}]}"
+      },
+      {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_zvH0LTIBF3CxVUNpTG1KOVCO",
+            "type": "function",
+            "function": {
+              "name": "get_order_details",
+              "arguments": "{\"order_id\":\"#W4219264\"}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_zvH0LTIBF3CxVUNpTG1KOVCO",
+        "name": "get_order_details",
+        "content": "{\"order_id\": \"#W4219264\", \"user_id\": \"noah_ito_3850\", \"address\": {\"address1\": \"619 Broadway\", \"address2\": \"Suite 484\", \"city\": \"Seattle\", \"country\": \"USA\", \"state\": \"WA\", \"zip\": \"98187\"}, \"items\": [{\"name\": \"Jigsaw Puzzle\", \"product_id\": \"1808611083\", \"item_id\": \"7869640094\", \"price\": 47.59, \"options\": {\"pieces\": \"2000\", \"theme\": \"animals\", \"difficulty level\": \"expert\"}}, {\"name\": \"Wristwatch\", \"product_id\": \"6066914160\", \"item_id\": \"8886009523\", \"price\": 1944.02, \"options\": {\"strap material\": \"silicone\", \"dial color\": \"blue\"}}, {\"name\": \"Wristwatch\", \"product_id\": \"6066914160\", \"item_id\": \"9112290483\", \"price\": 1925.16, \"options\": {\"strap material\": \"metal\", \"dial color\": \"blue\"}}], \"fulfillments\": [], \"status\": \"pending\", \"payment_history\": [{\"transaction_type\": \"payment\", \"amount\": 3916.77, \"payment_method_id\": \"credit_card_1620755\"}]}"
+      },
+      {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_Mb1oWdgiv00bqsEdrJNaLkM3",
+            "type": "function",
+            "function": {
+              "name": "get_order_details",
+              "arguments": "{\"order_id\":\"#W6729841\"}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_Mb1oWdgiv00bqsEdrJNaLkM3",
+        "name": "get_order_details",
+        "content": "{\"order_id\": \"#W6729841\", \"user_id\": \"noah_ito_3850\", \"address\": {\"address1\": \"619 Broadway\", \"address2\": \"Suite 484\", \"city\": \"Seattle\", \"country\": \"USA\", \"state\": \"WA\", \"zip\": \"98187\"}, \"items\": [{\"name\": \"Bluetooth Speaker\", \"product_id\": \"4768869376\", \"item_id\": \"5855700373\", \"price\": 293.46, \"options\": {\"color\": \"black\", \"battery life\": \"10 hours\", \"water resistance\": \"yes\"}}, {\"name\": \"Air Purifier\", \"product_id\": \"3821016478\", \"item_id\": \"3076708684\", \"price\": 535.97, \"options\": {\"room size\": \"medium\", \"filter type\": \"HEPA\", \"features\": \"quiet operation\"}}], \"fulfillments\": [], \"status\": \"pending\", \"payment_history\": [{\"transaction_type\": \"payment\", \"amount\": 829.43, \"payment_method_id\": \"credit_card_1620755\"}]}"
+      },
+      {
+        "role": "assistant",
+        "content": "Here are the details for your three most recent orders:\n\n1. Order #W3445693 (delivered): Total paid was $919.67.\n2. Order #W4219264 (pending): Total paid was $3,916.77.\n3. Order #W6729841 (pending): Total paid was $829.43.\n\nYour most recent order is #W6729841, and you paid $829.43 for it. If you need more details about this order or any other, please let me know!",
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "user",
+        "content": "Thank you! $829.43\u2014got it. That\u2019s all I needed. \n\n###STOP###"
+      }
+    ],
+    "trial": 67,
+    "records": {}
+  }
+]

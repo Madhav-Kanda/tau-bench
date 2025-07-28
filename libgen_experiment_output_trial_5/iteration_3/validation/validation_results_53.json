@@ -1,0 +1,434 @@
+[
+  {
+    "task_id": 53,
+    "reward": 1.0,
+    "info": {
+      "task": {
+        "user_id": "sofia_li_9219",
+        "actions": [
+          {
+            "name": "find_user_id_by_name_zip",
+            "kwargs": {
+              "first_name": "Sofia",
+              "last_name": "Li",
+              "zip": "78260"
+            }
+          },
+          {
+            "name": "get_user_details",
+            "kwargs": {
+              "user_id": "sofia_li_9219"
+            }
+          },
+          {
+            "name": "get_order_details",
+            "kwargs": {
+              "order_id": "#W4689314"
+            }
+          },
+          {
+            "name": "get_order_details",
+            "kwargs": {
+              "order_id": "#W8855135"
+            }
+          },
+          {
+            "name": "get_order_details",
+            "kwargs": {
+              "order_id": "#W3916020"
+            }
+          },
+          {
+            "name": "return_delivered_order_items",
+            "kwargs": {
+              "order_id": "#W3916020",
+              "item_ids": [
+                "7758198585"
+              ],
+              "payment_method_id": "credit_card_8105988"
+            }
+          }
+        ],
+        "instruction": "You are Sofia Li, residing in San Antonio, 78260. The bicycle you received was damaged during delivery, and you want to get a refund. You're quite frustrated because the bike was very expensive and you'd like to receive the refund as soon as possible. You want the refund to be credited to your original credit card.",
+        "outputs": []
+      },
+      "source": "user",
+      "user_cost": 973,
+      "reward_info": {
+        "reward": 1.0,
+        "info": {
+          "r_actions": 1.0,
+          "gt_data_hash": "5a4b2cb59f4d12dea7e4adff24a7f8fada510ead49372ea4a729a82bbb5f49b5"
+        },
+        "actions": [
+          {
+            "name": "find_user_id_by_name_zip",
+            "kwargs": {
+              "first_name": "Sofia",
+              "last_name": "Li",
+              "zip": "78260"
+            }
+          },
+          {
+            "name": "get_user_details",
+            "kwargs": {
+              "user_id": "sofia_li_9219"
+            }
+          },
+          {
+            "name": "get_order_details",
+            "kwargs": {
+              "order_id": "#W4689314"
+            }
+          },
+          {
+            "name": "get_order_details",
+            "kwargs": {
+              "order_id": "#W8855135"
+            }
+          },
+          {
+            "name": "get_order_details",
+            "kwargs": {
+              "order_id": "#W3916020"
+            }
+          },
+          {
+            "name": "return_delivered_order_items",
+            "kwargs": {
+              "order_id": "#W3916020",
+              "item_ids": [
+                "7758198585"
+              ],
+              "payment_method_id": "credit_card_8105988"
+            }
+          }
+        ]
+      }
+    },
+    "traj": [
+      {
+        "role": "system",
+        "content": "# Retail agent policy\n\nAs a retail agent, you can help users cancel or modify pending orders, return or exchange delivered orders, modify their default user address, or provide information about their own profile, orders, and related products.\n\n- At the beginning of the conversation, you have to authenticate the user identity by locating their user id via email, or via name + zip code. This has to be done even when the user already provides the user id.\n\n- Once the user has been authenticated, you can provide the user with information about order, product, profile information, e.g. help the user look up order id.\n\n- You can only help one user per conversation (but you can handle multiple requests from the same user), and must deny any requests for tasks related to any other user.\n\n- Before taking consequential actions that update the database (cancel, modify, return, exchange), you have to list the action detail and obtain explicit user confirmation (yes) to proceed.\n\n- You should not make up any information or knowledge or procedures not provided from the user or the tools, or give subjective recommendations or comments.\n\n- You should at most make one tool call at a time, and if you take a tool call, you should not respond to the user at the same time. If you respond to the user, you should not make a tool call.\n\n- You should transfer the user to a human agent if and only if the request cannot be handled within the scope of your actions.\n\n## Domain basic\n\n- All times in the database are EST and 24 hour based. For example \"02:30:00\" means 2:30 AM EST.\n\n- Each user has a profile of its email, default address, user id, and payment methods. Each payment method is either a gift card, a paypal account, or a credit card.\n\n- Our retail store has 50 types of products. For each type of product, there are variant items of different options. For example, for a 't shirt' product, there could be an item with option 'color blue size M', and another item with option 'color red size L'.\n\n- Each product has an unique product id, and each item has an unique item id. They have no relations and should not be confused.\n\n- Each order can be in status 'pending', 'processed', 'delivered', or 'cancelled'. Generally, you can only take action on pending or delivered orders.\n\n- Exchange or modify order tools can only be called once. Be sure that all items to be changed are collected into a list before making the tool call!!!\n\n## Cancel pending order\n\n- An order can only be cancelled if its status is 'pending', and you should check its status before taking the action.\n\n- The user needs to confirm the order id and the reason (either 'no longer needed' or 'ordered by mistake') for cancellation.\n\n- After user confirmation, the order status will be changed to 'cancelled', and the total will be refunded via the original payment method immediately if it is gift card, otherwise in 5 to 7 business days.\n\n## Modify pending order\n\n- An order can only be modified if its status is 'pending', and you should check its status before taking the action.\n\n- For a pending order, you can take actions to modify its shipping address, payment method, or product item options, but nothing else.\n\n### Modify payment\n\n- The user can only choose a single payment method different from the original payment method.\n\n- If the user wants the modify the payment method to gift card, it must have enough balance to cover the total amount.\n\n- After user confirmation, the order status will be kept 'pending'. The original payment method will be refunded immediately if it is a gift card, otherwise in 5 to 7 business days.\n\n### Modify items\n\n- This action can only be called once, and will change the order status to 'pending (items modifed)', and the agent will not be able to modify or cancel the order anymore. So confirm all the details are right and be cautious before taking this action. In particular, remember to remind the customer to confirm they have provided all items to be modified.\n\n- For a pending order, each item can be modified to an available new item of the same product but of different product option. There cannot be any change of product types, e.g. modify shirt to shoe.\n\n- The user must provide a payment method to pay or receive refund of the price difference. If the user provides a gift card, it must have enough balance to cover the price difference.\n\n## Return delivered order\n\n- An order can only be returned if its status is 'delivered', and you should check its status before taking the action.\n\n- The user needs to confirm the order id, the list of items to be returned, and a payment method to receive the refund.\n\n- The refund must either go to the original payment method, or an existing gift card.\n\n- After user confirmation, the order status will be changed to 'return requested', and the user will receive an email regarding how to return items.\n\n## Exchange delivered order\n\n- An order can only be exchanged if its status is 'delivered', and you should check its status before taking the action. In particular, remember to remind the customer to confirm they have provided all items to be exchanged.\n\n- For a delivered order, each item can be exchanged to an available new item of the same product but of different product option. There cannot be any change of product types, e.g. modify shirt to shoe.\n\n- The user must provide a payment method to pay or receive refund of the price difference. If the user provides a gift card, it must have enough balance to cover the price difference.\n\n- After user confirmation, the order status will be changed to 'exchange requested', and the user will receive an email regarding how to return items. There is no need to place a new order.\n"
+      },
+      {
+        "role": "user",
+        "content": "Hi, I recently received a bicycle I ordered, but it was damaged when it arrived. I\u2019m really frustrated and would like to get a refund as soon as possible."
+      },
+      {
+        "role": "assistant",
+        "content": "I'm sorry to hear about the damaged bicycle. I can help you request a return and refund for your order.\n\nTo get started, could you please provide the email address you used for your purchase? This will help me locate your order and assist you further.",
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "user",
+        "content": "Sure, my email address is sofiali.sa@gmail.com."
+      },
+      {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_fD1BdBO3bQAHgE76b5AtdcWt",
+            "type": "function",
+            "function": {
+              "name": "find_user_id_by_email",
+              "arguments": "{\"email\":\"sofiali.sa@gmail.com\"}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_fD1BdBO3bQAHgE76b5AtdcWt",
+        "name": "find_user_id_by_email",
+        "content": "Error: user not found"
+      },
+      {
+        "role": "assistant",
+        "content": "It appears that I couldn't find a user with the email address \"sofiali.sa@gmail.com\" in our system. \n\nCould you please confirm if the email is correct? If you\u2019re not sure or used a different email, I can also look up your account using your first name, last name, and zip code. Would you like to try that?",
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "user",
+        "content": "Yes, let's try that. My name is Sofia Li and my zip code is 78260."
+      },
+      {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_h5XrLaxPAINs94gSxcey66fO",
+            "type": "function",
+            "function": {
+              "name": "find_user_id_by_name_zip",
+              "arguments": "{\"first_name\":\"Sofia\",\"last_name\":\"Li\",\"zip\":\"78260\"}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_h5XrLaxPAINs94gSxcey66fO",
+        "name": "find_user_id_by_name_zip",
+        "content": "sofia_li_9219"
+      },
+      {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_x1HlXORn4plyuDa85aKmQnwg",
+            "type": "function",
+            "function": {
+              "name": "get_user_details",
+              "arguments": "{\"user_id\":\"sofia_li_9219\"}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_x1HlXORn4plyuDa85aKmQnwg",
+        "name": "get_user_details",
+        "content": "{\"name\": {\"first_name\": \"Sofia\", \"last_name\": \"Li\"}, \"address\": {\"address1\": \"786 Elm Street\", \"address2\": \"Suite 546\", \"city\": \"San Antonio\", \"country\": \"USA\", \"state\": \"TX\", \"zip\": \"78260\"}, \"email\": \"sofia.li7352@example.com\", \"payment_methods\": {\"paypal_8194385\": {\"source\": \"paypal\", \"id\": \"paypal_8194385\"}, \"credit_card_3951670\": {\"source\": \"credit_card\", \"brand\": \"visa\", \"last_four\": \"6791\", \"id\": \"credit_card_3951670\"}, \"credit_card_8105988\": {\"source\": \"credit_card\", \"brand\": \"mastercard\", \"last_four\": \"8484\", \"id\": \"credit_card_8105988\"}}, \"orders\": [\"#W4689314\", \"#W8855135\", \"#W3916020\", \"#W5416052\"]}"
+      },
+      {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_yLymNp1NrfPOILJmvZBftynX",
+            "type": "function",
+            "function": {
+              "name": "list_user_orders_and_statuses",
+              "arguments": "{\"user_id\":\"sofia_li_9219\"}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_yLymNp1NrfPOILJmvZBftynX",
+        "name": "list_user_orders_and_statuses",
+        "content": "["
+      },
+      {
+        "role": "assistant",
+        "content": "Thank you, Sofia. I\u2019ve found your account. To help you with the return and refund for your damaged bicycle, could you please confirm which order the bicycle was part of, or provide any details about the order (such as the order date or other items in the order)? This will help me identify the correct order for your return request.",
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "user",
+        "content": "I\u2019m sorry, I don\u2019t remember the order number or the exact date, but the bicycle was the only item in that order."
+      },
+      {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_MljKHeujNIGABNI0Ar299RSA",
+            "type": "function",
+            "function": {
+              "name": "find_orders_by_user",
+              "arguments": "{\"user_id\":\"sofia_li_9219\"}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_MljKHeujNIGABNI0Ar299RSA",
+        "name": "find_orders_by_user",
+        "content": "[{\"order_id\": \"#W4689314\", \"status\": \"delivered\", \"items\": [\"Digital Camera\"]}, {\"order_id\": \"#W8855135\", \"status\": \"pending\", \"items\": [\"Air Purifier\", \"Hiking Boots\", \"Skateboard\", \"Yoga Mat\"]}, {\"order_id\": \"#W3916020\", \"status\": \"delivered\", \"items\": [\"Jigsaw Puzzle\", \"Bicycle\"]}, {\"order_id\": \"#W5416052\", \"status\": \"delivered\", \"items\": [\"Pet Bed\", \"Cycling Helmet\", \"Wireless Earbuds\", \"Jigsaw Puzzle\", \"Smart Watch\"]}]"
+      },
+      {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_ZmiHffwxO4159mQYuogLoz4N",
+            "type": "function",
+            "function": {
+              "name": "list_order_items",
+              "arguments": "{\"order_id\":\"#W3916020\"}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_ZmiHffwxO4159mQYuogLoz4N",
+        "name": "list_order_items",
+        "content": "{\n  \"name\": \"Jigsaw Puzzle\",\n  \"product_id\": \"1808611083\",\n  \"item_id\": \"4068787148\",\n  \"price\": 52.01,\n  \"options\": {\n    \"pieces\": \"500\",\n    \"theme\": \"art\",\n    \"difficulty level\": \"intermediate\"\n  }\n}"
+      },
+      {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_yVIniNoKNgPeXqgNKN9Ldecq",
+            "type": "function",
+            "function": {
+              "name": "list_order_items",
+              "arguments": "{\"order_id\":\"#W3916020\"}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_yVIniNoKNgPeXqgNKN9Ldecq",
+        "name": "list_order_items",
+        "content": "{\n  \"name\": \"Jigsaw Puzzle\",\n  \"product_id\": \"1808611083\",\n  \"item_id\": \"4068787148\",\n  \"price\": 52.01,\n  \"options\": {\n    \"pieces\": \"500\",\n    \"theme\": \"art\",\n    \"difficulty level\": \"intermediate\"\n  }\n}"
+      },
+      {
+        "role": "assistant",
+        "content": "It looks like the order that included a bicycle also had a jigsaw puzzle. Could you confirm if you would like to return just the bicycle, or both the bicycle and the jigsaw puzzle from this order? Once you confirm, I\u2019ll proceed to the next step and show you your refund options.",
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "user",
+        "content": "I only want to return the bicycle. The jigsaw puzzle is fine."
+      },
+      {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_2UOCb1qW886RQxYvcUKHxgS3",
+            "type": "function",
+            "function": {
+              "name": "list_order_items",
+              "arguments": "{\"order_id\":\"#W3916020\"}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_2UOCb1qW886RQxYvcUKHxgS3",
+        "name": "list_order_items",
+        "content": "{\n  \"name\": \"Jigsaw Puzzle\",\n  \"product_id\": \"1808611083\",\n  \"item_id\": \"4068787148\",\n  \"price\": 52.01,\n  \"options\": {\n    \"pieces\": \"500\",\n    \"theme\": \"art\",\n    \"difficulty level\": \"intermediate\"\n  }\n}"
+      },
+      {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_BDGkS1l86sFFUH7MRZ9UCppi",
+            "type": "function",
+            "function": {
+              "name": "get_order_details",
+              "arguments": "{\"order_id\":\"#W3916020\"}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_BDGkS1l86sFFUH7MRZ9UCppi",
+        "name": "get_order_details",
+        "content": "{\"order_id\": \"#W3916020\", \"user_id\": \"sofia_li_9219\", \"address\": {\"address1\": \"285 Elm Street\", \"address2\": \"Suite 121\", \"city\": \"Fort Worth\", \"country\": \"USA\", \"state\": \"TX\", \"zip\": \"76155\"}, \"items\": [{\"name\": \"Jigsaw Puzzle\", \"product_id\": \"1808611083\", \"item_id\": \"4068787148\", \"price\": 52.01, \"options\": {\"pieces\": \"500\", \"theme\": \"art\", \"difficulty level\": \"intermediate\"}}, {\"name\": \"Bicycle\", \"product_id\": \"9783735446\", \"item_id\": \"7758198585\", \"price\": 1917.21, \"options\": {\"frame size\": \"medium\", \"color\": \"green\", \"type\": \"road\"}}], \"fulfillments\": [{\"tracking_id\": [\"580826001577\"], \"item_ids\": [\"4068787148\", \"7758198585\"]}], \"status\": \"delivered\", \"payment_history\": [{\"transaction_type\": \"payment\", \"amount\": 1969.22, \"payment_method_id\": \"credit_card_8105988\"}]}"
+      },
+      {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_YkOcGmN27iYZooVbTpBjSMpf",
+            "type": "function",
+            "function": {
+              "name": "list_user_payment_methods",
+              "arguments": "{\"user_id\":\"sofia_li_9219\"}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_YkOcGmN27iYZooVbTpBjSMpf",
+        "name": "list_user_payment_methods",
+        "content": "{\n  \"paypal_8194385\": {\n    \"source\": \"paypal\",\n    \"id\": \"paypal_8194385\"\n  },\n  \"credit_card_3951670\": {\n    \"source\": \"credit_card\",\n    \"brand\": \"visa\",\n    \"last_four\": \"6791\",\n    \"id\": \"credit_card_3951670\"\n  },\n  \"credit_card_8105988\": {\n    \"source\": \"credit_card\",\n    \"brand\": \"mastercard\",\n    \"last_four\": \"8484\",\n    \"id\": \"credit_card_8105988\"\n  }\n}"
+      },
+      {
+        "role": "assistant",
+        "content": "You are requesting to return only the bicycle from your delivered order #W3916020. The refund can be issued to your original payment method (Mastercard ending in 8484) or to a PayPal account or another credit card you have on file.\n\nPlease confirm:\n- You want to return only the bicycle (green, medium, road type).\n- Your refund should go to either your Mastercard ending in 8484, your Visa ending in 6791, or your PayPal account.\n\nLet me know your preferred refund method and confirm you\u2019d like to proceed. Once you confirm, I\u2019ll submit the return request and you\u2019ll receive an email with return instructions.",
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "user",
+        "content": "Yes, that\u2019s correct\u2014I want to return only the bicycle, and I\u2019d like the refund to be credited back to my original Mastercard ending in 8484. Please proceed as soon as possible."
+      },
+      {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_J3vXWuUmOrpILoy8n5aAjAra",
+            "type": "function",
+            "function": {
+              "name": "return_delivered_order_items",
+              "arguments": "{\"order_id\":\"#W3916020\",\"item_ids\":[\"7758198585\"],\"payment_method_id\":\"credit_card_8105988\"}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_J3vXWuUmOrpILoy8n5aAjAra",
+        "name": "return_delivered_order_items",
+        "content": "{\"order_id\": \"#W3916020\", \"user_id\": \"sofia_li_9219\", \"address\": {\"address1\": \"285 Elm Street\", \"address2\": \"Suite 121\", \"city\": \"Fort Worth\", \"country\": \"USA\", \"state\": \"TX\", \"zip\": \"76155\"}, \"items\": [{\"name\": \"Jigsaw Puzzle\", \"product_id\": \"1808611083\", \"item_id\": \"4068787148\", \"price\": 52.01, \"options\": {\"pieces\": \"500\", \"theme\": \"art\", \"difficulty level\": \"intermediate\"}}, {\"name\": \"Bicycle\", \"product_id\": \"9783735446\", \"item_id\": \"7758198585\", \"price\": 1917.21, \"options\": {\"frame size\": \"medium\", \"color\": \"green\", \"type\": \"road\"}}], \"fulfillments\": [{\"tracking_id\": [\"580826001577\"], \"item_ids\": [\"4068787148\", \"7758198585\"]}], \"status\": \"return requested\", \"payment_history\": [{\"transaction_type\": \"payment\", \"amount\": 1969.22, \"payment_method_id\": \"credit_card_8105988\"}], \"return_items\": [\"7758198585\"], \"return_payment_method_id\": \"credit_card_8105988\"}"
+      },
+      {
+        "role": "assistant",
+        "content": "Your return request for the bicycle (green, medium, road type) from order #W3916020 has been submitted. The refund will be credited back to your original Mastercard ending in 8484. You will receive an email shortly with instructions on how to return the bicycle.\n\nIf you have any further questions or need additional assistance, please let me know!",
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "user",
+        "content": "Thank you. I\u2019ll wait for the email."
+      },
+      {
+        "role": "assistant",
+        "content": "You\u2019re welcome, Sofia! You should receive the return instructions email soon. If you need any more help with your orders or have other questions, feel free to reach out. Have a great day!",
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "user",
+        "content": "###STOP###"
+      }
+    ],
+    "trial": 53,
+    "records": {}
+  }
+]

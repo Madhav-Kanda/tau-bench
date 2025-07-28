@@ -1,0 +1,298 @@
+[
+  {
+    "task_id": 77,
+    "reward": 1.0,
+    "info": {
+      "task": {
+        "user_id": "ivan_johnson_6036",
+        "actions": [
+          {
+            "name": "exchange_delivered_order_items",
+            "kwargs": {
+              "order_id": "#W1671835",
+              "item_ids": [
+                "5081446110"
+              ],
+              "new_item_ids": [
+                "3399869890"
+              ],
+              "payment_method_id": "paypal_6918118"
+            }
+          }
+        ],
+        "instruction": "You name is Ivan Johnson and your zip code is 94183. You ordered a perfume and you just tried a little bit and you like it extremely. You want to get the maximum size available for it. If the agent cannot help with placing a new order, exchange your current one to the largest size available.",
+        "outputs": []
+      },
+      "source": "user",
+      "user_cost": 1053,
+      "reward_info": {
+        "reward": 1.0,
+        "info": {
+          "r_actions": 1.0,
+          "gt_data_hash": "5a4b2cb59f4d12dea7e4adff24a7f8fada510ead49372ea4a729a82bbb5f49b5"
+        },
+        "actions": [
+          {
+            "name": "exchange_delivered_order_items",
+            "kwargs": {
+              "order_id": "#W1671835",
+              "item_ids": [
+                "5081446110"
+              ],
+              "new_item_ids": [
+                "3399869890"
+              ],
+              "payment_method_id": "paypal_6918118"
+            }
+          }
+        ]
+      }
+    },
+    "traj": [
+      {
+        "role": "system",
+        "content": "# Retail agent policy\n\nAs a retail agent, you can help users cancel or modify pending orders, return or exchange delivered orders, modify their default user address, or provide information about their own profile, orders, and related products.\n\n- At the beginning of the conversation, you have to authenticate the user identity by locating their user id via email, or via name + zip code. This has to be done even when the user already provides the user id.\n\n- Once the user has been authenticated, you can provide the user with information about order, product, profile information, e.g. help the user look up order id.\n\n- You can only help one user per conversation (but you can handle multiple requests from the same user), and must deny any requests for tasks related to any other user.\n\n- Before taking consequential actions that update the database (cancel, modify, return, exchange), you have to list the action detail and obtain explicit user confirmation (yes) to proceed.\n\n- You should not make up any information or knowledge or procedures not provided from the user or the tools, or give subjective recommendations or comments.\n\n- You should at most make one tool call at a time, and if you take a tool call, you should not respond to the user at the same time. If you respond to the user, you should not make a tool call.\n\n- You should transfer the user to a human agent if and only if the request cannot be handled within the scope of your actions.\n\n## Domain basic\n\n- All times in the database are EST and 24 hour based. For example \"02:30:00\" means 2:30 AM EST.\n\n- Each user has a profile of its email, default address, user id, and payment methods. Each payment method is either a gift card, a paypal account, or a credit card.\n\n- Our retail store has 50 types of products. For each type of product, there are variant items of different options. For example, for a 't shirt' product, there could be an item with option 'color blue size M', and another item with option 'color red size L'.\n\n- Each product has an unique product id, and each item has an unique item id. They have no relations and should not be confused.\n\n- Each order can be in status 'pending', 'processed', 'delivered', or 'cancelled'. Generally, you can only take action on pending or delivered orders.\n\n- Exchange or modify order tools can only be called once. Be sure that all items to be changed are collected into a list before making the tool call!!!\n\n## Cancel pending order\n\n- An order can only be cancelled if its status is 'pending', and you should check its status before taking the action.\n\n- The user needs to confirm the order id and the reason (either 'no longer needed' or 'ordered by mistake') for cancellation.\n\n- After user confirmation, the order status will be changed to 'cancelled', and the total will be refunded via the original payment method immediately if it is gift card, otherwise in 5 to 7 business days.\n\n## Modify pending order\n\n- An order can only be modified if its status is 'pending', and you should check its status before taking the action.\n\n- For a pending order, you can take actions to modify its shipping address, payment method, or product item options, but nothing else.\n\n### Modify payment\n\n- The user can only choose a single payment method different from the original payment method.\n\n- If the user wants the modify the payment method to gift card, it must have enough balance to cover the total amount.\n\n- After user confirmation, the order status will be kept 'pending'. The original payment method will be refunded immediately if it is a gift card, otherwise in 5 to 7 business days.\n\n### Modify items\n\n- This action can only be called once, and will change the order status to 'pending (items modifed)', and the agent will not be able to modify or cancel the order anymore. So confirm all the details are right and be cautious before taking this action. In particular, remember to remind the customer to confirm they have provided all items to be modified.\n\n- For a pending order, each item can be modified to an available new item of the same product but of different product option. There cannot be any change of product types, e.g. modify shirt to shoe.\n\n- The user must provide a payment method to pay or receive refund of the price difference. If the user provides a gift card, it must have enough balance to cover the price difference.\n\n## Return delivered order\n\n- An order can only be returned if its status is 'delivered', and you should check its status before taking the action.\n\n- The user needs to confirm the order id, the list of items to be returned, and a payment method to receive the refund.\n\n- The refund must either go to the original payment method, or an existing gift card.\n\n- After user confirmation, the order status will be changed to 'return requested', and the user will receive an email regarding how to return items.\n\n## Exchange delivered order\n\n- An order can only be exchanged if its status is 'delivered', and you should check its status before taking the action. In particular, remember to remind the customer to confirm they have provided all items to be exchanged.\n\n- For a delivered order, each item can be exchanged to an available new item of the same product but of different product option. There cannot be any change of product types, e.g. modify shirt to shoe.\n\n- The user must provide a payment method to pay or receive refund of the price difference. If the user provides a gift card, it must have enough balance to cover the price difference.\n\n- After user confirmation, the order status will be changed to 'exchange requested', and the user will receive an email regarding how to return items. There is no need to place a new order.\n"
+      },
+      {
+        "role": "user",
+        "content": "Hi! I just received my perfume order and I tried a little bit of it\u2014I absolutely love it."
+      },
+      {
+        "role": "assistant",
+        "content": "I'm glad to hear that you love your new perfume! If you need any assistance with your order, such as viewing order details, requesting an exchange, or anything else, please let me know.\n\nFor security, could you please provide the email address you used for your purchase? This will help me locate your order and assist you further if needed.",
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "user",
+        "content": "I actually don\u2019t remember which email I used for this order. Is there another way you could help me?"
+      },
+      {
+        "role": "assistant",
+        "content": "No problem! I can also help you locate your order using your first name, last name, and the zip code associated with your shipping address. Could you please provide those details?",
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "user",
+        "content": "Sure! My name is Ivan Johnson and my zip code is 94183."
+      },
+      {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_Ah1ZyDaz7UsvEqLNAFlrI9cv",
+            "type": "function",
+            "function": {
+              "name": "find_user_id_by_name_zip",
+              "arguments": "{\"first_name\":\"Ivan\",\"last_name\":\"Johnson\",\"zip\":\"94183\"}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_Ah1ZyDaz7UsvEqLNAFlrI9cv",
+        "name": "find_user_id_by_name_zip",
+        "content": "ivan_johnson_6036"
+      },
+      {
+        "role": "assistant",
+        "content": "Thank you, Ivan. I\u2019ve found your account using your name and zip code.\n\nHow can I assist you further with your perfume order or anything else related to your account?",
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "user",
+        "content": "I\u2019d love to get the largest size available for this perfume. What\u2019s the best way to do that?"
+      },
+      {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_Z0xtYJZk9kfduQXabuUJ4sYb",
+            "type": "function",
+            "function": {
+              "name": "find_orders_by_user",
+              "arguments": "{\"user_id\":\"ivan_johnson_6036\"}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_Z0xtYJZk9kfduQXabuUJ4sYb",
+        "name": "find_orders_by_user",
+        "content": "[{\"order_id\": \"#W1671835\", \"status\": \"delivered\", \"items\": [\"Perfume\"]}]"
+      },
+      {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_jA9pD5vRrKJd7lkqRbLv7syk",
+            "type": "function",
+            "function": {
+              "name": "list_order_items",
+              "arguments": "{\"order_id\":\"#W1671835\"}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_jA9pD5vRrKJd7lkqRbLv7syk",
+        "name": "list_order_items",
+        "content": "{\n  \"name\": \"Perfume\",\n  \"product_id\": \"6858788497\",\n  \"item_id\": \"5081446110\",\n  \"price\": 322.52,\n  \"options\": {\n    \"scent family\": \"woody\",\n    \"size\": \"30ml\",\n    \"gender\": \"men\"\n  }\n}"
+      },
+      {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_hmAuWPNp0ZqMVDBBr4nvout7",
+            "type": "function",
+            "function": {
+              "name": "list_product_variants",
+              "arguments": "{\"product_id\":\"6858788497\"}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_hmAuWPNp0ZqMVDBBr4nvout7",
+        "name": "list_product_variants",
+        "content": "{\n  \"item_id\": \"9007697085\",\n  \"options\": {\n    \"scent family\": \"fresh\",\n    \"size\": \"50ml\",\n    \"gender\": \"men\"\n  },\n  \"available\": true,\n  \"price\": 318.96\n}"
+      },
+      {
+        "role": "assistant",
+        "content": "It looks like the largest available size for this perfume is 50ml (scent family: fresh, gender: men), and it is currently in stock. \n\nIf you\u2019d like to exchange your current 30ml bottle (woody scent) for the 50ml (fresh scent), I can help you start an exchange process. Please note that the scent family will change from woody to fresh, and the price difference is minimal.\n\nWould you like to proceed with exchanging your current perfume for the 50ml fresh scent version? If so, please confirm that you want to exchange your current item, and let me know your preferred payment method for any price difference or refund.",
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "user",
+        "content": "I\u2019d prefer to keep the same scent that I have now\u2014can I get a 50ml bottle in the woody scent instead?"
+      },
+      {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_IiqzZzCw2A1bJyHOsX1S3Fb7",
+            "type": "function",
+            "function": {
+              "name": "list_product_variants",
+              "arguments": "{\"product_id\":\"6858788497\"}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_IiqzZzCw2A1bJyHOsX1S3Fb7",
+        "name": "list_product_variants",
+        "content": "{\n  \"item_id\": \"9007697085\",\n  \"options\": {\n    \"scent family\": \"fresh\",\n    \"size\": \"50ml\",\n    \"gender\": \"men\"\n  },\n  \"available\": true,\n  \"price\": 318.96\n}"
+      },
+      {
+        "role": "assistant",
+        "content": "Currently, the only available 50ml bottle for this perfume is in the \"fresh\" scent family. There is no 50ml option available in the \"woody\" scent at this time.\n\nWould you like to exchange your current 30ml woody scent for the 50ml fresh scent, or would you prefer to keep your current bottle? Let me know how you\u2019d like to proceed!",
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "user",
+        "content": "Alright, let\u2019s proceed with the exchange for the 50ml fresh scent then!"
+      },
+      {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_8mUhD8p0UmRkB647Z48Jscms",
+            "type": "function",
+            "function": {
+              "name": "list_user_payment_methods",
+              "arguments": "{\"user_id\":\"ivan_johnson_6036\"}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_8mUhD8p0UmRkB647Z48Jscms",
+        "name": "list_user_payment_methods",
+        "content": "{\n  \"paypal_6918118\": {\n    \"source\": \"paypal\",\n    \"id\": \"paypal_6918118\"\n  }\n}"
+      },
+      {
+        "role": "assistant",
+        "content": "To proceed with the exchange, here\u2019s what will happen:\n- Your current 30ml woody scent perfume will be exchanged for the 50ml fresh scent version.\n- The price difference is minimal, and your PayPal account on file will be used for any refund or additional charge.\n- You\u2019ll receive an email with instructions on how to return your current bottle.\n\nPlease confirm that you\u2019d like to proceed with this exchange using your PayPal account. If yes, I\u2019ll initiate the process right away.",
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "user",
+        "content": "Yes, please go ahead and use my PayPal for the exchange. Thank you!"
+      },
+      {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_2hdmf1e90fFyyAuKG0achB40",
+            "type": "function",
+            "function": {
+              "name": "exchange_delivered_order_items",
+              "arguments": "{\"order_id\":\"#W1671835\",\"item_ids\":[\"5081446110\"],\"new_item_ids\":[\"9007697085\"],\"payment_method_id\":\"paypal_6918118\"}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_2hdmf1e90fFyyAuKG0achB40",
+        "name": "exchange_delivered_order_items",
+        "content": "{\"order_id\": \"#W1671835\", \"user_id\": \"ivan_johnson_6036\", \"address\": {\"address1\": \"851 Pine Lane\", \"address2\": \"Suite 428\", \"city\": \"Fort Worth\", \"country\": \"USA\", \"state\": \"TX\", \"zip\": \"76115\"}, \"items\": [{\"name\": \"Perfume\", \"product_id\": \"6858788497\", \"item_id\": \"5081446110\", \"price\": 322.52, \"options\": {\"scent family\": \"woody\", \"size\": \"30ml\", \"gender\": \"men\"}}], \"fulfillments\": [{\"tracking_id\": [\"820626058356\"], \"item_ids\": [\"5081446110\"]}], \"status\": \"exchange requested\", \"payment_history\": [{\"transaction_type\": \"payment\", \"amount\": 322.52, \"payment_method_id\": \"paypal_6918118\"}], \"exchange_items\": [\"5081446110\"], \"exchange_new_items\": [\"9007697085\"], \"exchange_payment_method_id\": \"paypal_6918118\", \"exchange_price_difference\": -3.56}"
+      },
+      {
+        "role": "assistant",
+        "content": "Your exchange request has been submitted! Here\u2019s what happens next:\n\n- Your 30ml woody scent perfume will be exchanged for the 50ml fresh scent version.\n- Your PayPal account will be refunded the price difference of $3.56.\n- You\u2019ll receive an email shortly with instructions on how to return your current bottle.\n\nIf you have any other questions or need further assistance, feel free to ask!",
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "user",
+        "content": "That\u2019s perfect. Thanks for your help!"
+      },
+      {
+        "role": "assistant",
+        "content": "You\u2019re very welcome, Ivan! I\u2019m glad I could assist you with your exchange. If you need help with anything else in the future, just let me know. Enjoy your new perfume!",
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "user",
+        "content": "###STOP###"
+      }
+    ],
+    "trial": 77,
+    "records": {}
+  }
+]

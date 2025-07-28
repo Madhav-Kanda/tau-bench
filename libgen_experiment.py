@@ -40,21 +40,25 @@ def generate_func(tasks, task_ids, mcp_server_before_generation, new_mcp_server,
     old_library = Library(tools).get_funcs()
     ######### GET NEW FUNC CANDIDATES #######
     def_flag = False
-    while not def_flag:
+    doc_trial = 0
+    while not def_flag and doc_trial < 2:
+        doc_trial += 1
         new_func_name, new_func_def = lib_gen.get_new_func(tasks, old_library)
         doc = extract_docstring_from_function_string(new_func_def)
         if is_docstring_json(doc):  
             def_flag = True
-
+    if not def_flag:
+        print(colored("Failed to generate a valid function definition.", 'red'))
+        return False, None, None
     print(colored(f'New function proposed: {new_func_def}', 'blue'))
     new_func_def_history = [{"role": "user", "content": "Original function: \n" + new_func_def}]
 
     
     ########## IMPROVE TRAJECTORIES AND FUNCTION CANDIDATES ##########
     trial = 0
-    found_incorrect_trajectory = False
-    max_refinement_tries = 3
-    while(found_incorrect_trajectory or trial < max_refinement_tries):
+    found_incorrect_trajectory = True
+    max_refinement_tries = 2
+    while(found_incorrect_trajectory and trial < max_refinement_tries):
         trial += 1
         ########## IMPROVE TRAJECTORIES ##########
         new_library = old_library + [new_func_def]
@@ -148,7 +152,7 @@ def test_phase(task_ids, mcp_server, new_funcs, output_folder):
         print("Running test phase")
         run_tasks([task_ids[i]], mcp_server, output_file, agent_strategy='tool-calling')
         trajectory = json.load(open(output_file, 'r'))[0]
-        res = Metrics(trajectory, list(new_funcs.keys()))
+        res = Metrics(trajectory, new_funcs)
         results.append(res)
     results_file = os.path.join(output_folder, "test_results.json")
     with open(results_file, 'w') as f:
@@ -157,23 +161,25 @@ def test_phase(task_ids, mcp_server, new_funcs, output_folder):
 
 def main2():
     original_logs = "final_results/tool-calling-none-0.1_range_0-100_user-none-llm_06232025.json"
-    lib_gen_experiment_output_folder = "libgen_experiment_output_trial_4"
-    original_mcp_server = os.path.normpath('mcp/retail_server.py')
-    mcp_server_before_generation = os.path.normpath('mcp/retail_server_initial.py')
-    open(mcp_server_before_generation, 'w').close()
-    create_file(original_mcp_server, mcp_server_before_generation, '')
+    lib_gen_experiment_output_folder = "libgen_experiment_output_trial_7"
+    # original_mcp_server = os.path.normpath('mcp/retail_server.py')
+    # mcp_server_before_generation = os.path.normpath('mcp/retail_server_initial.py')
+    # open(mcp_server_before_generation, 'w').close()
+    # create_file(original_mcp_server, mcp_server_before_generation, '')
 
-    generation_phase_iterations = 2
+    generation_phase_iterations = 3
     generation_phase_chunk_size = 5
-    test_after_iterations = 5
+    test_after_iterations = 6
 
     train_ids = range(0, 50)
     validation_ids = range(50, 80)
     test_ids = range(80, 100)
     train_tasks = json.load(open(original_logs, 'r'))
 
-    iteration = -1
-    while(True):
+    mcp_server_before_generation = os.path.normpath('mcp/retail_server_before_generation_iteration_6.py')
+
+    iteration = 5
+    while(iteration < 10):
 
         for j in range(test_after_iterations):
             iteration += 1
@@ -183,7 +189,7 @@ def main2():
 
 
             print("Running generation phase")
-            mcp_server_after_generation = os.path.normpath('mcp/retail_server_after_generation.py')
+            mcp_server_after_generation = os.path.normpath(f'mcp/retail_server_after_generation_iteration_{iteration}.py')
             open(mcp_server_after_generation, 'w').close()
             generation_output_folder = os.path.join(output_folder, "generation")
             os.makedirs(generation_output_folder, exist_ok=True)
@@ -200,15 +206,22 @@ def main2():
             if len(filtered_funcs) == 0:
                 continue
 
-            mcp_server_after_validation = os.path.normpath('mcp/retail_server_after_validation.py')
+            mcp_server_after_validation = os.path.normpath(f'mcp/retail_server_after_validation_iteration_{iteration}.py')
             open(mcp_server_after_validation, 'w').close()
 
-            mcp_server_temp = os.path.normpath('mcp/retail_server_temp.py')
+            mcp_server_temp = os.path.normpath(f'mcp/retail_server_temp_iteration_{iteration}.py')
             create_file(mcp_server_before_generation, mcp_server_temp, "")
             for func in filtered_funcs:
                 create_file(mcp_server_temp, mcp_server_after_validation, new_funcs[func])
                 create_file(mcp_server_after_validation, mcp_server_temp, "")
-            mcp_server_before_generation = mcp_server_after_validation
+            
+            
+            mcp_server_before_generation = f'mcp/retail_server_before_generation_iteration_{iteration+1}.py'
+            create_file(mcp_server_after_validation, mcp_server_before_generation, "")
+
+            if iteration % test_after_iterations == 0:
+                break
+            
 
         print("Running test phase")
         test_output_folder = os.path.join(lib_gen_experiment_output_folder, "test")
@@ -246,11 +259,16 @@ def main():
 
         ######### GET NEW FUNC CANDIDATES #######
         def_flag = False
-        while not def_flag:
+        doc_trial = 0
+        while not def_flag and doc_trial < 2:
+            doc_trial += 1
             new_func_name, new_func_def = lib_gen.get_new_func(tasks, old_library)
             doc = extract_docstring_from_function_string(new_func_def)
             if is_docstring_json(doc):  
                 def_flag = True
+        if not def_flag:
+            print(colored("Failed to generate a valid function definition.", 'red'))
+            return False, None, None
 
         print(colored(f'New function proposed: {new_func_def}', 'blue'))
         new_func_def_history = [{"role": "user", "content": "Original function: \n" + new_func_def}]

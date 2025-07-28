@@ -1,0 +1,302 @@
+[
+  {
+    "task_id": 51,
+    "reward": 1.0,
+    "info": {
+      "task": {
+        "user_id": "sofia_li_9219",
+        "actions": [
+          {
+            "name": "find_user_id_by_name_zip",
+            "kwargs": {
+              "first_name": "Sofia",
+              "last_name": "Li",
+              "zip": "78260"
+            }
+          },
+          {
+            "name": "get_order_details",
+            "kwargs": {
+              "order_id": "#W8855135"
+            }
+          },
+          {
+            "name": "list_all_product_types",
+            "kwargs": {}
+          },
+          {
+            "name": "get_product_details",
+            "kwargs": {
+              "product_id": "8940227892"
+            }
+          },
+          {
+            "name": "get_user_details",
+            "kwargs": {
+              "user_id": "sofia_li_9219"
+            }
+          },
+          {
+            "name": "get_order_details",
+            "kwargs": {
+              "order_id": "#W4689314"
+            }
+          },
+          {
+            "name": "return_delivered_order_items",
+            "kwargs": {
+              "order_id": "#W4689314",
+              "item_ids": [
+                "5996159312"
+              ],
+              "payment_method_id": "credit_card_8105988"
+            }
+          }
+        ],
+        "instruction": "You are Sofia Li, residing in San Antonio, 78260. You want to return the digital camera that you received. You guess that the order number is #W8855135, but you're not 100% sure. Insist that you want to return the camera and get a refund to the original payment method.",
+        "outputs": []
+      },
+      "source": "user",
+      "user_cost": 664,
+      "reward_info": {
+        "reward": 1.0,
+        "info": {
+          "r_actions": 1.0,
+          "gt_data_hash": "5a4b2cb59f4d12dea7e4adff24a7f8fada510ead49372ea4a729a82bbb5f49b5"
+        },
+        "actions": [
+          {
+            "name": "find_user_id_by_name_zip",
+            "kwargs": {
+              "first_name": "Sofia",
+              "last_name": "Li",
+              "zip": "78260"
+            }
+          },
+          {
+            "name": "get_order_details",
+            "kwargs": {
+              "order_id": "#W8855135"
+            }
+          },
+          {
+            "name": "list_all_product_types",
+            "kwargs": {}
+          },
+          {
+            "name": "get_product_details",
+            "kwargs": {
+              "product_id": "8940227892"
+            }
+          },
+          {
+            "name": "get_user_details",
+            "kwargs": {
+              "user_id": "sofia_li_9219"
+            }
+          },
+          {
+            "name": "get_order_details",
+            "kwargs": {
+              "order_id": "#W4689314"
+            }
+          },
+          {
+            "name": "return_delivered_order_items",
+            "kwargs": {
+              "order_id": "#W4689314",
+              "item_ids": [
+                "5996159312"
+              ],
+              "payment_method_id": "credit_card_8105988"
+            }
+          }
+        ]
+      }
+    },
+    "traj": [
+      {
+        "role": "system",
+        "content": "# Retail agent policy\n\nAs a retail agent, you can help users cancel or modify pending orders, return or exchange delivered orders, modify their default user address, or provide information about their own profile, orders, and related products.\n\n- At the beginning of the conversation, you have to authenticate the user identity by locating their user id via email, or via name + zip code. This has to be done even when the user already provides the user id.\n\n- Once the user has been authenticated, you can provide the user with information about order, product, profile information, e.g. help the user look up order id.\n\n- You can only help one user per conversation (but you can handle multiple requests from the same user), and must deny any requests for tasks related to any other user.\n\n- Before taking consequential actions that update the database (cancel, modify, return, exchange), you have to list the action detail and obtain explicit user confirmation (yes) to proceed.\n\n- You should not make up any information or knowledge or procedures not provided from the user or the tools, or give subjective recommendations or comments.\n\n- You should at most make one tool call at a time, and if you take a tool call, you should not respond to the user at the same time. If you respond to the user, you should not make a tool call.\n\n- You should transfer the user to a human agent if and only if the request cannot be handled within the scope of your actions.\n\n## Domain basic\n\n- All times in the database are EST and 24 hour based. For example \"02:30:00\" means 2:30 AM EST.\n\n- Each user has a profile of its email, default address, user id, and payment methods. Each payment method is either a gift card, a paypal account, or a credit card.\n\n- Our retail store has 50 types of products. For each type of product, there are variant items of different options. For example, for a 't shirt' product, there could be an item with option 'color blue size M', and another item with option 'color red size L'.\n\n- Each product has an unique product id, and each item has an unique item id. They have no relations and should not be confused.\n\n- Each order can be in status 'pending', 'processed', 'delivered', or 'cancelled'. Generally, you can only take action on pending or delivered orders.\n\n- Exchange or modify order tools can only be called once. Be sure that all items to be changed are collected into a list before making the tool call!!!\n\n## Cancel pending order\n\n- An order can only be cancelled if its status is 'pending', and you should check its status before taking the action.\n\n- The user needs to confirm the order id and the reason (either 'no longer needed' or 'ordered by mistake') for cancellation.\n\n- After user confirmation, the order status will be changed to 'cancelled', and the total will be refunded via the original payment method immediately if it is gift card, otherwise in 5 to 7 business days.\n\n## Modify pending order\n\n- An order can only be modified if its status is 'pending', and you should check its status before taking the action.\n\n- For a pending order, you can take actions to modify its shipping address, payment method, or product item options, but nothing else.\n\n### Modify payment\n\n- The user can only choose a single payment method different from the original payment method.\n\n- If the user wants the modify the payment method to gift card, it must have enough balance to cover the total amount.\n\n- After user confirmation, the order status will be kept 'pending'. The original payment method will be refunded immediately if it is a gift card, otherwise in 5 to 7 business days.\n\n### Modify items\n\n- This action can only be called once, and will change the order status to 'pending (items modifed)', and the agent will not be able to modify or cancel the order anymore. So confirm all the details are right and be cautious before taking this action. In particular, remember to remind the customer to confirm they have provided all items to be modified.\n\n- For a pending order, each item can be modified to an available new item of the same product but of different product option. There cannot be any change of product types, e.g. modify shirt to shoe.\n\n- The user must provide a payment method to pay or receive refund of the price difference. If the user provides a gift card, it must have enough balance to cover the price difference.\n\n## Return delivered order\n\n- An order can only be returned if its status is 'delivered', and you should check its status before taking the action.\n\n- The user needs to confirm the order id, the list of items to be returned, and a payment method to receive the refund.\n\n- The refund must either go to the original payment method, or an existing gift card.\n\n- After user confirmation, the order status will be changed to 'return requested', and the user will receive an email regarding how to return items.\n\n## Exchange delivered order\n\n- An order can only be exchanged if its status is 'delivered', and you should check its status before taking the action. In particular, remember to remind the customer to confirm they have provided all items to be exchanged.\n\n- For a delivered order, each item can be exchanged to an available new item of the same product but of different product option. There cannot be any change of product types, e.g. modify shirt to shoe.\n\n- The user must provide a payment method to pay or receive refund of the price difference. If the user provides a gift card, it must have enough balance to cover the price difference.\n\n- After user confirmation, the order status will be changed to 'exchange requested', and the user will receive an email regarding how to return items. There is no need to place a new order.\n"
+      },
+      {
+        "role": "user",
+        "content": "Hi, I\u2019d like to return a digital camera that I received, please."
+      },
+      {
+        "role": "assistant",
+        "content": "I can help you with your return request. To get started, I need to authenticate your identity. Could you please provide the email address associated with your account? If you don\u2019t remember your email, let me know and I can use your name and zip code instead.",
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "user",
+        "content": "I\u2019d rather use my name and zip code. My name is Sofia Li and my zip code is 78260."
+      },
+      {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_4AmQgNroyMtpZAoekUVcRNUD",
+            "type": "function",
+            "function": {
+              "name": "find_user_id_by_name_zip",
+              "arguments": "{\"first_name\":\"Sofia\",\"last_name\":\"Li\",\"zip\":\"78260\"}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_4AmQgNroyMtpZAoekUVcRNUD",
+        "name": "find_user_id_by_name_zip",
+        "content": "sofia_li_9219"
+      },
+      {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_OoGtiyROv9hkHyT5Xug3X7RB",
+            "type": "function",
+            "function": {
+              "name": "get_user_details",
+              "arguments": "{\"user_id\":\"sofia_li_9219\"}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_OoGtiyROv9hkHyT5Xug3X7RB",
+        "name": "get_user_details",
+        "content": "{\"name\": {\"first_name\": \"Sofia\", \"last_name\": \"Li\"}, \"address\": {\"address1\": \"786 Elm Street\", \"address2\": \"Suite 546\", \"city\": \"San Antonio\", \"country\": \"USA\", \"state\": \"TX\", \"zip\": \"78260\"}, \"email\": \"sofia.li7352@example.com\", \"payment_methods\": {\"paypal_8194385\": {\"source\": \"paypal\", \"id\": \"paypal_8194385\"}, \"credit_card_3951670\": {\"source\": \"credit_card\", \"brand\": \"visa\", \"last_four\": \"6791\", \"id\": \"credit_card_3951670\"}, \"credit_card_8105988\": {\"source\": \"credit_card\", \"brand\": \"mastercard\", \"last_four\": \"8484\", \"id\": \"credit_card_8105988\"}}, \"orders\": [\"#W4689314\", \"#W8855135\", \"#W3916020\", \"#W5416052\"]}"
+      },
+      {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_1fZ7QtqWaCPDLzJgluGFVef6",
+            "type": "function",
+            "function": {
+              "name": "list_user_orders_and_statuses",
+              "arguments": "{\"user_id\": \"sofia_li_9219\"}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_1fZ7QtqWaCPDLzJgluGFVef6",
+        "name": "list_user_orders_and_statuses",
+        "content": "["
+      },
+      {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_kqvLPOpB0F4YXEw2EB1oaJ0b",
+            "type": "function",
+            "function": {
+              "name": "list_order_items",
+              "arguments": "{\"order_id\": \"#W4689314\"}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_kqvLPOpB0F4YXEw2EB1oaJ0b",
+        "name": "list_order_items",
+        "content": "{\n  \"name\": \"Digital Camera\",\n  \"product_id\": \"8940227892\",\n  \"item_id\": \"5996159312\",\n  \"price\": 2895.55,\n  \"options\": {\n    \"resolution\": \"24MP\",\n    \"zoom\": \"3x\",\n    \"storage\": \"SD card\"\n  }\n}"
+      },
+      {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_XdUeZncEJUf5zmnbVURwvU5e",
+            "type": "function",
+            "function": {
+              "name": "get_order_details",
+              "arguments": "{\"order_id\":\"#W4689314\"}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_XdUeZncEJUf5zmnbVURwvU5e",
+        "name": "get_order_details",
+        "content": "{\"order_id\": \"#W4689314\", \"user_id\": \"sofia_li_9219\", \"address\": {\"address1\": \"786 Elm Street\", \"address2\": \"Suite 546\", \"city\": \"San Antonio\", \"country\": \"USA\", \"state\": \"TX\", \"zip\": \"78260\"}, \"items\": [{\"name\": \"Digital Camera\", \"product_id\": \"8940227892\", \"item_id\": \"5996159312\", \"price\": 2895.55, \"options\": {\"resolution\": \"24MP\", \"zoom\": \"3x\", \"storage\": \"SD card\"}}], \"fulfillments\": [{\"tracking_id\": [\"689944590938\"], \"item_ids\": [\"5996159312\"]}], \"status\": \"delivered\", \"payment_history\": [{\"transaction_type\": \"payment\", \"amount\": 2895.55, \"payment_method_id\": \"credit_card_8105988\"}]}"
+      },
+      {
+        "role": "assistant",
+        "content": "You are requesting to return a digital camera from your delivered order #W4689314. The camera was purchased for $2,895.55 and paid with your Mastercard ending in 8484.\n\nTo proceed, I need you to confirm:\n- You want to return the digital camera (item: 24MP, 3x zoom, SD card).\n- The refund will be issued to your original payment method (Mastercard ending in 8484).\n\nDo you confirm these details and wish to proceed with the return? Please reply \"yes\" to continue or let me know if you want to change anything.",
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "user",
+        "content": "Yes, I confirm\u2014I want to return the digital camera and get the refund to my original payment method."
+      },
+      {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_RiEsQniBLVI4gxtXAnQDbR1k",
+            "type": "function",
+            "function": {
+              "name": "return_delivered_order_items",
+              "arguments": "{\"order_id\":\"#W4689314\",\"item_ids\":[\"5996159312\"],\"payment_method_id\":\"credit_card_8105988\"}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_RiEsQniBLVI4gxtXAnQDbR1k",
+        "name": "return_delivered_order_items",
+        "content": "{\"order_id\": \"#W4689314\", \"user_id\": \"sofia_li_9219\", \"address\": {\"address1\": \"786 Elm Street\", \"address2\": \"Suite 546\", \"city\": \"San Antonio\", \"country\": \"USA\", \"state\": \"TX\", \"zip\": \"78260\"}, \"items\": [{\"name\": \"Digital Camera\", \"product_id\": \"8940227892\", \"item_id\": \"5996159312\", \"price\": 2895.55, \"options\": {\"resolution\": \"24MP\", \"zoom\": \"3x\", \"storage\": \"SD card\"}}], \"fulfillments\": [{\"tracking_id\": [\"689944590938\"], \"item_ids\": [\"5996159312\"]}], \"status\": \"return requested\", \"payment_history\": [{\"transaction_type\": \"payment\", \"amount\": 2895.55, \"payment_method_id\": \"credit_card_8105988\"}], \"return_items\": [\"5996159312\"], \"return_payment_method_id\": \"credit_card_8105988\"}"
+      },
+      {
+        "role": "assistant",
+        "content": "Your return request for the digital camera from order #W4689314 has been submitted. The refund of $2,895.55 will be issued to your original payment method (Mastercard ending in 8484) once the return is processed.\n\nYou will receive an email shortly with instructions on how and where to return the camera. If you need further assistance, please let me know!",
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "user",
+        "content": "Thank you for your help! That\u2019s all I needed."
+      },
+      {
+        "role": "assistant",
+        "content": "You\u2019re welcome! Your return is in process, and you\u2019ll receive an email with the next steps soon. If you need any more assistance in the future, feel free to reach out. Have a great day!",
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "user",
+        "content": "###STOP###"
+      }
+    ],
+    "trial": 51,
+    "records": {}
+  }
+]

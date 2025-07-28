@@ -98,8 +98,8 @@ def extract_docstring_from_function_string(function_str: str) -> str:
         for node in tree.body:
             if isinstance(node, ast.FunctionDef):
                 return ast.get_docstring(node)
-    except SyntaxError as e:
-        print(f"Syntax error while parsing: {e}")
+    except Exception:
+        return None
     return None
 
 def is_docstring_json(docstring: str) -> bool:

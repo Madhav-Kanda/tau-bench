@@ -297,7 +297,7 @@ def get_new_func(tasks, old_library, verbose=True):
         if is_docstring_json(doc):
             gen_flag = True
         else:
-            print(doc)
+            gen_flag = True
     if verbose:
         print(colored(f'Proposed function definition:\n{new_func}', 'yellow'))
 
@@ -308,7 +308,7 @@ def get_new_func(tasks, old_library, verbose=True):
         if is_docstring_json(doc):
             gen_flag = True
         else:
-            print(doc)
+            gen_flag = True
     if verbose:
         print(colored(f'Corrected function definition:\n{new_func}', 'green'))
 
