@@ -1,3 +1,14 @@
+"""
+LLM-as-a-Judge Evaluation System
+
+This module provides an automated evaluation system for analyzing AI agent failures
+using Large Language Models as judges. It classifies failure types, computes statistics,
+and generates comprehensive evaluation reports.
+
+Author: [Your Name]
+Date: August 2025
+"""
+
 import json  
 import pandas as pd
 from enum import Enum
@@ -6,6 +17,17 @@ from statistics import mean, median, stdev, variance, multimode
 from llmagent import LLMAgent
 
 class FailureCase(Enum):
+    """
+    Enumeration of different types of AI agent failures.
+    
+    Each failure case represents a distinct category of agent malfunction:
+    - SYSTEM_OR_TOOL_FAILURE: Technical/infrastructure issues
+    - UNSPECIFIED_TASK_OR_AMBIGUOUS_USER_INTENT: Unclear user requirements
+    - INCORRECT_PLAN_GENERATION: Wrong understanding of task
+    - INCORRECT_PLAN_EXECUTION: Right understanding, wrong execution
+    - INCONCLUSIVE: Cannot determine if planning or execution failed
+    - HALLUCINATING_FACTS: Generated ungrounded information
+    """
     SYSTEM_OR_TOOL_FAILURE = 1
     UNSPECIFIED_TASK_OR_AMBIGUOUS_USER_INTENT = 2
     INCORRECT_PLAN_GENERATION = 3
@@ -14,19 +36,60 @@ class FailureCase(Enum):
     HALLUCINATING_FACTS = 6
 
 class Failure:
+    """
+    Represents a single failure instance with associated metadata.
+    
+    Attributes:
+        task_id (str): Unique identifier for the task
+        failure_case (FailureCase): Type of failure that occurred
+        description (str): Detailed description of the failure
+        step_number (int): Step in the trajectory where failure occurred
+    """
     def __init__(self, task_id, failure_case, description, step_number):
+        """
+        Initialize a Failure instance.
+        
+        Args:
+            task_id (str): Unique identifier for the task
+            failure_case (FailureCase): Type of failure from FailureCase enum
+            description (str): Human-readable description of the failure
+            step_number (int): Step number where the failure occurred
+        """
         self.task_id = task_id
         self.failure_case = failure_case
         self.description = description
         self.step_number = step_number
 
 class Report:
+    """
+    Aggregates multiple failure judgments for a single task and computes statistics.
+    
+    This class collects failure judgments from multiple LLM evaluation runs
+    and provides comprehensive statistical analysis comparing against ground truth.
+    
+    Attributes:
+        task_id (str): Unique identifier for the task
+        failures (list[Failure]): List of failure instances from multiple runs
+        num_judges (int): Number of judgment runs completed
+    """
     def __init__(self, task_id):
+        """
+        Initialize a Report for a specific task.
+        
+        Args:
+            task_id (str): Unique identifier for the task
+        """
         self.task_id = task_id
         self.failures = []
         self.num_judges = 0
 
     def add_failure(self, failure):
+        """
+        Add a failure judgment from an LLM evaluation run.
+        
+        Args:
+            failure (Failure): Failure instance to add to the report
+        """
         self.failures.append(failure)
         self.num_judges += 1
 
@@ -50,6 +113,21 @@ class Report:
         return result
 
     def compute_stats(self, gt_failure):
+        """
+        Compute comprehensive statistics comparing LLM judgments to ground truth.
+        
+        Calculates various metrics including:
+        - Failure classification accuracy and distributions
+        - Step number prediction accuracy (MAE)
+        - Statistical measures (mean, median, std dev, etc.)
+        - Agreement metrics across multiple judgment runs
+        
+        Args:
+            gt_failure (Failure): Ground truth failure annotation
+            
+        Raises:
+            ValueError: If no failures have been added to analyze
+        """
         failure_cases = [f.failure_case for f in self.failures]
         step_numbers = [f.step_number for f in self.failures]
         gt_failure_case = gt_failure.failure_case
@@ -100,6 +178,21 @@ class Report:
     
 
 def convert_to_failure_case(case_str):
+    """
+    Convert string description to FailureCase enum value.
+    
+    Maps various string representations of failure types to standardized
+    FailureCase enum values. Handles common variations in naming.
+    
+    Args:
+        case_str (str): String description of failure case
+        
+    Returns:
+        FailureCase: Corresponding enum value
+        
+    Raises:
+        ValueError: If case_str doesn't match any known failure case
+    """
     case_str = case_str.strip().lower()
     if case_str == "system or tool failure":
         return FailureCase.SYSTEM_OR_TOOL_FAILURE
@@ -119,6 +212,26 @@ def convert_to_failure_case(case_str):
         raise ValueError(f"Unknown failure case: {case_str}")
 
 def load_failures_from_csv(file_path):
+    """
+    Load ground truth failure annotations from CSV file.
+    
+    Expected CSV format:
+    - Task_id: Unique task identifier
+    - Failure cases: String description of failure type
+    - Details: Detailed description of the failure
+    - Step Number: Step in trajectory where failure occurred
+    
+    Args:
+        file_path (str): Path to CSV file containing ground truth data
+        
+    Returns:
+        list[Failure]: List of Failure objects loaded from CSV
+        
+    Raises:
+        FileNotFoundError: If CSV file doesn't exist
+        KeyError: If required columns are missing from CSV
+        ValueError: If failure case strings are unrecognized
+    """
     df = pd.read_csv(file_path)
     failures = []
     for _, row in df.iterrows():
@@ -132,10 +245,35 @@ def load_failures_from_csv(file_path):
 
 
 class LLMJudge(LLMAgent):
+    """
+    LLM-powered judge for evaluating AI agent failure trajectories.
+    
+    Inherits from LLMAgent and adds specialized functionality for analyzing
+    agent conversation trajectories and classifying failure types.
+    """
     def __init__(self, *args, **kwargs):
+        """Initialize LLMJudge with same parameters as LLMAgent."""
         super().__init__(*args, **kwargs)
 
     def judge_response(self, task_id, trajectory, ground_truth, outputs=None):
+        """
+        Evaluate a single agent trajectory and classify its failure.
+        
+        Uses the configured LLM to analyze an agent's conversation trajectory
+        and determine what type of failure occurred and at which step.
+        
+        Args:
+            task_id (str): Unique identifier for the task
+            trajectory (str): Full conversation transcript between agent and user
+            ground_truth (str/list): Expected sequence of actions/tool calls
+            outputs (str/list, optional): Expected response outputs from agent
+            
+        Returns:
+            Failure: Classified failure with type and step number
+            
+        Raises:
+            RuntimeError: If LLM response cannot be parsed or is missing required fields
+        """
         system_prompt = '''
 You are an expert judge.
 You will be provided with a trajectory of an agent's interaction with a user.
@@ -193,6 +331,23 @@ Output a JSON object in the following format:
         )
 
 def judge_trajectories(num_runs=1):
+    """
+    Run LLM evaluation on all failed trajectories with multiple judgment runs.
+    
+    Loads trajectory data, initializes LLM judge, and evaluates each failed
+    trajectory multiple times to ensure reliability. Only processes trajectories
+    with reward <= 0 (indicating failure).
+    
+    Args:
+        num_runs (int): Number of evaluation runs per trajectory (default: 1)
+        
+    Returns:
+        list[Report]: List of Report objects containing aggregated judgments
+        
+    Raises:
+        RuntimeError: If trajectory file cannot be loaded or processed
+        FileNotFoundError: If required input files are missing
+    """
     api_version = '2025-03-01-preview'  # Ensure this is a valid API version see: https://learn.microsoft.com/en-us/azure/ai-services/openai/api-version-deprecation#latest-ga-api-release
     model_name = 'o3'  # Ensure this is a valid model name
     model_version = '2025-04-16'  # Ensure this is a valid model version
@@ -237,14 +392,43 @@ def judge_trajectories(num_runs=1):
     return responses
 
 def filter_task_ids(responses, ground_truth_failures):
+    """
+    Filter evaluation responses to only include tasks present in ground truth.
+    
+    Args:
+        responses (list[Report]): List of evaluation reports
+        ground_truth_failures (list[Failure]): Ground truth failure annotations
+        
+    Returns:
+        list[Report]: Filtered list containing only tasks with ground truth data
+    """
     task_ids = [failure.task_id for failure in ground_truth_failures]
     filtered_responses = [response for response in responses if response.task_id in task_ids]
     return filtered_responses
 
 def sort_responses_by_task_id(responses):
+    """
+    Sort evaluation responses by task ID for consistent ordering.
+    
+    Args:
+        responses (list[Report]): List of evaluation reports
+        
+    Returns:
+        list[Report]: Sorted list of reports
+    """
     return sorted(responses, key=lambda x: x.task_id)
 
 def validate_responses(responses: list[Report], ground_truth_failures: list[Failure]):
+    """
+    Validate that responses and ground truth have matching task IDs in same order.
+    
+    Args:
+        responses (list[Report]): Sorted evaluation reports
+        ground_truth_failures (list[Failure]): Sorted ground truth failures
+        
+    Raises:
+        AssertionError: If task IDs don't match between responses and ground truth
+    """
     for i in range(len(responses)):
         print(responses[i].task_id, ground_truth_failures[i].task_id)
     for i in range(len(responses)):
@@ -252,12 +436,26 @@ def validate_responses(responses: list[Report], ground_truth_failures: list[Fail
     return
 
 def analysis(data):
+    """
+    Perform high-level analysis of evaluation results and print summary statistics.
+    
+    Analyzes the accuracy of failure classification and step number prediction,
+    computing overall metrics for correct vs incorrect classifications.
+    
+    Args:
+        data (list[dict]): List of report dictionaries with computed statistics
+        
+    Prints:
+        - Individual task results (failure type, std dev, step metrics)
+        - Overall accuracy statistics
+        - Average distance metrics for step number predictions
+    """
     correct_cases = 0
     incorrect_cases = 0
     correct_distance = 0
     incorrect_distance = 0
     for task in data:
-        print(f"{task['most_common_failure'].split('.')[1]},{task['std_dev']},{task['step_mean']},{task['step_std_dev']}")
+        print(f"{task['most_common_failure'].split('.')[1]},{task['failure_case_accuracy']},{task['step_mean']},{task['step_std_dev']}")
         if task['most_common_failure'] == task['gt_failure_case']:
             correct_cases += 1
             correct_distance += abs(task['step_mean'] - task['gt_step_number'])
@@ -268,6 +466,26 @@ def analysis(data):
     print(f"Average distance for correct cases: {correct_distance/correct_cases if correct_cases > 0 else 0}, Average distance for incorrect cases: {incorrect_distance/incorrect_cases if incorrect_cases > 0 else 0}, Overall average distance: {(correct_distance + incorrect_distance)/(correct_cases + incorrect_cases) if (correct_cases + incorrect_cases) > 0 else 0}")
 
 def main():
+    """
+    Main execution function that runs the complete evaluation pipeline.
+    
+    Orchestrates the entire evaluation process:
+    1. Load ground truth failure annotations from CSV
+    2. Run LLM evaluation on trajectory data (multiple runs for reliability)
+    3. Filter and align results with ground truth
+    4. Compute comprehensive statistics
+    5. Generate analysis summary
+    6. Save detailed results to JSON file
+    
+    Configuration:
+        - Ground truth file: "ground_truth_failures_tau_bench.csv"
+        - Trajectory file: "tool-calling-l0-4o-with-index.json" (in judge_trajectories)
+        - Output file: "llm_judge_responses_multiple_runs.json"
+        - Number of evaluation runs: 5
+    
+    Raises:
+        Exception: Re-raises any exceptions with additional context for debugging
+    """
     file_name = "ground_truth_failures_tau_bench.csv"
     try:
         ground_truth_failures = load_failures_from_csv(file_name)

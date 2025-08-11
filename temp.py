@@ -1,6 +1,6 @@
 import json
 
-file = "llm_judge_responses_multiple_runs.json"
+file = "llm_as_a_judge/llm_judge_responses_multiple_runs.json"
 data = json.load(open(file, "r"))
 
 correct_cases = 0
@@ -8,7 +8,8 @@ incorrect_cases = 0
 correct_distance = 0
 incorrect_distance = 0
 for task in data:
-    print(f"{task['most_common_failure'].split('.')[1]},{task['std_dev']},{task['step_mean']},{task['step_std_dev']}")
+    # print(f"{task['most_common_failure'].split('.')[1]},{task['failure_case_accuracy']},{task['step_mean']},{task['step_std_dev']}")
+    print(f"{task['failure_case_accuracy']}")
     if task['most_common_failure'] == task['gt_failure_case']:
         correct_cases += 1
         correct_distance += abs(task['step_mean'] - task['gt_step_number'])
