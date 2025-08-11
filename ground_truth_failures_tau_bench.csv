@@ -1,0 +1,24 @@
+Task_id,Failure cases,Step Number,Details
+2,Hallucinating Facts,7,Computation Error
+3,Hallucinating Facts,6,Computation Error
+4,Hallucinating Facts,6,Computation Error
+12,Incorrect plan generation,19,Did not ask for the payment method from the user. The step is missing in the plan. So wrong payment method in the tool call
+20,Inconclusive,49,Wrong tool call. When the agents gets the details of the orders they are processed. So it should exchange the orders. But it ended up modifying the order. So either the plan generation is wrong or the execution.
+21,Incorrect plan generation,41,Did not ask for the payment method from the user. The step is missing in the plan. So wrong payment method in the tool call
+28,Inconclusive,33,The user asked to cancel an item. But the agents cancelled the entire order. It is not clear if the agent did not think that the tool call wasn't appropriate or just executed it incorrectly even after thinking the right thing.
+34,Incorrect plan generation,17,Incorrect plan generation. The agent did not realise that it is not even possible to cancel a partial order. So it did not generate the correct plan.
+39,Hallucinating facts,17,Incorrect assumption. The agent made up its own policy which is incorrect
+41,Inconclusive,20,Should modify the address first. It is not clear if the agent did not think of the correct plan or just executed it incorrectly.
+47,Incorrect plan generation,19,Wrong tool call. From the conversation it seems that the agent is not even thinking of doing the right tool call. So the plan is correctly generated.
+55,Inconclusive,37,Forgot one order item (water Bottle). It is not clear from the conversation that the plan was incorrect or just the execution is incorrect.
+59,Underspecified task and intent,19,wrong order cancelled and modified. It seems that it is not even clear in the conversation which order the user is refering to. So it seems to be a problem on the user's side.
+63,Underspecified task or intent,32,The user did not follow the instruction
+71,Incorrect plan execution,19,The plan generation seems correct from the conversation. But the agent forgot to update the address and moved to the next subtask
+72,Incorrect plan generation,21,Did not ask for the payment method from the user. The step is missing in the plan. So wrong payment method in the tool call
+74,Inconclusive,21,Wrong tool call. When the agents gets the details of the orders they are pending. So it should not exchange the orders. So either the plan generation is wrong or the execution. Not clear which one
+80,Incorrect plan execution,26,It is clear from the conversation that the agent thought to do the right thing. But it did not execute the tool call.
+82,Underspecified task or intent,20,The user misunderstood the instruction and communicated the wrong thing to the agent.
+87,Incorrect plan execution,35,From the conversation in step 29 it is clear that the agent thought to do the right thing. But it forgot to update one of the pending order address.
+91,Incorrect plan execution,40,It is clear from the conversation that the agent thought to do the right thing. But it did not execute the tool call.
+98,Inconclusive,21,Should modify the address first. It is not clear if the agent did not think of the correct plan or just executed it incorrectly.
+99,Incorrect plan execution,29,From conversation in step 27 it is clear that the agent thought to do the right thing. But it passed the wrong credit card as the argument to the tool call.

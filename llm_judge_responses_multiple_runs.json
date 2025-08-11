@@ -1,0 +1,1569 @@
+[
+    {
+        "task_id": 2,
+        "failures": [
+            {
+                "task_id": 2,
+                "failure_case": "FailureCase.INCORRECT_PLAN_GENERATION",
+                "description": "When handling a return for a delivered order the policy requires the agent to collect the user-chosen refund payment method (either the original method or an existing gift card) before asking for confirmation. In step 27 the assistant skipped this required step and unilaterally decided to refund to the original Mastercard, then immediately sought confirmation and executed the return. The plan it generated was missing the mandatory collection of the payment-method information.",
+                "step_number": 27
+            },
+            {
+                "task_id": 2,
+                "failure_case": "FailureCase.INCORRECT_PLAN_GENERATION",
+                "description": "The agent directly proceeded to fulfill the user\u2019s request for product information and even made a tool call (list_all_product_types) before authenticating the user\u2019s identity. According to the retail-agent policy, the agent must authenticate the user at the very beginning of the conversation, even if the user only requests product information. Skipping this mandatory step indicates the agent generated an incorrect plan that violates policy requirements.",
+                "step_number": 3
+            },
+            {
+                "task_id": 2,
+                "failure_case": "FailureCase.HALLUCINATING_FACTS",
+                "description": "The assistant stated that there are 11 available T-shirt options, but the product details returned by the tool show only 10 variants marked as available. Thus the assistant invented an incorrect fact not grounded in the tool output.",
+                "step_number": 7
+            },
+            {
+                "task_id": 2,
+                "failure_case": "FailureCase.HALLUCINATING_FACTS",
+                "description": "The assistant miscounted the number of available T-shirt variants. The product details show only 10 variants marked as available, yet the assistant told the user there are 11. This is an invented (hallucinated) fact not grounded in the tool output.",
+                "step_number": 7
+            },
+            {
+                "task_id": 2,
+                "failure_case": "FailureCase.HALLUCINATING_FACTS",
+                "description": "The assistant stated that there are 11 available T-shirt options, while the product details show only 10 variants marked as available. It invented an incorrect count that was not grounded in the tool-returned data.",
+                "step_number": 7
+            }
+        ],
+        "num_judges": 5,
+        "frequency": {
+            "FailureCase.INCORRECT_PLAN_GENERATION": 2,
+            "FailureCase.HALLUCINATING_FACTS": 3
+        },
+        "most_common_failure": "FailureCase.HALLUCINATING_FACTS",
+        "modes": [
+            "FailureCase.HALLUCINATING_FACTS"
+        ],
+        "mean": 4.8,
+        "median": 6,
+        "std_dev": 1.6431676725154984,
+        "variance": 2.7,
+        "min": 3,
+        "max": 6,
+        "proportions": {
+            "FailureCase.INCORRECT_PLAN_GENERATION": 0.4,
+            "FailureCase.HALLUCINATING_FACTS": 0.6
+        },
+        "step_mean": 10.2,
+        "step_median": 7,
+        "step_std_dev": 9.549869109050658,
+        "step_variance": 91.2,
+        "step_min": 3,
+        "step_max": 27,
+        "failure_case_accuracy": 0.6,
+        "step_mae": 4.8,
+        "step_error_distribution": {
+            "20": 1,
+            "4": 1,
+            "0": 3
+        },
+        "gt_failure_case": "FailureCase.HALLUCINATING_FACTS",
+        "gt_step_number": 7,
+        "gt_failure_description": "Computation Error"
+    },
+    {
+        "task_id": 3,
+        "failures": [
+            {
+                "task_id": 3,
+                "failure_case": "FailureCase.INCORRECT_PLAN_GENERATION",
+                "description": "The user asked to modify all pending orders that contain small-sized T-shirts, but the assistant only retrieved and considered one pending order (#W4776164). It failed to look up the remaining orders (#W6679257 and #W2378156) listed under the user and therefore provided incomplete information and action. The mistake stems from not expanding the search to every pending order, so the plan itself was inadequate.",
+                "step_number": 25
+            },
+            {
+                "task_id": 3,
+                "failure_case": "FailureCase.INCORRECT_PLAN_GENERATION",
+                "description": "The user asked the assistant to look at **all** pending orders containing small-sized T-shirts, but the assistant only fetched details for two orders (#W9711842 and #W4776164) and stopped after finding the first relevant one. It never retrieved or examined the remaining pending orders (#W6679257 and #W2378156) and therefore could not confirm whether they contained small T-shirts that also needed modification. The plan of action (checking every pending order) was thus incomplete from the outset.",
+                "step_number": 25
+            },
+            {
+                "task_id": 3,
+                "failure_case": "FailureCase.INCORRECT_PLAN_GENERATION",
+                "description": "When the user asked to modify *all* pending small T-shirts, the assistant only checked two of the five orders and stopped, skipping #W6679257 and #W2378156. By prematurely concluding that only one matching order existed, it generated an incomplete plan that did not satisfy the user\u2019s request.",
+                "step_number": 25
+            },
+            {
+                "task_id": 3,
+                "failure_case": "FailureCase.INCORRECT_PLAN_EXECUTION",
+                "description": "The user asked to modify all pending orders containing small T-shirts, but the assistant only looked up one such order (#W4776164) and proceeded with modifying that single order, ignoring the other pending orders (#W6679257, #W2378156) in the user\u2019s account. Thus the assistant did not fulfil the user\u2019s request to handle *all* relevant orders.",
+                "step_number": 25
+            },
+            {
+                "task_id": 3,
+                "failure_case": "FailureCase.INCORRECT_PLAN_GENERATION",
+                "description": "The user asked to modify ALL pending orders that contain small-sized T-shirts.  The agent only fetched details for two of the five orders in the user\u2019s history (#W6247578, #W9711842, #W4776164) and ignored the remaining two orders (#W6679257, #W2378156).  Because of this incomplete search the agent could not know whether other pending small-T-shirt items existed, so its subsequent modification covered only one order instead of all relevant orders requested by the user.",
+                "step_number": 25
+            }
+        ],
+        "num_judges": 5,
+        "frequency": {
+            "FailureCase.INCORRECT_PLAN_GENERATION": 4,
+            "FailureCase.INCORRECT_PLAN_EXECUTION": 1
+        },
+        "most_common_failure": "FailureCase.INCORRECT_PLAN_GENERATION",
+        "modes": [
+            "FailureCase.INCORRECT_PLAN_GENERATION"
+        ],
+        "mean": 3.2,
+        "median": 3,
+        "std_dev": 0.4472135954999579,
+        "variance": 0.2,
+        "min": 3,
+        "max": 4,
+        "proportions": {
+            "FailureCase.INCORRECT_PLAN_GENERATION": 0.8,
+            "FailureCase.INCORRECT_PLAN_EXECUTION": 0.2
+        },
+        "step_mean": 25,
+        "step_median": 25,
+        "step_std_dev": 0.0,
+        "step_variance": 0,
+        "step_min": 25,
+        "step_max": 25,
+        "failure_case_accuracy": 0.0,
+        "step_mae": 19,
+        "step_error_distribution": {
+            "19": 5
+        },
+        "gt_failure_case": "FailureCase.HALLUCINATING_FACTS",
+        "gt_step_number": 6,
+        "gt_failure_description": "Computation Error"
+    },
+    {
+        "task_id": 4,
+        "failures": [
+            {
+                "task_id": 4,
+                "failure_case": "FailureCase.INCORRECT_PLAN_GENERATION",
+                "description": "The agent did not follow the expected plan of tool calls: it skipped the required call get_product_details(product_id=\"6086499569\") that should have been made before listing all product types. This indicates an incorrect sequence / missing step in the plan.",
+                "step_number": 11
+            },
+            {
+                "task_id": 4,
+                "failure_case": "FailureCase.HALLUCINATING_FACTS",
+                "description": "The assistant invoked non-existent tools ('think' and 'calculate'). These tool calls are not part of the provided tool set and therefore constitute hallucinations.",
+                "step_number": 31
+            },
+            {
+                "task_id": 4,
+                "failure_case": "FailureCase.INCORRECT_PLAN_GENERATION",
+                "description": "The assistant did not make the required get_product_details call with product_id 6086499569 that should have come before listing all product types; therefore its sequence of steps diverged from the expected plan for answering the user\u2019s first question.",
+                "step_number": 11
+            },
+            {
+                "task_id": 4,
+                "failure_case": "FailureCase.INCORRECT_PLAN_GENERATION",
+                "description": "Before invoking the modify_pending_order_items tool, the assistant was required by policy to explicitly remind the customer that (a) all items to be changed must be provided and (b) the order will no longer be modifiable or cancellable after the change, then obtain an explicit confirmation. In step 41 the assistant asked for confirmation but omitted these mandated reminders, yet still proceeded to execute the modifications in the next turns.",
+                "step_number": 41
+            },
+            {
+                "task_id": 4,
+                "failure_case": "FailureCase.INCORRECT_PLAN_GENERATION",
+                "description": "Before calling modify_pending_order_items the assistant must remind the customer that (1) all items to be changed must be provided and (2) after this single modification the order can no longer be modified or cancelled. In its confirmation message (index 41) the assistant only quoted the price difference and asked for confirmation, omitting the required reminder, then proceeded with the modification calls. This violates the stated policy for the Modify-items action.",
+                "step_number": 41
+            }
+        ],
+        "num_judges": 5,
+        "frequency": {
+            "FailureCase.INCORRECT_PLAN_GENERATION": 4,
+            "FailureCase.HALLUCINATING_FACTS": 1
+        },
+        "most_common_failure": "FailureCase.INCORRECT_PLAN_GENERATION",
+        "modes": [
+            "FailureCase.INCORRECT_PLAN_GENERATION"
+        ],
+        "mean": 3.6,
+        "median": 3,
+        "std_dev": 1.3416407864998738,
+        "variance": 1.8,
+        "min": 3,
+        "max": 6,
+        "proportions": {
+            "FailureCase.INCORRECT_PLAN_GENERATION": 0.8,
+            "FailureCase.HALLUCINATING_FACTS": 0.2
+        },
+        "step_mean": 27,
+        "step_median": 31,
+        "step_std_dev": 15.165750888103101,
+        "step_variance": 230,
+        "step_min": 11,
+        "step_max": 41,
+        "failure_case_accuracy": 0.2,
+        "step_mae": 21,
+        "step_error_distribution": {
+            "5": 2,
+            "25": 1,
+            "35": 2
+        },
+        "gt_failure_case": "FailureCase.HALLUCINATING_FACTS",
+        "gt_step_number": 6,
+        "gt_failure_description": "Computation Error"
+    },
+    {
+        "task_id": 12,
+        "failures": [
+            {
+                "task_id": 12,
+                "failure_case": "FailureCase.INCORRECT_PLAN_EXECUTION",
+                "description": "The assistant executed the return action without first listing the action details (items, order id, refund method) and obtaining explicit user confirmation or asking which payment method to use, violating the stated policy. It prematurely chose the original Visa card and made the tool call.",
+                "step_number": 19
+            },
+            {
+                "task_id": 12,
+                "failure_case": "FailureCase.INCORRECT_PLAN_EXECUTION",
+                "description": "The agent processed the return but sent the refund to the Visa card instead of the PayPal account that should have been used.",
+                "step_number": 19
+            },
+            {
+                "task_id": 12,
+                "failure_case": "FailureCase.INCORRECT_PLAN_GENERATION",
+                "description": "For a return of delivered items, the agent must (1) obtain the user-chosen refund payment method and (2) explicitly ask for confirmation before calling the return tool. Instead, at step 19 the agent immediately invoked return_delivered_order_items, assumed the original Visa card as the refund destination, and never asked for or received confirmation. The ground-truth sequence shows the tool should have been called with the user\u2019s PayPal account after collecting that preference.",
+                "step_number": 19
+            },
+            {
+                "task_id": 12,
+                "failure_case": "FailureCase.INCORRECT_PLAN_GENERATION",
+                "description": "Before calling the return_delivered_order_items tool the assistant was required to (1) obtain explicit user confirmation of the action details and (2) ask the customer which payment method should receive the refund. Instead, at message 19 it unilaterally submitted the tool call and chose the Visa card, while the correct workflow (ground-truth) was to use the customer\u2019s PayPal account after confirmation. This shows the assistant produced an incorrect action sequence, not merely a tool malfunction.",
+                "step_number": 19
+            },
+            {
+                "task_id": 12,
+                "failure_case": "FailureCase.INCORRECT_PLAN_EXECUTION",
+                "description": "The assistant executed the return action without first listing the action details and obtaining explicit user confirmation, and it chose the wrong payment_method_id (Visa instead of PayPal).",
+                "step_number": 19
+            }
+        ],
+        "num_judges": 5,
+        "frequency": {
+            "FailureCase.INCORRECT_PLAN_EXECUTION": 3,
+            "FailureCase.INCORRECT_PLAN_GENERATION": 2
+        },
+        "most_common_failure": "FailureCase.INCORRECT_PLAN_EXECUTION",
+        "modes": [
+            "FailureCase.INCORRECT_PLAN_EXECUTION"
+        ],
+        "mean": 3.6,
+        "median": 4,
+        "std_dev": 0.5477225575051661,
+        "variance": 0.3,
+        "min": 3,
+        "max": 4,
+        "proportions": {
+            "FailureCase.INCORRECT_PLAN_EXECUTION": 0.6,
+            "FailureCase.INCORRECT_PLAN_GENERATION": 0.4
+        },
+        "step_mean": 19,
+        "step_median": 19,
+        "step_std_dev": 0.0,
+        "step_variance": 0,
+        "step_min": 19,
+        "step_max": 19,
+        "failure_case_accuracy": 0.4,
+        "step_mae": 0,
+        "step_error_distribution": {
+            "0": 5
+        },
+        "gt_failure_case": "FailureCase.INCORRECT_PLAN_GENERATION",
+        "gt_step_number": 19,
+        "gt_failure_description": "Did not ask for the payment method from the user. The step is missing in the plan. So wrong payment method in the tool call"
+    },
+    {
+        "task_id": 20,
+        "failures": [
+            {
+                "task_id": 20,
+                "failure_case": "FailureCase.INCORRECT_PLAN_GENERATION",
+                "description": "The agent attempted to exchange items in order #W4967593 even though the order status is \"processed\" (not \"delivered\"). Exchanging is only allowed for delivered orders. This shows the agent generated an invalid action plan that violates policy and differs from the ground-truth sequence (which only modifies the pending order).",
+                "step_number": 49
+            },
+            {
+                "task_id": 20,
+                "failure_case": "FailureCase.INCORRECT_PLAN_GENERATION",
+                "description": "The agent attempted to exchange items in order #W4967593 even though the order status is \"processed\" (not \"delivered\"). According to policy, exchanges are only allowed for delivered orders. The ground-truth sequence contains no such exchange call, showing the agent planned the wrong action.",
+                "step_number": 49
+            },
+            {
+                "task_id": 20,
+                "failure_case": "FailureCase.INCORRECT_PLAN_GENERATION",
+                "description": "The agent created an incorrect plan: it decided to exchange items in orders that are only in \"processed\" status (not \"delivered\"), which is disallowed. Ground-truth shows it should only modify the pending order, not touch the processed ones. This wrong plan appears when the agent lays out its upgrade strategy before any tool calls and later leads to invalid tool calls.",
+                "step_number": 21
+            },
+            {
+                "task_id": 20,
+                "failure_case": "FailureCase.INCORRECT_PLAN_EXECUTION",
+                "description": "The assistant attempted to call exchange_delivered_order_items for order #W4967593 even though its status is only \"processed\" (not \"delivered\"). Exchanging is only allowed for delivered orders, so the tool call was invalid and deviated from the correct workflow.",
+                "step_number": 49
+            },
+            {
+                "task_id": 20,
+                "failure_case": "FailureCase.INCORRECT_PLAN_GENERATION",
+                "description": "The agent incorrectly planned to exchange items from orders that are in \"processed\" status, which is not allowed (only \"delivered\" orders can be exchanged). This wrong plan is presented to the user before any tool call is made, showing a misunderstanding of policy and order status.",
+                "step_number": 41
+            }
+        ],
+        "num_judges": 5,
+        "frequency": {
+            "FailureCase.INCORRECT_PLAN_GENERATION": 4,
+            "FailureCase.INCORRECT_PLAN_EXECUTION": 1
+        },
+        "most_common_failure": "FailureCase.INCORRECT_PLAN_GENERATION",
+        "modes": [
+            "FailureCase.INCORRECT_PLAN_GENERATION"
+        ],
+        "mean": 3.2,
+        "median": 3,
+        "std_dev": 0.4472135954999579,
+        "variance": 0.2,
+        "min": 3,
+        "max": 4,
+        "proportions": {
+            "FailureCase.INCORRECT_PLAN_GENERATION": 0.8,
+            "FailureCase.INCORRECT_PLAN_EXECUTION": 0.2
+        },
+        "step_mean": 41.8,
+        "step_median": 49,
+        "step_std_dev": 12.13260071048248,
+        "step_variance": 147.2,
+        "step_min": 21,
+        "step_max": 49,
+        "failure_case_accuracy": 0.0,
+        "step_mae": 7.2,
+        "step_error_distribution": {
+            "0": 3,
+            "28": 1,
+            "8": 1
+        },
+        "gt_failure_case": "FailureCase.INCONCLUSIVE",
+        "gt_step_number": 49,
+        "gt_failure_description": "Wrong tool call. When the agents gets the details of the orders they are processed. So it should exchange the orders. But it ended up modifying the order. So either the plan generation is wrong or the execution."
+    },
+    {
+        "task_id": 21,
+        "failures": [
+            {
+                "task_id": 21,
+                "failure_case": "FailureCase.INCORRECT_PLAN_GENERATION",
+                "description": "The agent misinterpreted the user\u2019s request to exchange the shoes. Instead of offering to replace the shoe variant within the still-pending order (by modifying items), the agent insisted an exchange could not be done and suggested handing off to a human. Later, the agent modified only the keyboard item (and used PayPal instead of the user\u2019s gift card) while ignoring the shoe the user originally wanted changed. Thus the agent generated the wrong overall plan for fulfilling the user\u2019s intent.",
+                "step_number": 17
+            },
+            {
+                "task_id": 21,
+                "failure_case": "FailureCase.INCORRECT_PLAN_GENERATION",
+                "description": "The assistant mistakenly refused to process the customer\u2019s request to change the running-shoes item (treatable as a modification to the still-pending order) and went on to plan a modification that covered only the keyboard.  The correct plan should have bundled BOTH items (shoes and keyboard) into a single modify_pending_order_items call and used the gift card balance for the payment difference, as reflected in the ground-truth sequence.",
+                "step_number": 27
+            },
+            {
+                "task_id": 21,
+                "failure_case": "FailureCase.INCORRECT_PLAN_GENERATION",
+                "description": "When modifying the pending order, the assistant skipped the required step of asking the user to specify a payment method for the price difference and unilaterally chose the original PayPal account. It then made the modify_pending_order_items tool call with that PayPal method (and without including all possible items), violating policy requirements and the ground-truth sequence.",
+                "step_number": 41
+            },
+            {
+                "task_id": 21,
+                "failure_case": "FailureCase.INCORRECT_PLAN_GENERATION",
+                "description": "When modifying the pending order, the assistant skipped the required step of asking the customer to specify a payment method to cover the price difference and assumed PayPal automatically. The correct flow (ground-truth) expected the agent to collect/confirm the payment method (gift card) and include the shoes in the same single-modify call, but the assistant generated a plan that only replaced one item and used the wrong payment method.",
+                "step_number": 41
+            },
+            {
+                "task_id": 21,
+                "failure_case": "FailureCase.INCORRECT_PLAN_GENERATION",
+                "description": "When it finally modified the pending order, the assistant only replaced the keyboard, used the wrong payment method (PayPal instead of the gift-card) and ignored the user\u2019s earlier request to change the shoes. According to policy the assistant should have collected *all* item changes first and sent one call that replaced both the shoes (item 9791469541 \u2192 4107812777) and the keyboard (1340995114 \u2192 1421289881) with the gift card covering the price difference. The incorrect modify_pending_order_items call at this step led to the wrong total (+$33.64 instead of $44.08) and exhausted the single allowed modification call.",
+                "step_number": 41
+            }
+        ],
+        "num_judges": 5,
+        "frequency": {
+            "FailureCase.INCORRECT_PLAN_GENERATION": 5
+        },
+        "most_common_failure": "FailureCase.INCORRECT_PLAN_GENERATION",
+        "modes": [
+            "FailureCase.INCORRECT_PLAN_GENERATION"
+        ],
+        "mean": 3,
+        "median": 3,
+        "std_dev": 0.0,
+        "variance": 0,
+        "min": 3,
+        "max": 3,
+        "proportions": {
+            "FailureCase.INCORRECT_PLAN_GENERATION": 1.0
+        },
+        "step_mean": 33.4,
+        "step_median": 41,
+        "step_std_dev": 10.99090533122727,
+        "step_variance": 120.8,
+        "step_min": 17,
+        "step_max": 41,
+        "failure_case_accuracy": 1.0,
+        "step_mae": 7.6,
+        "step_error_distribution": {
+            "24": 1,
+            "14": 1,
+            "0": 3
+        },
+        "gt_failure_case": "FailureCase.INCORRECT_PLAN_GENERATION",
+        "gt_step_number": 41,
+        "gt_failure_description": "Did not ask for the payment method from the user. The step is missing in the plan. So wrong payment method in the tool call"
+    },
+    {
+        "task_id": 28,
+        "failures": [
+            {
+                "task_id": 28,
+                "failure_case": "FailureCase.INCORRECT_PLAN_EXECUTION",
+                "description": "The agent executed cancel_pending_order for the entire order #W2575533 even though the user only wanted to cancel the garden hose item and had not agreed to cancel the whole order. This contradicted the user\u2019s intent and the retail policy (which does not allow cancelling individual items but requires informing the user rather than cancelling all).",
+                "step_number": 33
+            },
+            {
+                "task_id": 28,
+                "failure_case": "FailureCase.INCORRECT_PLAN_EXECUTION",
+                "description": "The user asked to cancel only the garden hose from the pending order #W2575533, but the assistant used the cancel_pending_order tool which cancels the entire order and refunds the full amount. This was not what the user intended and the ground-truth sequence does not include that cancellation. The mistake happened when the assistant executed the wrong tool action.",
+                "step_number": 33
+            },
+            {
+                "task_id": 28,
+                "failure_case": "FailureCase.INCORRECT_PLAN_GENERATION",
+                "description": "When the user asked to cancel only the garden hose from the pending order #W2575533, the agent stated that it was possible to cancel just that item and asked for confirmation (step 31). According to the policy, the cancel-pending-order action cancels the entire order; single-item cancellation is not supported. The agent therefore devised an incorrect plan and later proceeded to cancel the whole order, against the user\u2019s intent.",
+                "step_number": 31
+            },
+            {
+                "task_id": 28,
+                "failure_case": "FailureCase.INCORRECT_PLAN_GENERATION",
+                "description": "The assistant incorrectly told the user that it could cancel only the Garden Hose item from the pending order, even though partial cancellation of items from a pending order is not supported by the policies. This indicates an incorrect understanding and plan for how to fulfill the user's request.",
+                "step_number": 31
+            },
+            {
+                "task_id": 28,
+                "failure_case": "FailureCase.INCORRECT_PLAN_GENERATION",
+                "description": "The agent incorrectly proceeded to cancel the entire pending order #W2575533 even though the user only wanted to cancel one item (the garden hose). According to the policy, individual-item cancellation from a pending order is not possible; the correct behaviour would have been to inform the user of that limitation rather than cancelling the whole order. The agent therefore generated the wrong plan for the user\u2019s request.",
+                "step_number": 31
+            }
+        ],
+        "num_judges": 5,
+        "frequency": {
+            "FailureCase.INCORRECT_PLAN_EXECUTION": 2,
+            "FailureCase.INCORRECT_PLAN_GENERATION": 3
+        },
+        "most_common_failure": "FailureCase.INCORRECT_PLAN_GENERATION",
+        "modes": [
+            "FailureCase.INCORRECT_PLAN_GENERATION"
+        ],
+        "mean": 3.4,
+        "median": 3,
+        "std_dev": 0.5477225575051661,
+        "variance": 0.3,
+        "min": 3,
+        "max": 4,
+        "proportions": {
+            "FailureCase.INCORRECT_PLAN_EXECUTION": 0.4,
+            "FailureCase.INCORRECT_PLAN_GENERATION": 0.6
+        },
+        "step_mean": 31.8,
+        "step_median": 31,
+        "step_std_dev": 1.0954451150103321,
+        "step_variance": 1.2,
+        "step_min": 31,
+        "step_max": 33,
+        "failure_case_accuracy": 0.0,
+        "step_mae": 1.2,
+        "step_error_distribution": {
+            "0": 2,
+            "2": 3
+        },
+        "gt_failure_case": "FailureCase.INCONCLUSIVE",
+        "gt_step_number": 33,
+        "gt_failure_description": "The user asked to cancel an item. But the agents cancelled the entire order. It is not clear if the agent did not think that the tool call wasn't appropriate or just executed it incorrectly even after thinking the right thing."
+    },
+    {
+        "task_id": 34,
+        "failures": [
+            {
+                "task_id": 34,
+                "failure_case": "FailureCase.INCORRECT_PLAN_GENERATION",
+                "description": "The agent misunderstood the user\u2019s request and pursued an item-removal modification path, whereas the correct resolution (ground-truth) was to keep the order intact and simply change the shipping address. It therefore generated the wrong plan for the user\u2019s intent.",
+                "step_number": 13
+            },
+            {
+                "task_id": 34,
+                "failure_case": "FailureCase.INCORRECT_PLAN_GENERATION",
+                "description": "The agent chose the wrong course of action for the user\u2019s request.  According to the ground-truth flow, after authentication the agent should have simply updated the shipping address of the pending order (modify_pending_order_address).  Instead, beginning at step 15 it planned to \u2018remove\u2019 three items with the modify_pending_order_items tool \u2013 an operation that is not supported by the tool and violates the one-to-one mapping requirement.  This incorrect plan led to consecutive tool errors and the order was never updated correctly.",
+                "step_number": 15
+            },
+            {
+                "task_id": 34,
+                "failure_case": "FailureCase.INCORRECT_PLAN_GENERATION",
+                "description": "The agent misinterpreted the allowed operations on a pending order. According to policy, items in a pending order can only be modified to other variants of the SAME product, not removed. At step 13 the agent tells the user it can \"modify the order to remove the office items,\" which is not possible. All later errors cascade from this bad plan (wrong tool usage, repeated failures, never performing the correct address-update). Therefore the failure stems from producing an incorrect plan rather than a tool malfunction.",
+                "step_number": 13
+            },
+            {
+                "task_id": 34,
+                "failure_case": "FailureCase.INCORRECT_PLAN_GENERATION",
+                "description": "After the user decided to simply ship the whole order to their NYC address, the agent should have used the modify_pending_order_address tool to change the shipping address. Instead, the agent stated that the order would ship to NYC without making any tool call, leaving the order unchanged (still addressed to Seattle).",
+                "step_number": 29
+            },
+            {
+                "task_id": 34,
+                "failure_case": "FailureCase.INCORRECT_PLAN_GENERATION",
+                "description": "The assistant concluded that the order would now ship to the user\u2019s NYC address without ever issuing a modify-pending-order-address tool call (or any other action) to change the shipping address from Seattle to New York. The correct plan, per ground-truth, was to call modify_pending_order_address after pulling the remaining order details. Instead the assistant simply replied to the user, leaving the order unchanged in the database.",
+                "step_number": 29
+            }
+        ],
+        "num_judges": 5,
+        "frequency": {
+            "FailureCase.INCORRECT_PLAN_GENERATION": 5
+        },
+        "most_common_failure": "FailureCase.INCORRECT_PLAN_GENERATION",
+        "modes": [
+            "FailureCase.INCORRECT_PLAN_GENERATION"
+        ],
+        "mean": 3,
+        "median": 3,
+        "std_dev": 0.0,
+        "variance": 0,
+        "min": 3,
+        "max": 3,
+        "proportions": {
+            "FailureCase.INCORRECT_PLAN_GENERATION": 1.0
+        },
+        "step_mean": 19.8,
+        "step_median": 15,
+        "step_std_dev": 8.438009243891594,
+        "step_variance": 71.2,
+        "step_min": 13,
+        "step_max": 29,
+        "failure_case_accuracy": 1.0,
+        "step_mae": 6.8,
+        "step_error_distribution": {
+            "4": 2,
+            "2": 1,
+            "12": 2
+        },
+        "gt_failure_case": "FailureCase.INCORRECT_PLAN_GENERATION",
+        "gt_step_number": 17,
+        "gt_failure_description": "Incorrect plan generation. The agent did not realise that it is not even possible to cancel a partial order. So it did not generate the correct plan."
+    },
+    {
+        "task_id": 39,
+        "failures": [
+            {
+                "task_id": 39,
+                "failure_case": "FailureCase.INCORRECT_PLAN_GENERATION",
+                "description": "After the user asked to change her default address to the new Phoenix (85033) address, the agent never proceeded with the address-update workflow that the ground-truth scenario expected: re-locating the user with the new zip, retrieving the order details, and finally calling modify_user_address. Instead, the agent only asked the user for more address details and then moved on to product enquiries, so none of the required tool calls (find_user_id_by_name_zip with zip 85033, get_order_details, modify_user_address) were ever made.",
+                "step_number": 17
+            },
+            {
+                "task_id": 39,
+                "failure_case": "FailureCase.INCORRECT_PLAN_GENERATION",
+                "description": "The user explicitly asked whether the agent could obtain the new address from the order details. The correct next step was to call get_order_details (and later modify_user_address) to retrieve and update the address, as reflected in the ground-truth sequence. Instead, the agent claimed this was impossible and stopped the flow, so it never executed the necessary tool calls or fulfilled the user\u2019s request.",
+                "step_number": 17
+            },
+            {
+                "task_id": 39,
+                "failure_case": "FailureCase.INCORRECT_PLAN_GENERATION",
+                "description": "The assistant attempted to locate the user with the old zip code (32169) instead of first trying the newly-provided zip code (85033), diverging from the expected sequence of tool calls that should have been made to authenticate the user. This indicates the plan for locating the user did not follow the correct order required by the ground-truth workflow.",
+                "step_number": 9
+            },
+            {
+                "task_id": 39,
+                "failure_case": "FailureCase.INCORRECT_PLAN_GENERATION",
+                "description": "When the user asked if the new address could be obtained from her order details, the assistant incorrectly stated that this was impossible and did not attempt the required get_order_details tool call (nor the subsequent modify_user_address call). The correct plan should have been to fetch the order\u2019s shipping address and, upon user confirmation, update the default address. Thus the assistant produced the wrong plan rather than executing a correct one incorrectly.",
+                "step_number": 17
+            },
+            {
+                "task_id": 39,
+                "failure_case": "FailureCase.INCORRECT_PLAN_GENERATION",
+                "description": "The user asked if the agent could pull the new address from an order. The toolkit allows the agent to call get_order_details to see the shipping address of order #W5285031 (ground-truth sequence includes that call) and then issue modify_user_address. Instead, at step 17 the agent incorrectly told the user this wasn\u2019t possible and ended the task without updating the address.",
+                "step_number": 17
+            }
+        ],
+        "num_judges": 5,
+        "frequency": {
+            "FailureCase.INCORRECT_PLAN_GENERATION": 5
+        },
+        "most_common_failure": "FailureCase.INCORRECT_PLAN_GENERATION",
+        "modes": [
+            "FailureCase.INCORRECT_PLAN_GENERATION"
+        ],
+        "mean": 3,
+        "median": 3,
+        "std_dev": 0.0,
+        "variance": 0,
+        "min": 3,
+        "max": 3,
+        "proportions": {
+            "FailureCase.INCORRECT_PLAN_GENERATION": 1.0
+        },
+        "step_mean": 15.4,
+        "step_median": 17,
+        "step_std_dev": 3.5777087639996634,
+        "step_variance": 12.8,
+        "step_min": 9,
+        "step_max": 17,
+        "failure_case_accuracy": 0.0,
+        "step_mae": 1.6,
+        "step_error_distribution": {
+            "0": 4,
+            "8": 1
+        },
+        "gt_failure_case": "FailureCase.HALLUCINATING_FACTS",
+        "gt_step_number": 17,
+        "gt_failure_description": "Incorrect assumption. The agent made up its own policy which is incorrect"
+    },
+    {
+        "task_id": 41,
+        "failures": [
+            {
+                "task_id": 41,
+                "failure_case": "FailureCase.INCORRECT_PLAN_GENERATION",
+                "description": "The assistant modified the items in the pending order (#W4082615) before fixing the shipping address. Doing so changed the order status to \"pending (item modified)\", after which addresses can no longer be edited, causing the later address-update attempt to fail. The correct plan should have updated the shipping address (for both pending orders and the user profile) first and then modified the items.",
+                "step_number": 17
+            },
+            {
+                "task_id": 41,
+                "failure_case": "FailureCase.INCORRECT_PLAN_GENERATION",
+                "description": "The agent changed the puzzle item first, which immediately set the order status to \"pending (item modified)\". After this status change the address can no longer be edited, so the agent could not fulfil the user\u2019s confirmed request to correct the address (nor the address on the other pending order or the profile). The correct plan would have been to update the shipping address(es) (and profile) first and then modify the item(s).",
+                "step_number": 17
+            },
+            {
+                "task_id": 41,
+                "failure_case": "FailureCase.INCORRECT_PLAN_GENERATION",
+                "description": "The agent updated the order items first, which immediately changed the order status to \u201cpending (item modified).\u201d Under the domain rules, once this status is set the order can no longer be modified, so the subsequent attempt to change the shipping address failed. The correct plan would have been to update the (incorrect) address on both orders (and the user profile) first, then modify the items. By choosing the wrong sequence, the agent prevented the address correction the user needed.",
+                "step_number": 17
+            },
+            {
+                "task_id": 41,
+                "failure_case": "FailureCase.INCORRECT_PLAN_GENERATION",
+                "description": "The agent modified the order items before updating the shipping address. According to policy, once items are modified the order becomes \u201cpending (items modified)\u201d and no further modifications (including address changes) are allowed. The correct plan was to update the address first and then (optionally) modify the items. By calling modify_pending_order_items first, the agent blocked itself from fulfilling the user\u2019s second request.",
+                "step_number": 17
+            },
+            {
+                "task_id": 41,
+                "failure_case": "FailureCase.INCORRECT_PLAN_GENERATION",
+                "description": "The agent switched the puzzle items before updating the shipping address. According to policy, once items on a pending order are modified, the order moves to status \"pending (item modified)\" and can no longer be modified in other ways (e.g., address). The correct plan would have been to update the address first (while status was still \"pending\"), then modify the items. By executing the steps in the wrong order, the agent blocked the requested address correction and had to transfer the user to a human agent.",
+                "step_number": 17
+            }
+        ],
+        "num_judges": 5,
+        "frequency": {
+            "FailureCase.INCORRECT_PLAN_GENERATION": 5
+        },
+        "most_common_failure": "FailureCase.INCORRECT_PLAN_GENERATION",
+        "modes": [
+            "FailureCase.INCORRECT_PLAN_GENERATION"
+        ],
+        "mean": 3,
+        "median": 3,
+        "std_dev": 0.0,
+        "variance": 0,
+        "min": 3,
+        "max": 3,
+        "proportions": {
+            "FailureCase.INCORRECT_PLAN_GENERATION": 1.0
+        },
+        "step_mean": 17,
+        "step_median": 17,
+        "step_std_dev": 0.0,
+        "step_variance": 0,
+        "step_min": 17,
+        "step_max": 17,
+        "failure_case_accuracy": 0.0,
+        "step_mae": 3,
+        "step_error_distribution": {
+            "3": 5
+        },
+        "gt_failure_case": "FailureCase.INCONCLUSIVE",
+        "gt_step_number": 20,
+        "gt_failure_description": "Should modify the address first. It is not clear if the agent did not think of the correct plan or just executed it incorrectly."
+    },
+    {
+        "task_id": 47,
+        "failures": [
+            {
+                "task_id": 47,
+                "failure_case": "FailureCase.INCORRECT_PLAN_GENERATION",
+                "description": "Instead of proceeding with the return (calling return_delivered_order_items) after the user confirmed, the agent escalated to a human agent, so the planned sequence of actions did not match the correct sequence required by policy and ground-truth.",
+                "step_number": 19
+            },
+            {
+                "task_id": 47,
+                "failure_case": "FailureCase.INCORRECT_PLAN_GENERATION",
+                "description": "After successfully authenticating the user and confirming the items and payment method, the assistant should have proceeded to create the return request (return_delivered_order_items call). Instead, it decided to transfer the conversation to a human agent, skipping the required return tool call and refund computation. This shows the assistant generated an incorrect course of action for the user\u2019s confirmed request.",
+                "step_number": 19
+            },
+            {
+                "task_id": 47,
+                "failure_case": "FailureCase.INCORRECT_PLAN_GENERATION",
+                "description": "After getting user confirmation and calculating the refund, the assistant unnecessarily escalated/ transferred the case to a human agent instead of proceeding with the normal return_delivered_order_items tool call that was fully within its own capabilities.",
+                "step_number": 19
+            },
+            {
+                "task_id": 47,
+                "failure_case": "FailureCase.INCORRECT_PLAN_GENERATION",
+                "description": "After confirming the user\u2019s intent to return the two delivered items, the agent should have created the return request (return_delivered_order_items) and only then, if needed, escalated the timeline question. Instead, at step 19 the agent skipped the required return action and immediately transferred the user to a human agent, deviating from the correct sequence of steps.",
+                "step_number": 19
+            },
+            {
+                "task_id": 47,
+                "failure_case": "FailureCase.INCORRECT_PLAN_GENERATION",
+                "description": "After the user already confirmed the return, the agent should have submitted the return_delivered_order_items tool call (and the supporting calculations). Instead, the agent skipped the required return action and immediately transferred the conversation to a human agent simply because the user asked for a faster-than-normal refund timeline. The return itself was still within the bot\u2019s scope and should have been processed, so the agent generated an incorrect plan.",
+                "step_number": 19
+            }
+        ],
+        "num_judges": 5,
+        "frequency": {
+            "FailureCase.INCORRECT_PLAN_GENERATION": 5
+        },
+        "most_common_failure": "FailureCase.INCORRECT_PLAN_GENERATION",
+        "modes": [
+            "FailureCase.INCORRECT_PLAN_GENERATION"
+        ],
+        "mean": 3,
+        "median": 3,
+        "std_dev": 0.0,
+        "variance": 0,
+        "min": 3,
+        "max": 3,
+        "proportions": {
+            "FailureCase.INCORRECT_PLAN_GENERATION": 1.0
+        },
+        "step_mean": 19,
+        "step_median": 19,
+        "step_std_dev": 0.0,
+        "step_variance": 0,
+        "step_min": 19,
+        "step_max": 19,
+        "failure_case_accuracy": 1.0,
+        "step_mae": 0,
+        "step_error_distribution": {
+            "0": 5
+        },
+        "gt_failure_case": "FailureCase.INCORRECT_PLAN_GENERATION",
+        "gt_step_number": 19,
+        "gt_failure_description": "Wrong tool call. From the conversation it seems that the agent is not even thinking of doing the right tool call. So the plan is correctly generated."
+    },
+    {
+        "task_id": 55,
+        "failures": [
+            {
+                "task_id": 55,
+                "failure_case": "FailureCase.INCORRECT_PLAN_EXECUTION",
+                "description": "When initiating the return for order #W4597054, the assistant omitted the Water Bottle (item_id 6777246137).  The ground-truth requires all four delivered items in that order to be returned, but the assistant\u2019s tool call only listed three items, resulting in an incomplete and incorrect execution of the return.",
+                "step_number": 33
+            },
+            {
+                "task_id": 55,
+                "failure_case": "FailureCase.INCORRECT_PLAN_GENERATION",
+                "description": "When initiating the return for order #W4597054, the assistant omitted the Water Bottle item (item_id 6777246137). The ground-truth sequence expects all four delivered items to be included, but the assistant\u2019s tool call only listed three. Therefore the assistant generated an incomplete plan for the return operation.",
+                "step_number": 33
+            },
+            {
+                "task_id": 55,
+                "failure_case": "FailureCase.INCORRECT_PLAN_GENERATION",
+                "description": "While initiating the return for order #W4597054, the assistant omitted the Water Bottle (item_id 6777246137).  According to the ground-truth sequence it should have included all four delivered items in the return tool call, but it only listed three.  This shows the assistant generated an incomplete plan for the return action.",
+                "step_number": 33
+            },
+            {
+                "task_id": 55,
+                "failure_case": "FailureCase.INCORRECT_PLAN_GENERATION",
+                "description": "The assistant violated required workflow: before cancelling a pending order it needed to list the action details and explicitly ask the user for confirmation and a cancellation reason. Instead, at step 27 it directly invoked the cancel_pending_order tool without obtaining the required confirmation or reason from the user, contravening policy.",
+                "step_number": 27
+            },
+            {
+                "task_id": 55,
+                "failure_case": "FailureCase.INCORRECT_PLAN_GENERATION",
+                "description": "When initiating the return for order #W4597054, the assistant omitted the Water Bottle (item_id 6777246137). According to the ground-truth steps, all delivered items (including the Water Bottle) should have been placed into the single return_delivered_order_items call. The assistant therefore generated an incorrect list of items for the return.",
+                "step_number": 33
+            }
+        ],
+        "num_judges": 5,
+        "frequency": {
+            "FailureCase.INCORRECT_PLAN_EXECUTION": 1,
+            "FailureCase.INCORRECT_PLAN_GENERATION": 4
+        },
+        "most_common_failure": "FailureCase.INCORRECT_PLAN_GENERATION",
+        "modes": [
+            "FailureCase.INCORRECT_PLAN_GENERATION"
+        ],
+        "mean": 3.2,
+        "median": 3,
+        "std_dev": 0.4472135954999579,
+        "variance": 0.2,
+        "min": 3,
+        "max": 4,
+        "proportions": {
+            "FailureCase.INCORRECT_PLAN_EXECUTION": 0.2,
+            "FailureCase.INCORRECT_PLAN_GENERATION": 0.8
+        },
+        "step_mean": 31.8,
+        "step_median": 33,
+        "step_std_dev": 2.6832815729997477,
+        "step_variance": 7.2,
+        "step_min": 27,
+        "step_max": 33,
+        "failure_case_accuracy": 0.0,
+        "step_mae": 5.2,
+        "step_error_distribution": {
+            "4": 4,
+            "10": 1
+        },
+        "gt_failure_case": "FailureCase.INCONCLUSIVE",
+        "gt_step_number": 37,
+        "gt_failure_description": "Forgot one order item (water Bottle). It is not clear from the conversation that the plan was incorrect or just the execution is incorrect."
+    },
+    {
+        "task_id": 59,
+        "failures": [
+            {
+                "task_id": 59,
+                "failure_case": "FailureCase.INCORRECT_PLAN_EXECUTION",
+                "description": "The assistant updated the shipping address for order #W8268610 without first listing the action details and getting explicit user confirmation, which is required by policy before any database-changing action. It directly called the tool modify_pending_order_address.",
+                "step_number": 23
+            },
+            {
+                "task_id": 59,
+                "failure_case": "FailureCase.INCORRECT_PLAN_GENERATION",
+                "description": "The agent executed a cancellation for order #W2702727, whereas the ground-truth sequence expected the agent to first calculate the price, then cancel order #W8268610 (not #W2702727). This indicates the agent followed an incorrect sequence / acted on the wrong order compared with the expected plan.",
+                "step_number": 19
+            },
+            {
+                "task_id": 59,
+                "failure_case": "FailureCase.INCORRECT_PLAN_EXECUTION",
+                "description": "The assistant executed a consequential action\u2014calling modify_pending_order_address and changing the order\u2019s shipping address\u2014without first listing the exact change and asking the user for an explicit \"yes\" confirmation, which the policy requires before any database-updating action.",
+                "step_number": 23
+            },
+            {
+                "task_id": 59,
+                "failure_case": "FailureCase.INCORRECT_PLAN_EXECUTION",
+                "description": "Before performing the address-change (a consequential database update), the assistant failed to list the action details and obtain an explicit \"yes\" confirmation from the user, as required by policy. Instead, it directly invoked the modify_pending_order_address tool.",
+                "step_number": 23
+            },
+            {
+                "task_id": 59,
+                "failure_case": "FailureCase.INCORRECT_PLAN_EXECUTION",
+                "description": "The assistant changed the shipping address without first listing the details and asking the user for explicit confirmation, which is required before any database-updating action. It executed the tool call immediately, violating policy.",
+                "step_number": 23
+            }
+        ],
+        "num_judges": 5,
+        "frequency": {
+            "FailureCase.INCORRECT_PLAN_EXECUTION": 4,
+            "FailureCase.INCORRECT_PLAN_GENERATION": 1
+        },
+        "most_common_failure": "FailureCase.INCORRECT_PLAN_EXECUTION",
+        "modes": [
+            "FailureCase.INCORRECT_PLAN_EXECUTION"
+        ],
+        "mean": 3.8,
+        "median": 4,
+        "std_dev": 0.4472135954999579,
+        "variance": 0.2,
+        "min": 3,
+        "max": 4,
+        "proportions": {
+            "FailureCase.INCORRECT_PLAN_EXECUTION": 0.8,
+            "FailureCase.INCORRECT_PLAN_GENERATION": 0.2
+        },
+        "step_mean": 22.2,
+        "step_median": 23,
+        "step_std_dev": 1.7888543819998317,
+        "step_variance": 3.2,
+        "step_min": 19,
+        "step_max": 23,
+        "failure_case_accuracy": 0.0,
+        "step_mae": 3.2,
+        "step_error_distribution": {
+            "4": 4,
+            "0": 1
+        },
+        "gt_failure_case": "FailureCase.UNSPECIFIED_TASK_OR_AMBIGUOUS_USER_INTENT",
+        "gt_step_number": 19,
+        "gt_failure_description": "wrong order cancelled and modified. It seems that it is not even clear in the conversation which order the user is refering to. So it seems to be a problem on the user's side."
+    },
+    {
+        "task_id": 63,
+        "failures": [
+            {
+                "task_id": 63,
+                "failure_case": "FailureCase.INCORRECT_PLAN_GENERATION",
+                "description": "The assistant incorrectly told the user that it could not add or otherwise adjust the items in the pending order, ending the interaction without making the required modify-pending-order-items tool call (and associated price recalculation). The correct solution was to replace the expensive speaker with the cheaper variant, but the assistant\u2019s plan denied that option.",
+                "step_number": 33
+            },
+            {
+                "task_id": 63,
+                "failure_case": "FailureCase.INCORRECT_PLAN_EXECUTION",
+                "description": "The assistant never executed the required modification of the pending order (#W5061109). After identifying a cheaper in-stock variant and obtaining the user\u2019s choice, it should have replaced the existing speaker with the cheaper one (and calculated the new total) using the modify_pending_order_items and calculate tool calls. Instead, at step 33 it told the user that no change could be made and ended the interaction, so the correct tool calls were never issued.",
+                "step_number": 33
+            },
+            {
+                "task_id": 63,
+                "failure_case": "FailureCase.INCORRECT_PLAN_GENERATION",
+                "description": "The agent falsely stated that it could not cancel or modify a single item in the pending order and never attempted the correct modify-pending-order-items flow (which would replace the expensive speaker with the cheaper variant). This reflects an incorrect understanding of allowable actions and therefore an incorrect plan for fulfilling the user\u2019s request.",
+                "step_number": 23
+            },
+            {
+                "task_id": 63,
+                "failure_case": "FailureCase.INCORRECT_PLAN_EXECUTION",
+                "description": "The agent failed to carry out the correct follow-up action for modifying the user\u2019s pending order. After identifying an available cheaper variant of the same Bluetooth speaker, the agent should have proceeded (after collecting/confirming details) to replace the original speaker with the cheaper one, compute the new total (1319.43 \u2013 302.67 + 271.89 = 1288.65) and invoke the modify_pending_order_items tool. Instead, at step 33 the agent incorrectly stated that it could not add an item and ended the flow, never issuing the required calculate and modify_pending_order_items tool calls.",
+                "step_number": 33
+            },
+            {
+                "task_id": 63,
+                "failure_case": "FailureCase.HALLUCINATING_FACTS",
+                "description": "The assistant invoked a fictitious function named \"think\" to reason about product variants, even though such a tool is not part of the provided tool set. Introducing and calling a non-existent tool violates the policy that the agent must only use the available tools and never make up new ones.",
+                "step_number": 25
+            }
+        ],
+        "num_judges": 5,
+        "frequency": {
+            "FailureCase.INCORRECT_PLAN_GENERATION": 2,
+            "FailureCase.INCORRECT_PLAN_EXECUTION": 2,
+            "FailureCase.HALLUCINATING_FACTS": 1
+        },
+        "most_common_failure": "FailureCase.INCORRECT_PLAN_GENERATION",
+        "modes": [
+            "FailureCase.INCORRECT_PLAN_GENERATION",
+            "FailureCase.INCORRECT_PLAN_EXECUTION"
+        ],
+        "mean": 4,
+        "median": 4,
+        "std_dev": 1.224744871391589,
+        "variance": 1.5,
+        "min": 3,
+        "max": 6,
+        "proportions": {
+            "FailureCase.INCORRECT_PLAN_GENERATION": 0.4,
+            "FailureCase.INCORRECT_PLAN_EXECUTION": 0.4,
+            "FailureCase.HALLUCINATING_FACTS": 0.2
+        },
+        "step_mean": 29.4,
+        "step_median": 33,
+        "step_std_dev": 4.979959839195493,
+        "step_variance": 24.8,
+        "step_min": 23,
+        "step_max": 33,
+        "failure_case_accuracy": 0.0,
+        "step_mae": 3.8,
+        "step_error_distribution": {
+            "1": 3,
+            "9": 1,
+            "7": 1
+        },
+        "gt_failure_case": "FailureCase.UNSPECIFIED_TASK_OR_AMBIGUOUS_USER_INTENT",
+        "gt_step_number": 32,
+        "gt_failure_description": "The user did not follow the instruction"
+    },
+    {
+        "task_id": 71,
+        "failures": [
+            {
+                "task_id": 71,
+                "failure_case": "FailureCase.INCORRECT_PLAN_GENERATION",
+                "description": "The agent prematurely called modify_pending_order_items after only updating the desk lamp without first confirming whether the user had any other item changes, violating the policy that all item modifications must be bundled into a single call. Consequently, when the user later asked to change the backpack, the agent could no longer comply, diverging from the ground-truth sequence that required both the lamp and backpack to be modified in one call.",
+                "step_number": 27
+            },
+            {
+                "task_id": 71,
+                "failure_case": "FailureCase.INCORRECT_PLAN_GENERATION",
+                "description": "The agent prematurely called modify_pending_order_items as soon as the user confirmed only the desk-lamp change, even though the policy states the item-modification tool can be used only once per order and all desired item changes must be gathered first. This prevented it from fulfilling the later backpack modification the user requested and contradicted the ground-truth sequence that required waiting and modifying the backpack instead. The wrong sequence of steps reflects an incorrect plan, not merely a mis-execution of a correct plan.",
+                "step_number": 27
+            },
+            {
+                "task_id": 71,
+                "failure_case": "FailureCase.INCORRECT_PLAN_GENERATION",
+                "description": "The agent prematurely called modify_pending_order_items for the desk lamp before confirming whether all desired item changes were complete, violating the policy that the item-modification tool may be used only once. When the user later asked to modify the backpack, the agent could no longer comply. The correct plan would have been to ask the user if there were any other item modifications before executing the single modify_pending_order_items call that should have included both the lamp and backpack changes.",
+                "step_number": 27
+            },
+            {
+                "task_id": 71,
+                "failure_case": "FailureCase.INCORRECT_PLAN_GENERATION",
+                "description": "The agent prematurely called modify_pending_order_items for the desk lamp without first confirming whether the user had any other item changes, even though the policy states that item modification can only be done once and all items must be collected beforehand. This prevented the later requested change to the backpack, which the ground-truth sequence expected. The incorrect sequencing shows the agent produced the wrong overall plan.",
+                "step_number": 27
+            },
+            {
+                "task_id": 71,
+                "failure_case": "FailureCase.INCORRECT_PLAN_GENERATION",
+                "description": "The agent incorrectly chose to modify the desk-lamp item (item_id 7453605304 \u2192 5320792178) and used the gift-card payment method, whereas the correct plan (ground truth) required modifying the backpack item (item_id 2492465580 \u2192 5917587651) and using the PayPal method. This wrong choice exhausted the single allowed item-modification call and prevented the later requested backpack change.",
+                "step_number": 27
+            }
+        ],
+        "num_judges": 5,
+        "frequency": {
+            "FailureCase.INCORRECT_PLAN_GENERATION": 5
+        },
+        "most_common_failure": "FailureCase.INCORRECT_PLAN_GENERATION",
+        "modes": [
+            "FailureCase.INCORRECT_PLAN_GENERATION"
+        ],
+        "mean": 3,
+        "median": 3,
+        "std_dev": 0.0,
+        "variance": 0,
+        "min": 3,
+        "max": 3,
+        "proportions": {
+            "FailureCase.INCORRECT_PLAN_GENERATION": 1.0
+        },
+        "step_mean": 27,
+        "step_median": 27,
+        "step_std_dev": 0.0,
+        "step_variance": 0,
+        "step_min": 27,
+        "step_max": 27,
+        "failure_case_accuracy": 0.0,
+        "step_mae": 8,
+        "step_error_distribution": {
+            "8": 5
+        },
+        "gt_failure_case": "FailureCase.INCORRECT_PLAN_EXECUTION",
+        "gt_step_number": 19,
+        "gt_failure_description": "The plan generation seems correct from the conversation. But the agent forgot to update the address and moved to the next subtask"
+    },
+    {
+        "task_id": 72,
+        "failures": [
+            {
+                "task_id": 72,
+                "failure_case": "FailureCase.INCORRECT_PLAN_GENERATION",
+                "description": "The assistant skipped the required address-update step and executed an items-modification with the wrong payment method (gift card) and without explicit confirmation, diverging from the correct sequence and parameters expected by the ground truth.",
+                "step_number": 21
+            },
+            {
+                "task_id": 72,
+                "failure_case": "FailureCase.INCORRECT_PLAN_EXECUTION",
+                "description": "The assistant executed the modification incorrectly: it called modify_pending_order_items without obtaining explicit user confirmation, used the gift card instead of the requested PayPal method, modified BOTH backpack and desk lamp, and did not update the shipping address first. This consumed the single allowed item-modification call and blocked the required address change.",
+                "step_number": 21
+            },
+            {
+                "task_id": 72,
+                "failure_case": "FailureCase.INCORRECT_PLAN_EXECUTION",
+                "description": "The agent prematurely executed modify_pending_order_items (index 21) without first obtaining explicit user confirmation, used the wrong payment method (gift card instead of PayPal), included both items instead of confirming all details, and did not perform the required address-change action. This incorrect execution prevented the later requested address update and payment change.",
+                "step_number": 21
+            },
+            {
+                "task_id": 72,
+                "failure_case": "FailureCase.INCORRECT_PLAN_GENERATION",
+                "description": "The assistant prematurely called modify_pending_order_items using the gift card without first confirming the action details (incl. payment method) with the user and before changing the shipping address. This diverged from the required workflow and from what the user ultimately wanted (shipping-address change + backpack only with PayPal).",
+                "step_number": 21
+            },
+            {
+                "task_id": 72,
+                "failure_case": "FailureCase.INCORRECT_PLAN_GENERATION",
+                "description": "The agent prematurely called modify_pending_order_items without first changing the shipping address, used the wrong payment method (gift card instead of PayPal), included the desk lamp even though the user later preferred only the backpack, and did not obtain explicit confirmation. The correct sequence should have been: 1) modify the shipping address, 2) modify only the backpack item using PayPal. Thus the agent generated the wrong action plan.",
+                "step_number": 21
+            }
+        ],
+        "num_judges": 5,
+        "frequency": {
+            "FailureCase.INCORRECT_PLAN_GENERATION": 3,
+            "FailureCase.INCORRECT_PLAN_EXECUTION": 2
+        },
+        "most_common_failure": "FailureCase.INCORRECT_PLAN_GENERATION",
+        "modes": [
+            "FailureCase.INCORRECT_PLAN_GENERATION"
+        ],
+        "mean": 3.4,
+        "median": 3,
+        "std_dev": 0.5477225575051661,
+        "variance": 0.3,
+        "min": 3,
+        "max": 4,
+        "proportions": {
+            "FailureCase.INCORRECT_PLAN_GENERATION": 0.6,
+            "FailureCase.INCORRECT_PLAN_EXECUTION": 0.4
+        },
+        "step_mean": 21,
+        "step_median": 21,
+        "step_std_dev": 0.0,
+        "step_variance": 0,
+        "step_min": 21,
+        "step_max": 21,
+        "failure_case_accuracy": 0.6,
+        "step_mae": 0,
+        "step_error_distribution": {
+            "0": 5
+        },
+        "gt_failure_case": "FailureCase.INCORRECT_PLAN_GENERATION",
+        "gt_step_number": 21,
+        "gt_failure_description": "Did not ask for the payment method from the user. The step is missing in the plan. So wrong payment method in the tool call"
+    },
+    {
+        "task_id": 74,
+        "failures": [
+            {
+                "task_id": 74,
+                "failure_case": "FailureCase.INCORRECT_PLAN_GENERATION",
+                "description": "The agent chose the wrong action for the user\u2019s situation. The laptop order it had been working with (#W5166363) is in \u201cpending\u201d status, so the correct operation (per policy and ground-truth) should have been a pending-order item-modification. Instead, at step 21 the agent tried to call the exchange_delivered_order_items tool, which only works for delivered orders. This shows the plan itself was wrong, not merely a mis-executed correct plan.",
+                "step_number": 21
+            },
+            {
+                "task_id": 74,
+                "failure_case": "FailureCase.INCORRECT_PLAN_GENERATION",
+                "description": "The assistant attempted to call the exchange_delivered_order_items tool for an order whose status was \u201cpending.\u201d Exchanges can only be done on delivered orders; for a pending order the correct tool should have been modify_pending_order_items. Thus the assistant generated an incorrect plan / tool choice.",
+                "step_number": 21
+            },
+            {
+                "task_id": 74,
+                "failure_case": "FailureCase.INCORRECT_PLAN_GENERATION",
+                "description": "The user wanted to change the laptop in a PENDING order; the correct action was to call modify_pending_order_items. Instead, the assistant tried to call exchange_delivered_order_items (only valid for delivered orders), which failed and derailed the flow, leading to cancellation of the wrong order later. The error shows the agent chose the wrong tool for the task.",
+                "step_number": 21
+            },
+            {
+                "task_id": 74,
+                "failure_case": "FailureCase.INCORRECT_PLAN_EXECUTION",
+                "description": "The assistant chose the wrong tool: it invoked exchange_delivered_order_items for a PENDING order (#W5166363). The correct action, given the user\u2019s request and the order status, was to use modify_pending_order_items. This wrong tool call shows the agent executed its (otherwise reasonable) plan incorrectly, leading to a tool error and to a cascade of wrong subsequent actions (the expected modify call never happened, and the wrong order was later cancelled).",
+                "step_number": 21
+            },
+            {
+                "task_id": 74,
+                "failure_case": "FailureCase.INCORRECT_PLAN_GENERATION",
+                "description": "The agent attempted to call the exchange_delivered_order_items function for order #W5166363 even though the order status was \"pending.\" According to policy, only delivered orders can be exchanged; pending orders must be modified. The correct action would have been to generate a modify_pending_order_items call (with the appropriate payment method), not an exchange call. This shows the agent produced an incorrect plan for the user\u2019s intent.",
+                "step_number": 21
+            }
+        ],
+        "num_judges": 5,
+        "frequency": {
+            "FailureCase.INCORRECT_PLAN_GENERATION": 4,
+            "FailureCase.INCORRECT_PLAN_EXECUTION": 1
+        },
+        "most_common_failure": "FailureCase.INCORRECT_PLAN_GENERATION",
+        "modes": [
+            "FailureCase.INCORRECT_PLAN_GENERATION"
+        ],
+        "mean": 3.2,
+        "median": 3,
+        "std_dev": 0.4472135954999579,
+        "variance": 0.2,
+        "min": 3,
+        "max": 4,
+        "proportions": {
+            "FailureCase.INCORRECT_PLAN_GENERATION": 0.8,
+            "FailureCase.INCORRECT_PLAN_EXECUTION": 0.2
+        },
+        "step_mean": 21,
+        "step_median": 21,
+        "step_std_dev": 0.0,
+        "step_variance": 0,
+        "step_min": 21,
+        "step_max": 21,
+        "failure_case_accuracy": 0.0,
+        "step_mae": 0,
+        "step_error_distribution": {
+            "0": 5
+        },
+        "gt_failure_case": "FailureCase.INCONCLUSIVE",
+        "gt_step_number": 21,
+        "gt_failure_description": "Wrong tool call. When the agents gets the details of the orders they are pending. So it should not exchange the orders. So either the plan generation is wrong or the execution. Not clear which one"
+    },
+    {
+        "task_id": 80,
+        "failures": [
+            {
+                "task_id": 80,
+                "failure_case": "FailureCase.INCORRECT_PLAN_EXECUTION",
+                "description": "After the user gave explicit confirmation to proceed with the exchange, the assistant did not make the required exchange_delivered_order_items tool call. The conversation ends without carrying out the confirmed action.",
+                "step_number": 26
+            },
+            {
+                "task_id": 80,
+                "failure_case": "FailureCase.INCORRECT_PLAN_EXECUTION",
+                "description": "After obtaining explicit user confirmation to proceed with the exchange, the agent never executed the required tool call (exchange_delivered_order_items). Thus the exchange was not processed.",
+                "step_number": 26
+            },
+            {
+                "task_id": 80,
+                "failure_case": "FailureCase.INCORRECT_PLAN_EXECUTION",
+                "description": "After the user explicitly confirmed they wanted to proceed with the exchange (and provided all the required details), the assistant never issued the required `exchange_delivered_order_items` tool call to actually carry out the exchange. Thus the correct action was not executed.",
+                "step_number": 26
+            },
+            {
+                "task_id": 80,
+                "failure_case": "FailureCase.INCORRECT_PLAN_EXECUTION",
+                "description": "After obtaining the user\u2019s explicit confirmation to proceed with the exchange (step 26), the assistant failed to execute the required tool call `exchange_delivered_order_items` to finalize the exchange.",
+                "step_number": 26
+            },
+            {
+                "task_id": 80,
+                "failure_case": "FailureCase.INCORRECT_PLAN_EXECUTION",
+                "description": "After the user explicitly confirmed they wanted to proceed with the exchange (index 26), the agent failed to make the required tool call `exchange_delivered_order_items` to carry out the exchange. No further assistant message or tool invocation followed the confirmation.",
+                "step_number": 26
+            }
+        ],
+        "num_judges": 5,
+        "frequency": {
+            "FailureCase.INCORRECT_PLAN_EXECUTION": 5
+        },
+        "most_common_failure": "FailureCase.INCORRECT_PLAN_EXECUTION",
+        "modes": [
+            "FailureCase.INCORRECT_PLAN_EXECUTION"
+        ],
+        "mean": 4,
+        "median": 4,
+        "std_dev": 0.0,
+        "variance": 0,
+        "min": 4,
+        "max": 4,
+        "proportions": {
+            "FailureCase.INCORRECT_PLAN_EXECUTION": 1.0
+        },
+        "step_mean": 26,
+        "step_median": 26,
+        "step_std_dev": 0.0,
+        "step_variance": 0,
+        "step_min": 26,
+        "step_max": 26,
+        "failure_case_accuracy": 1.0,
+        "step_mae": 0,
+        "step_error_distribution": {
+            "0": 5
+        },
+        "gt_failure_case": "FailureCase.INCORRECT_PLAN_EXECUTION",
+        "gt_step_number": 26,
+        "gt_failure_description": "It is clear from the conversation that the agent thought to do the right thing. But it did not execute the tool call."
+    },
+    {
+        "task_id": 82,
+        "failures": [
+            {
+                "task_id": 82,
+                "failure_case": "FailureCase.INCORRECT_PLAN_GENERATION",
+                "description": "The assistant initiated two separate return calls \u2014 one for the tablet in order #W3069600 and one for only the tablet in order #W9571698 \u2014 whereas the ground-truth action required a single return call for ALL items in order #W9571698. Hence the assistant generated an incorrect plan of what needed to be returned (and consequently executed the wrong tool calls).",
+                "step_number": 23
+            },
+            {
+                "task_id": 82,
+                "failure_case": "FailureCase.INCORRECT_PLAN_GENERATION",
+                "description": "The assistant initiated two separate return requests but, for order #W9571698, it only included the tablet item instead of returning every item in that delivered order as required by the ground-truth expectation.",
+                "step_number": 25
+            },
+            {
+                "task_id": 82,
+                "failure_case": "FailureCase.INCORRECT_PLAN_GENERATION",
+                "description": "The agent misunderstood the items that the user wished to return and planned to return only the tablets, whereas the ground-truth shows that all items in order #W9571698 needed to be returned. This incorrect understanding appeared when the assistant summarised the action before getting confirmation, leading to tool calls that did not include the required items.",
+                "step_number": 21
+            },
+            {
+                "task_id": 82,
+                "failure_case": "FailureCase.INCORRECT_PLAN_GENERATION",
+                "description": "The agent decided to return only the tablet items (and even used two separate tool calls \u2013 one per order). According to the ground-truth, it should have submitted a single return_delivered_order_items call for order #W9571698 including ALL four items in that order. Hence the agent produced an incorrect set of tool-calls \u2013 it planned the wrong action set for the user\u2019s request.",
+                "step_number": 25
+            },
+            {
+                "task_id": 82,
+                "failure_case": "FailureCase.INCORRECT_PLAN_GENERATION",
+                "description": "The agent initiated a return for only the tablet item in order #W9571698, while the ground-truth expected a return request for ALL four items in that order. Thus the agent generated an incomplete/incorrect plan compared with what was required.",
+                "step_number": 25
+            }
+        ],
+        "num_judges": 5,
+        "frequency": {
+            "FailureCase.INCORRECT_PLAN_GENERATION": 5
+        },
+        "most_common_failure": "FailureCase.INCORRECT_PLAN_GENERATION",
+        "modes": [
+            "FailureCase.INCORRECT_PLAN_GENERATION"
+        ],
+        "mean": 3,
+        "median": 3,
+        "std_dev": 0.0,
+        "variance": 0,
+        "min": 3,
+        "max": 3,
+        "proportions": {
+            "FailureCase.INCORRECT_PLAN_GENERATION": 1.0
+        },
+        "step_mean": 23.8,
+        "step_median": 25,
+        "step_std_dev": 1.7888543819998317,
+        "step_variance": 3.2,
+        "step_min": 21,
+        "step_max": 25,
+        "failure_case_accuracy": 0.0,
+        "step_mae": 3.8,
+        "step_error_distribution": {
+            "3": 1,
+            "5": 3,
+            "1": 1
+        },
+        "gt_failure_case": "FailureCase.UNSPECIFIED_TASK_OR_AMBIGUOUS_USER_INTENT",
+        "gt_step_number": 20,
+        "gt_failure_description": "The user misunderstood the instruction and communicated the wrong thing to the agent."
+    },
+    {
+        "task_id": 87,
+        "failures": [
+            {
+                "task_id": 87,
+                "failure_case": "FailureCase.INCORRECT_PLAN_GENERATION",
+                "description": "The agent failed to update one of the user\u2019s pending orders (#W6832752) even though the user asked to update \u201ceverything.\u201d  The correct plan required three modify_pending_order_address calls (for #W2166301, #W2466703, and #W6832752) plus the modify_user_address call, but the agent executed only two of the order-address updates, omitting #W6832752.",
+                "step_number": 31
+            },
+            {
+                "task_id": 87,
+                "failure_case": "FailureCase.INCORRECT_PLAN_GENERATION",
+                "description": "The agent failed to include one of the customer\u2019s pending orders (#W6832752) when updating addresses, even though the user asked to update \u201ceverything\u201d and the agent had already retrieved that order\u2019s details. Thus the sequence of actions did not satisfy the user\u2019s intent.",
+                "step_number": 31
+            },
+            {
+                "task_id": 87,
+                "failure_case": "FailureCase.INCORRECT_PLAN_GENERATION",
+                "description": "The assistant overlooked one of the user\u2019s pending orders (#W6832752). Consequently, it never planned to update that order\u2019s address\u2014even though the ground-truth solution requires updating all three pending orders. Thus the mistake lies in the plan itself, not in its execution.",
+                "step_number": 31
+            },
+            {
+                "task_id": 87,
+                "failure_case": "FailureCase.INCORRECT_PLAN_GENERATION",
+                "description": "The user asked to update the address on all of his pending orders and the default address. The agent identified three pending orders (#W2166301, #W2466703, #W6832752) but only planned and executed address updates for the first two, leaving #W6832752 unchanged. Hence the sequence of actions did not meet the user\u2019s intent.",
+                "step_number": 31
+            },
+            {
+                "task_id": 87,
+                "failure_case": "FailureCase.INCORRECT_PLAN_GENERATION",
+                "description": "The user asked to update the address on ALL of their pending orders plus the default address. There are three pending orders (#W2166301, #W2466703, #W6832752). The assistant updated only two of them (#W2166301 and #W2466703) and ignored #W6832752, even though it had already retrieved that order and knew it was pending. So the assistant produced an incomplete plan of actions, omitting one required tool call.",
+                "step_number": 31
+            }
+        ],
+        "num_judges": 5,
+        "frequency": {
+            "FailureCase.INCORRECT_PLAN_GENERATION": 5
+        },
+        "most_common_failure": "FailureCase.INCORRECT_PLAN_GENERATION",
+        "modes": [
+            "FailureCase.INCORRECT_PLAN_GENERATION"
+        ],
+        "mean": 3,
+        "median": 3,
+        "std_dev": 0.0,
+        "variance": 0,
+        "min": 3,
+        "max": 3,
+        "proportions": {
+            "FailureCase.INCORRECT_PLAN_GENERATION": 1.0
+        },
+        "step_mean": 31,
+        "step_median": 31,
+        "step_std_dev": 0.0,
+        "step_variance": 0,
+        "step_min": 31,
+        "step_max": 31,
+        "failure_case_accuracy": 0.0,
+        "step_mae": 4,
+        "step_error_distribution": {
+            "4": 5
+        },
+        "gt_failure_case": "FailureCase.INCORRECT_PLAN_EXECUTION",
+        "gt_step_number": 35,
+        "gt_failure_description": "From the conversation in step 29 it is clear that the agent thought to do the right thing. But it forgot to update one of the pending order address."
+    },
+    {
+        "task_id": 91,
+        "failures": [
+            {
+                "task_id": 91,
+                "failure_case": "FailureCase.INCORRECT_PLAN_EXECUTION",
+                "description": "After the user gave explicit confirmation to proceed with the returns and exchanges, the assistant never executed the required tool calls (return_delivered_order_items and exchange_delivered_order_items). Thus the plan was not carried out.",
+                "step_number": 39
+            },
+            {
+                "task_id": 91,
+                "failure_case": "FailureCase.INCORRECT_PLAN_GENERATION",
+                "description": "The assistant generated an incorrect action plan: it planned to exchange both the E-Reader and the Tablet, while the correct plan (ground-truth) only required exchanging the E-Reader. This wrong plan deviates from the expected tool call arguments.",
+                "step_number": 38
+            },
+            {
+                "task_id": 91,
+                "failure_case": "FailureCase.INCORRECT_PLAN_EXECUTION",
+                "description": "After the user gave explicit confirmation to proceed, the assistant never executed the required tool calls to carry out the returns and exchanges. The conversation ends without any database-updating action.",
+                "step_number": 40
+            },
+            {
+                "task_id": 91,
+                "failure_case": "FailureCase.INCORRECT_PLAN_GENERATION",
+                "description": "The assistant's final plan includes an exchange for both the E-Reader and the Tablet, whereas the ground-truth expected only the E-Reader to be exchanged. Thus the assistant generated an incorrect set of actions (wrong items in the exchange).",
+                "step_number": 39
+            },
+            {
+                "task_id": 91,
+                "failure_case": "FailureCase.INCORRECT_PLAN_EXECUTION",
+                "description": "After the user gave explicit confirmation (index 40) to proceed with the returns and exchanges, the assistant never carried out the required tool calls (return_delivered_order_items and exchange_delivered_order_items). Thus, although the plan was correct, it was never executed.",
+                "step_number": 39
+            }
+        ],
+        "num_judges": 5,
+        "frequency": {
+            "FailureCase.INCORRECT_PLAN_EXECUTION": 3,
+            "FailureCase.INCORRECT_PLAN_GENERATION": 2
+        },
+        "most_common_failure": "FailureCase.INCORRECT_PLAN_EXECUTION",
+        "modes": [
+            "FailureCase.INCORRECT_PLAN_EXECUTION"
+        ],
+        "mean": 3.6,
+        "median": 4,
+        "std_dev": 0.5477225575051661,
+        "variance": 0.3,
+        "min": 3,
+        "max": 4,
+        "proportions": {
+            "FailureCase.INCORRECT_PLAN_EXECUTION": 0.6,
+            "FailureCase.INCORRECT_PLAN_GENERATION": 0.4
+        },
+        "step_mean": 39,
+        "step_median": 39,
+        "step_std_dev": 0.7071067811865476,
+        "step_variance": 0.5,
+        "step_min": 38,
+        "step_max": 40,
+        "failure_case_accuracy": 0.6,
+        "step_mae": 1,
+        "step_error_distribution": {
+            "1": 3,
+            "2": 1,
+            "0": 1
+        },
+        "gt_failure_case": "FailureCase.INCORRECT_PLAN_EXECUTION",
+        "gt_step_number": 40,
+        "gt_failure_description": "It is clear from the conversation that the agent thought to do the right thing. But it did not execute the tool call."
+    },
+    {
+        "task_id": 98,
+        "failures": [
+            {
+                "task_id": 98,
+                "failure_case": "FailureCase.INCORRECT_PLAN_GENERATION",
+                "description": "The agent changed the order items before updating the shipping address. Once the modify_pending_order_items tool was called, the order status changed to \"pending (item modified)\", which locked the order against further changes. Because of this wrong sequence, the subsequent modify_pending_order_address call failed and the user\u2019s request couldn\u2019t be satisfied.",
+                "step_number": 21
+            },
+            {
+                "task_id": 98,
+                "failure_case": "FailureCase.INCORRECT_PLAN_GENERATION",
+                "description": "The agent modified the items in the pending order before updating the shipping address. According to policy, once items are modified the order status changes to \"pending (item modified)\", after which no further modifications (including address changes) can be made. The correct plan (and the ground-truth) required updating the address first, then modifying the items. By choosing the wrong sequence, the agent made it impossible to fulfil the user\u2019s request.",
+                "step_number": 21
+            },
+            {
+                "task_id": 98,
+                "failure_case": "FailureCase.INCORRECT_PLAN_GENERATION",
+                "description": "The agent modified the items in the pending order first, which automatically changed the order status to \"pending (item modified)\" and therefore blocked any further changes. According to policy (and the ground-truth sequence), the shipping address should have been updated FIRST (modify_pending_order_address) while the order was still in plain \"pending\" status, and only THEN should the items have been modified. By choosing the wrong order of operations, the agent made it impossible to fulfil the user\u2019s request to update the address.",
+                "step_number": 21
+            },
+            {
+                "task_id": 98,
+                "failure_case": "FailureCase.INCORRECT_PLAN_GENERATION",
+                "description": "The agent modified the items first, even though the policy states that after calling modify_pending_order_items the order can no longer be modified (including address changes). The correct plan was to update the shipping address first and then modify the item list, as shown in the ground-truth sequence. By calling modify_pending_order_items first, the agent blocked the subsequent address change and failed the user\u2019s request.",
+                "step_number": 21
+            },
+            {
+                "task_id": 98,
+                "failure_case": "FailureCase.INCORRECT_PLAN_GENERATION",
+                "description": "The agent changed the item in the pending order before updating the shipping address. According to policy, once items are modified the order switches to \"pending (item modified)\" and can no longer be updated or cancelled. The correct sequence (per ground-truth) was to update the address first, then modify the items. Because of the wrong order, the subsequent address-modification call failed.",
+                "step_number": 21
+            }
+        ],
+        "num_judges": 5,
+        "frequency": {
+            "FailureCase.INCORRECT_PLAN_GENERATION": 5
+        },
+        "most_common_failure": "FailureCase.INCORRECT_PLAN_GENERATION",
+        "modes": [
+            "FailureCase.INCORRECT_PLAN_GENERATION"
+        ],
+        "mean": 3,
+        "median": 3,
+        "std_dev": 0.0,
+        "variance": 0,
+        "min": 3,
+        "max": 3,
+        "proportions": {
+            "FailureCase.INCORRECT_PLAN_GENERATION": 1.0
+        },
+        "step_mean": 21,
+        "step_median": 21,
+        "step_std_dev": 0.0,
+        "step_variance": 0,
+        "step_min": 21,
+        "step_max": 21,
+        "failure_case_accuracy": 0.0,
+        "step_mae": 0,
+        "step_error_distribution": {
+            "0": 5
+        },
+        "gt_failure_case": "FailureCase.INCONCLUSIVE",
+        "gt_step_number": 21,
+        "gt_failure_description": "Should modify the address first. It is not clear if the agent did not think of the correct plan or just executed it incorrectly."
+    },
+    {
+        "task_id": 99,
+        "failures": [
+            {
+                "task_id": 99,
+                "failure_case": "FailureCase.INCORRECT_PLAN_EXECUTION",
+                "description": "When processing the camera exchange, the agent called exchange_delivered_order_items with payment_method_id \"credit_card_8105988\" (Mastercard 8484). According to the ground-truth sequence, the refund should have been sent to \"credit_card_3951670\" (Visa 6791). Thus the agent executed the exchange with an incorrect payment method.",
+                "step_number": 35
+            },
+            {
+                "task_id": 99,
+                "failure_case": "FailureCase.INCORRECT_PLAN_EXECUTION",
+                "description": "For the camera exchange (#W4689314) the agent called exchange_delivered_order_items with payment_method_id=\"credit_card_8105988\" (Mastercard 8484).  The ground-truth required the payment_method_id to be \"credit_card_3951670\" (Visa 6791).  Therefore the agent executed the correct overall action but with an incorrect argument, leading to an incorrect execution of the plan.",
+                "step_number": 35
+            },
+            {
+                "task_id": 99,
+                "failure_case": "FailureCase.INCORRECT_PLAN_GENERATION",
+                "description": "When executing the camera exchange the assistant passed the wrong payment_method_id (credit_card_8105988 \u2013 Mastercard) instead of the one required (credit_card_3951670 \u2013 Visa).",
+                "step_number": 35
+            },
+            {
+                "task_id": 99,
+                "failure_case": "FailureCase.INCORRECT_PLAN_EXECUTION",
+                "description": "When executing the camera exchange (#W4689314), the agent used payment_method_id \"credit_card_8105988\" (Mastercard \u20268484), but the ground-truth and policy require the refund to go to the original Visa card (credit_card_3951670). Thus the agent executed the action with incorrect parameters, deviating from the correct plan.",
+                "step_number": 35
+            },
+            {
+                "task_id": 99,
+                "failure_case": "FailureCase.INCORRECT_PLAN_EXECUTION",
+                "description": "When performing the camera exchange for order #W4689314, the agent called exchange_delivered_order_items with payment_method_id \"credit_card_8105988\" (Mastercard). According to the ground-truth sequence, the call should have used \"credit_card_3951670\" (Visa). Therefore the agent executed the correct type of action but supplied an incorrect argument (wrong payment method).",
+                "step_number": 35
+            }
+        ],
+        "num_judges": 5,
+        "frequency": {
+            "FailureCase.INCORRECT_PLAN_EXECUTION": 4,
+            "FailureCase.INCORRECT_PLAN_GENERATION": 1
+        },
+        "most_common_failure": "FailureCase.INCORRECT_PLAN_EXECUTION",
+        "modes": [
+            "FailureCase.INCORRECT_PLAN_EXECUTION"
+        ],
+        "mean": 3.8,
+        "median": 4,
+        "std_dev": 0.4472135954999579,
+        "variance": 0.2,
+        "min": 3,
+        "max": 4,
+        "proportions": {
+            "FailureCase.INCORRECT_PLAN_EXECUTION": 0.8,
+            "FailureCase.INCORRECT_PLAN_GENERATION": 0.2
+        },
+        "step_mean": 35,
+        "step_median": 35,
+        "step_std_dev": 0.0,
+        "step_variance": 0,
+        "step_min": 35,
+        "step_max": 35,
+        "failure_case_accuracy": 0.8,
+        "step_mae": 6,
+        "step_error_distribution": {
+            "6": 5
+        },
+        "gt_failure_case": "FailureCase.INCORRECT_PLAN_EXECUTION",
+        "gt_step_number": 29,
+        "gt_failure_description": "From conversation in step 27 it is clear that the agent thought to do the right thing. But it passed the wrong credit card as the argument to the tool call."
+    }
+]

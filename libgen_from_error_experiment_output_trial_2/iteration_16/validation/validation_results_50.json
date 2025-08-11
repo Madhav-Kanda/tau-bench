@@ -1,0 +1,92 @@
+[
+  {
+    "task_id": 50,
+    "reward": 1.0,
+    "info": {
+      "task": {
+        "user_id": "chen_smith_8425",
+        "actions": [
+          {
+            "name": "transfer_to_human_agents",
+            "kwargs": {
+              "summary": "The user urgently needs to undo a cancellation of an order and insists on receiving the items from the initial order as soon as possible. The user acknowledges the policy but requests exceptional measures due to the urgency of the situation."
+            }
+          }
+        ],
+        "instruction": "You're Chen Smith, living in Jacksonville 32278. You're in a rush and you want to undo cancelling an order that you've previously placed. Be insistent that the customer service agent should undo the cancellation and ensure that the order is delivered as soon as possible. Do NOT mention the actual items that were in the order, just that you want to undo the cancellation and receive all the items that were in the initial order as soon as possible.",
+        "outputs": []
+      },
+      "source": "transfer_to_human_agents",
+      "user_cost": 562,
+      "reward_info": {
+        "reward": 1.0,
+        "info": {
+          "r_actions": 1.0,
+          "gt_data_hash": "5a4b2cb59f4d12dea7e4adff24a7f8fada510ead49372ea4a729a82bbb5f49b5"
+        },
+        "actions": [
+          {
+            "name": "transfer_to_human_agents",
+            "kwargs": {
+              "summary": "The user urgently needs to undo a cancellation of an order and insists on receiving the items from the initial order as soon as possible. The user acknowledges the policy but requests exceptional measures due to the urgency of the situation."
+            }
+          }
+        ]
+      }
+    },
+    "traj": [
+      {
+        "role": "system",
+        "content": "# Retail agent policy\n\nAs a retail agent, you can help users cancel or modify pending orders, return or exchange delivered orders, modify their default user address, or provide information about their own profile, orders, and related products.\n\n- At the beginning of the conversation, you have to authenticate the user identity by locating their user id via email, or via name + zip code. This has to be done even when the user already provides the user id.\n\n- Once the user has been authenticated, you can provide the user with information about order, product, profile information, e.g. help the user look up order id.\n\n- You can only help one user per conversation (but you can handle multiple requests from the same user), and must deny any requests for tasks related to any other user.\n\n- Before taking consequential actions that update the database (cancel, modify, return, exchange), you have to list the action detail and obtain explicit user confirmation (yes) to proceed.\n\n- You should not make up any information or knowledge or procedures not provided from the user or the tools, or give subjective recommendations or comments.\n\n- You should at most make one tool call at a time, and if you take a tool call, you should not respond to the user at the same time. If you respond to the user, you should not make a tool call.\n\n- You should transfer the user to a human agent if and only if the request cannot be handled within the scope of your actions.\n\n## Domain basic\n\n- All times in the database are EST and 24 hour based. For example \"02:30:00\" means 2:30 AM EST.\n\n- Each user has a profile of its email, default address, user id, and payment methods. Each payment method is either a gift card, a paypal account, or a credit card.\n\n- Our retail store has 50 types of products. For each type of product, there are variant items of different options. For example, for a 't shirt' product, there could be an item with option 'color blue size M', and another item with option 'color red size L'.\n\n- Each product has an unique product id, and each item has an unique item id. They have no relations and should not be confused.\n\n- Each order can be in status 'pending', 'processed', 'delivered', or 'cancelled'. Generally, you can only take action on pending or delivered orders.\n\n- Exchange or modify order tools can only be called once. Be sure that all items to be changed are collected into a list before making the tool call!!!\n\n## Cancel pending order\n\n- An order can only be cancelled if its status is 'pending', and you should check its status before taking the action.\n\n- The user needs to confirm the order id and the reason (either 'no longer needed' or 'ordered by mistake') for cancellation.\n\n- After user confirmation, the order status will be changed to 'cancelled', and the total will be refunded via the original payment method immediately if it is gift card, otherwise in 5 to 7 business days.\n\n## Modify pending order\n\n- An order can only be modified if its status is 'pending', and you should check its status before taking the action.\n\n- For a pending order, you can take actions to modify its shipping address, payment method, or product item options, but nothing else.\n\n### Modify payment\n\n- The user can only choose a single payment method different from the original payment method.\n\n- If the user wants the modify the payment method to gift card, it must have enough balance to cover the total amount.\n\n- After user confirmation, the order status will be kept 'pending'. The original payment method will be refunded immediately if it is a gift card, otherwise in 5 to 7 business days.\n\n### Modify items\n\n- This action can only be called once, and will change the order status to 'pending (items modifed)', and the agent will not be able to modify or cancel the order anymore. So confirm all the details are right and be cautious before taking this action. In particular, remember to remind the customer to confirm they have provided all items to be modified.\n\n- For a pending order, each item can be modified to an available new item of the same product but of different product option. There cannot be any change of product types, e.g. modify shirt to shoe.\n\n- The user must provide a payment method to pay or receive refund of the price difference. If the user provides a gift card, it must have enough balance to cover the price difference.\n\n## Return delivered order\n\n- An order can only be returned if its status is 'delivered', and you should check its status before taking the action.\n\n- The user needs to confirm the order id, the list of items to be returned, and a payment method to receive the refund.\n\n- The refund must either go to the original payment method, or an existing gift card.\n\n- After user confirmation, the order status will be changed to 'return requested', and the user will receive an email regarding how to return items.\n\n## Exchange delivered order\n\n- An order can only be exchanged if its status is 'delivered', and you should check its status before taking the action. In particular, remember to remind the customer to confirm they have provided all items to be exchanged.\n\n- For a delivered order, each item can be exchanged to an available new item of the same product but of different product option. There cannot be any change of product types, e.g. modify shirt to shoe.\n\n- The user must provide a payment method to pay or receive refund of the price difference. If the user provides a gift card, it must have enough balance to cover the price difference.\n\n- After user confirmation, the order status will be changed to 'exchange requested', and the user will receive an email regarding how to return items. There is no need to place a new order.\n"
+      },
+      {
+        "role": "user",
+        "content": "Hi, I need you to undo the cancellation of an order I placed. I want it delivered as soon as possible, please."
+      },
+      {
+        "role": "assistant",
+        "content": "I understand you\u2019d like to undo the cancellation of an order and have it delivered. Unfortunately, once an order is cancelled, it cannot be undone or reinstated in our system.\n\nIf you\u2019d like, I can help you place a new order for the same items or assist you with anything else you need. Please let me know how you\u2019d like to proceed.",
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "user",
+        "content": "I really need the original order restored\u2014I don\u2019t want to go through placing everything again. Isn\u2019t there anything you can do to reactivate it and have it shipped right away?"
+      },
+      {
+        "role": "assistant",
+        "content": "I understand how important this is to you. However, once an order is cancelled in our system, it cannot be reactivated or restored. This is a system limitation, and I do not have the ability to reverse a cancellation.\n\nIf you would like, I can help you quickly place a new order for the same items or assist you in any other way. If you need further assistance beyond what I can provide, I can also transfer you to a human agent. Please let me know how you\u2019d like to proceed.",
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "user",
+        "content": "Can you escalate this or get someone who can actually help? I just need my order uncancelled and sent out right away."
+      },
+      {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_XSH1wERqa6X05RwfTnhYqvxm",
+            "type": "function",
+            "function": {
+              "name": "transfer_to_human_agents",
+              "arguments": "{\"summary\":\"User wants to restore a cancelled order and have it shipped, but system does not allow reactivation of cancelled orders. User requests escalation to a human agent for further assistance.\"}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_XSH1wERqa6X05RwfTnhYqvxm",
+        "name": "transfer_to_human_agents",
+        "content": "Transfer successful"
+      }
+    ],
+    "trial": 50,
+    "records": {}
+  }
+]

@@ -169,7 +169,7 @@ Output a JSON object in the following fomat:
             model=self.model_name,
             messages=[
                 {"role": "system", "content": system_prompt},
-                {"role": "user", "content": func},
+                {"role": "user", "content": f'{func}'},
             ],
             response_format="json_object"
         )

@@ -1,0 +1,256 @@
+[
+  {
+    "task_id": 79,
+    "reward": 1.0,
+    "info": {
+      "task": {
+        "user_id": "emma_kovacs_9839",
+        "actions": [
+          {
+            "name": "modify_pending_order_items",
+            "kwargs": {
+              "order_id": "#W8661412",
+              "item_ids": [
+                "3453331371"
+              ],
+              "new_item_ids": [
+                "2439754078"
+              ],
+              "payment_method_id": "credit_card_7239357"
+            }
+          }
+        ],
+        "instruction": "You name is Emma Kovacs and your zip code is 32190. You are insecure, rigid, sad, logical. You just bought a water bottle with 500ml but you regret it, and you want to change it to the other bottle you just placed with 1000ml capacity. If the exact item is not available any more, you can allow the material to be different.",
+        "outputs": []
+      },
+      "source": "user",
+      "user_cost": 1087,
+      "reward_info": {
+        "reward": 1.0,
+        "info": {
+          "r_actions": 1.0,
+          "gt_data_hash": "5a4b2cb59f4d12dea7e4adff24a7f8fada510ead49372ea4a729a82bbb5f49b5"
+        },
+        "actions": [
+          {
+            "name": "modify_pending_order_items",
+            "kwargs": {
+              "order_id": "#W8661412",
+              "item_ids": [
+                "3453331371"
+              ],
+              "new_item_ids": [
+                "2439754078"
+              ],
+              "payment_method_id": "credit_card_7239357"
+            }
+          }
+        ]
+      }
+    },
+    "traj": [
+      {
+        "role": "system",
+        "content": "# Retail agent policy\n\nAs a retail agent, you can help users cancel or modify pending orders, return or exchange delivered orders, modify their default user address, or provide information about their own profile, orders, and related products.\n\n- At the beginning of the conversation, you have to authenticate the user identity by locating their user id via email, or via name + zip code. This has to be done even when the user already provides the user id.\n\n- Once the user has been authenticated, you can provide the user with information about order, product, profile information, e.g. help the user look up order id.\n\n- You can only help one user per conversation (but you can handle multiple requests from the same user), and must deny any requests for tasks related to any other user.\n\n- Before taking consequential actions that update the database (cancel, modify, return, exchange), you have to list the action detail and obtain explicit user confirmation (yes) to proceed.\n\n- You should not make up any information or knowledge or procedures not provided from the user or the tools, or give subjective recommendations or comments.\n\n- You should at most make one tool call at a time, and if you take a tool call, you should not respond to the user at the same time. If you respond to the user, you should not make a tool call.\n\n- You should transfer the user to a human agent if and only if the request cannot be handled within the scope of your actions.\n\n## Domain basic\n\n- All times in the database are EST and 24 hour based. For example \"02:30:00\" means 2:30 AM EST.\n\n- Each user has a profile of its email, default address, user id, and payment methods. Each payment method is either a gift card, a paypal account, or a credit card.\n\n- Our retail store has 50 types of products. For each type of product, there are variant items of different options. For example, for a 't shirt' product, there could be an item with option 'color blue size M', and another item with option 'color red size L'.\n\n- Each product has an unique product id, and each item has an unique item id. They have no relations and should not be confused.\n\n- Each order can be in status 'pending', 'processed', 'delivered', or 'cancelled'. Generally, you can only take action on pending or delivered orders.\n\n- Exchange or modify order tools can only be called once. Be sure that all items to be changed are collected into a list before making the tool call!!!\n\n## Cancel pending order\n\n- An order can only be cancelled if its status is 'pending', and you should check its status before taking the action.\n\n- The user needs to confirm the order id and the reason (either 'no longer needed' or 'ordered by mistake') for cancellation.\n\n- After user confirmation, the order status will be changed to 'cancelled', and the total will be refunded via the original payment method immediately if it is gift card, otherwise in 5 to 7 business days.\n\n## Modify pending order\n\n- An order can only be modified if its status is 'pending', and you should check its status before taking the action.\n\n- For a pending order, you can take actions to modify its shipping address, payment method, or product item options, but nothing else.\n\n### Modify payment\n\n- The user can only choose a single payment method different from the original payment method.\n\n- If the user wants the modify the payment method to gift card, it must have enough balance to cover the total amount.\n\n- After user confirmation, the order status will be kept 'pending'. The original payment method will be refunded immediately if it is a gift card, otherwise in 5 to 7 business days.\n\n### Modify items\n\n- This action can only be called once, and will change the order status to 'pending (items modifed)', and the agent will not be able to modify or cancel the order anymore. So confirm all the details are right and be cautious before taking this action. In particular, remember to remind the customer to confirm they have provided all items to be modified.\n\n- For a pending order, each item can be modified to an available new item of the same product but of different product option. There cannot be any change of product types, e.g. modify shirt to shoe.\n\n- The user must provide a payment method to pay or receive refund of the price difference. If the user provides a gift card, it must have enough balance to cover the price difference.\n\n## Return delivered order\n\n- An order can only be returned if its status is 'delivered', and you should check its status before taking the action.\n\n- The user needs to confirm the order id, the list of items to be returned, and a payment method to receive the refund.\n\n- The refund must either go to the original payment method, or an existing gift card.\n\n- After user confirmation, the order status will be changed to 'return requested', and the user will receive an email regarding how to return items.\n\n## Exchange delivered order\n\n- An order can only be exchanged if its status is 'delivered', and you should check its status before taking the action. In particular, remember to remind the customer to confirm they have provided all items to be exchanged.\n\n- For a delivered order, each item can be exchanged to an available new item of the same product but of different product option. There cannot be any change of product types, e.g. modify shirt to shoe.\n\n- The user must provide a payment method to pay or receive refund of the price difference. If the user provides a gift card, it must have enough balance to cover the price difference.\n\n- After user confirmation, the order status will be changed to 'exchange requested', and the user will receive an email regarding how to return items. There is no need to place a new order.\n"
+      },
+      {
+        "role": "user",
+        "content": "Um, hi. I just ordered a 500ml water bottle, but honestly, I don\u2019t feel great about it. I wish I\u2019d picked the 1000ml one instead. Is there any way to swap it?"
+      },
+      {
+        "role": "assistant",
+        "content": "I can help you with that! To get started, I\u2019ll need to verify your identity. Could you please provide the email address you used for your order?",
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "user",
+        "content": "Oh, I, um\u2026 I\u2019m not sure right now. Do you really need the email? I just want to change the bottle size if possible."
+      },
+      {
+        "role": "assistant",
+        "content": "For your security and to access your order, I do need to verify your identity. If you don\u2019t remember your email, you can provide your first name, last name, and the zip code used for your order instead. Could you share those details?",
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "user",
+        "content": "Uh, okay. My name is Emma Kovacs, and the zip code is 32190."
+      },
+      {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_2pSqW9Ncw9pNJyZBLmAW3tKm",
+            "type": "function",
+            "function": {
+              "name": "find_user_id_by_name_zip",
+              "arguments": "{\"first_name\":\"Emma\",\"last_name\":\"Kovacs\",\"zip\":\"32190\"}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_2pSqW9Ncw9pNJyZBLmAW3tKm",
+        "name": "find_user_id_by_name_zip",
+        "content": "emma_kovacs_9839"
+      },
+      {
+        "role": "assistant",
+        "content": "Thank you, Emma. I\u2019ve found your account. Next, I\u2019ll check your recent order for the 500ml water bottle and see if it\u2019s still possible to swap it for the 1000ml version. Could you please confirm if you want to change all bottles in your order to the 1000ml size, or just a specific quantity? Also, do you want to swap every 500ml bottle, or only certain ones if you ordered more than one?",
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "user",
+        "content": "I just ordered one 500ml bottle, so I want to change that to a 1000ml bottle\u2014just that one. Sorry, I should have said that before."
+      },
+      {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_SKwP3zWBIgaPxEE00Pm2qiqr",
+            "type": "function",
+            "function": {
+              "name": "get_pending_orders_for_user",
+              "arguments": "{\"user_id\":\"emma_kovacs_9839\"}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_SKwP3zWBIgaPxEE00Pm2qiqr",
+        "name": "get_pending_orders_for_user",
+        "content": "#W8661412"
+      },
+      {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_kMjgYzFdxTCbJX5e3XwpKOPI",
+            "type": "function",
+            "function": {
+              "name": "get_all_items_in_order",
+              "arguments": "{\"order_id\":\"#W8661412\"}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_kMjgYzFdxTCbJX5e3XwpKOPI",
+        "name": "get_all_items_in_order",
+        "content": "{\"order_id\": \"#W8661412\", \"user_id\": \"emma_kovacs_9839\", \"address\": {\"address1\": \"637 Pine Lane\", \"address2\": \"Suite 443\", \"city\": \"Jacksonville\", \"country\": \"USA\", \"state\": \"FL\", \"zip\": \"32190\"}, \"items\": [{\"name\": \"Wristwatch\", \"product_id\": \"6066914160\", \"item_id\": \"2226219750\", \"price\": 2009.03, \"options\": {\"strap material\": \"silicone\", \"dial color\": \"white\"}}, {\"name\": \"Water Bottle\", \"product_id\": \"8310926033\", \"item_id\": \"3453331371\", \"price\": 52.79, \"options\": {\"capacity\": \"500ml\", \"material\": \"stainless steel\", \"color\": \"black\"}}, {\"name\": \"Office Chair\", \"product_id\": \"4794339885\", \"item_id\": \"8426249116\", \"price\": 488.81, \"options\": {\"material\": \"fabric\", \"color\": \"black\", \"armrest\": \"fixed\", \"backrest height\": \"standard\"}}], \"fulfillments\": [], \"status\": \"pending\", \"payment_history\": [{\"transaction_type\": \"payment\", \"amount\": 2550.63, \"payment_method_id\": \"credit_card_7239357\"}]}"
+      },
+      {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_rvkmJeizpMSScfWH1iznMfvl",
+            "type": "function",
+            "function": {
+              "name": "get_product_details",
+              "arguments": "{\"product_id\":\"8310926033\"}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_rvkmJeizpMSScfWH1iznMfvl",
+        "name": "get_product_details",
+        "content": "{\"name\": \"Water Bottle\", \"product_id\": \"8310926033\", \"variants\": {\"1434748144\": {\"item_id\": \"1434748144\", \"options\": {\"capacity\": \"1000ml\", \"material\": \"glass\", \"color\": \"red\"}, \"available\": false, \"price\": 49.72}, \"4579334072\": {\"item_id\": \"4579334072\", \"options\": {\"capacity\": \"750ml\", \"material\": \"glass\", \"color\": \"black\"}, \"available\": true, \"price\": 54.85}, \"6469567736\": {\"item_id\": \"6469567736\", \"options\": {\"capacity\": \"1000ml\", \"material\": \"glass\", \"color\": \"blue\"}, \"available\": false, \"price\": 47.84}, \"3453331371\": {\"item_id\": \"3453331371\", \"options\": {\"capacity\": \"500ml\", \"material\": \"stainless steel\", \"color\": \"black\"}, \"available\": true, \"price\": 52.79}, \"2439754078\": {\"item_id\": \"2439754078\", \"options\": {\"capacity\": \"1000ml\", \"material\": \"stainless steel\", \"color\": \"red\"}, \"available\": true, \"price\": 49.51}, \"7843064651\": {\"item_id\": \"7843064651\", \"options\": {\"capacity\": \"750ml\", \"material\": \"stainless steel\", \"color\": \"blue\"}, \"available\": true, \"price\": 50.14}, \"7918497119\": {\"item_id\": \"7918497119\", \"options\": {\"capacity\": \"500ml\", \"material\": \"glass\", \"color\": \"blue\"}, \"available\": false, \"price\": 54.51}, \"5758737025\": {\"item_id\": \"5758737025\", \"options\": {\"capacity\": \"500ml\", \"material\": \"glass\", \"color\": \"green\"}, \"available\": true, \"price\": 45.09}, \"7533802601\": {\"item_id\": \"7533802601\", \"options\": {\"capacity\": \"500ml\", \"material\": \"stainless steel\", \"color\": \"green\"}, \"available\": true, \"price\": 48.59}, \"3229676465\": {\"item_id\": \"3229676465\", \"options\": {\"capacity\": \"500ml\", \"material\": \"plastic\", \"color\": \"black\"}, \"available\": true, \"price\": 51.94}, \"2366567022\": {\"item_id\": \"2366567022\", \"options\": {\"capacity\": \"1000ml\", \"material\": \"stainless steel\", \"color\": \"blue\"}, \"available\": false, \"price\": 54.04}, \"6974536207\": {\"item_id\": \"6974536207\", \"options\": {\"capacity\": \"750ml\", \"material\": \"plastic\", \"color\": \"blue\"}, \"available\": true, \"price\": 49.3}, \"6777246137\": {\"item_id\": \"6777246137\", \"options\": {\"capacity\": \"750ml\", \"material\": \"stainless steel\", \"color\": \"red\"}, \"available\": true, \"price\": 47.76}, \"8538875209\": {\"item_id\": \"8538875209\", \"options\": {\"capacity\": \"500ml\", \"material\": \"glass\", \"color\": \"black\"}, \"available\": true, \"price\": 45.13}, \"9127591879\": {\"item_id\": \"9127591879\", \"options\": {\"capacity\": \"750ml\", \"material\": \"stainless steel\", \"color\": \"black\"}, \"available\": false, \"price\": 48.47}, \"7661609223\": {\"item_id\": \"7661609223\", \"options\": {\"capacity\": \"1000ml\", \"material\": \"stainless steel\", \"color\": \"black\"}, \"available\": true, \"price\": 46.51}, \"4947921075\": {\"item_id\": \"4947921075\", \"options\": {\"capacity\": \"750ml\", \"material\": \"stainless steel\", \"color\": \"green\"}, \"available\": false, \"price\": 49.57}, \"7199146548\": {\"item_id\": \"7199146548\", \"options\": {\"capacity\": \"750ml\", \"material\": \"plastic\", \"color\": \"black\"}, \"available\": true, \"price\": 48.02}}}"
+      },
+      {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_KHxGQxIrZ8l063FwjeVvUUXB",
+            "type": "function",
+            "function": {
+              "name": "get_user_payment_methods",
+              "arguments": "{\"user_id\":\"emma_kovacs_9839\"}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_KHxGQxIrZ8l063FwjeVvUUXB",
+        "name": "get_user_payment_methods",
+        "content": "{\n  \"credit_card_7239357\": {\n    \"source\": \"credit_card\",\n    \"brand\": \"visa\",\n    \"last_four\": \"8676\",\n    \"id\": \"credit_card_7239357\"\n  }\n}"
+      },
+      {
+        "role": "assistant",
+        "content": "You ordered one 500ml stainless steel water bottle (black), and you\u2019d like to swap it for a 1000ml stainless steel water bottle (black), which is available.\n\nHere\u2019s how the swap will work:\n- The 1000ml bottle (black, stainless steel) costs $46.51, which is $6.28 less than your original 500ml bottle ($52.79).\n- The difference of $6.28 will be refunded to your Visa card ending in 8676.\n\nOnce you confirm, I\u2019ll proceed with this change. Please confirm that you want to swap your 500ml bottle for the 1000ml black stainless steel bottle, and let me know if you have any other items to modify in this order (since item changes can only be done once per order).",
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "user",
+        "content": "Wait, just to be sure\u2014are you saying the bigger bottle is actually cheaper? Did I read that right? I\u2019m kind of confused."
+      },
+      {
+        "role": "assistant",
+        "content": "Yes, that\u2019s correct\u2014the 1000ml stainless steel water bottle (black) is currently priced at $46.51, while the 500ml version you ordered is $52.79. So, the larger bottle is actually $6.28 cheaper than the smaller one.\n\nIf you proceed with the swap, you\u2019ll receive a $6.28 refund to your Visa card ending in 8676.\n\nWould you like to go ahead with this change, or do you have any other questions?",
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "user",
+        "content": "Okay\u2026 I guess that makes sense. Sorry, I just get anxious about this stuff. Yes, I want to make the change, please. No other changes, just that one bottle."
+      },
+      {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_sXObwmtry1mtk5D3Mdbw1URH",
+            "type": "function",
+            "function": {
+              "name": "modify_pending_order_items",
+              "arguments": "{\"order_id\":\"#W8661412\",\"item_ids\":[\"3453331371\"],\"new_item_ids\":[\"7661609223\"],\"payment_method_id\":\"credit_card_7239357\"}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_sXObwmtry1mtk5D3Mdbw1URH",
+        "name": "modify_pending_order_items",
+        "content": "{\"order_id\": \"#W8661412\", \"user_id\": \"emma_kovacs_9839\", \"address\": {\"address1\": \"637 Pine Lane\", \"address2\": \"Suite 443\", \"city\": \"Jacksonville\", \"country\": \"USA\", \"state\": \"FL\", \"zip\": \"32190\"}, \"items\": [{\"name\": \"Wristwatch\", \"product_id\": \"6066914160\", \"item_id\": \"2226219750\", \"price\": 2009.03, \"options\": {\"strap material\": \"silicone\", \"dial color\": \"white\"}}, {\"name\": \"Water Bottle\", \"product_id\": \"8310926033\", \"item_id\": \"7661609223\", \"price\": 46.51, \"options\": {\"capacity\": \"1000ml\", \"material\": \"stainless steel\", \"color\": \"black\"}}, {\"name\": \"Office Chair\", \"product_id\": \"4794339885\", \"item_id\": \"8426249116\", \"price\": 488.81, \"options\": {\"material\": \"fabric\", \"color\": \"black\", \"armrest\": \"fixed\", \"backrest height\": \"standard\"}}], \"fulfillments\": [], \"status\": \"pending (item modified)\", \"payment_history\": [{\"transaction_type\": \"payment\", \"amount\": 2550.63, \"payment_method_id\": \"credit_card_7239357\"}, {\"transaction_type\": \"refund\", \"amount\": 6.280000000000001, \"payment_method_id\": \"credit_card_7239357\"}]}"
+      },
+      {
+        "role": "assistant",
+        "content": "Your order has been updated! The 500ml stainless steel water bottle (black) has been swapped for the 1000ml version (black), which is actually less expensive. A refund of $6.28 will be issued to your Visa card ending in 8676 within 5 to 7 business days.\n\nNo other changes were made to your order. If you have any more questions or need further assistance, just let me know!",
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "user",
+        "content": "Uh, okay, thanks. I\u2019m still not totally sure if I did the right thing, but\u2026 I guess there\u2019s nothing else for now.\n\n###STOP###"
+      }
+    ],
+    "trial": 79,
+    "records": {}
+  }
+]

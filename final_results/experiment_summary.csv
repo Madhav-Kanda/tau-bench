@@ -1,0 +1,7 @@
+Experiment,Total_Calls,Total_Success,Total_Failures,Total_Expected_Errors,Success_Rate,Failure_Rate,Expected_Error_Rate,Unique_Tools_Used
+L0_GPT4o,940,902,0,38,96.0%,0.0%,4.0%,16
+L0_GPT4.1,915,858,3,54,93.8%,0.3%,5.9%,17
+L1_GPT4o,992,939,10,43,94.7%,1.0%,4.3%,22
+L1_GPT4.1,999,912,33,54,91.3%,3.3%,5.4%,22
+L2_GPT4o,1006,955,13,38,94.9%,1.3%,3.8%,36
+L2_GPT4.1,1124,1033,35,56,91.9%,3.1%,5.0%,36

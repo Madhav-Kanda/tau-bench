@@ -1,0 +1,300 @@
+[
+  {
+    "task_id": 61,
+    "reward": 1.0,
+    "info": {
+      "task": {
+        "user_id": "chen_johnson_4204",
+        "actions": [
+          {
+            "name": "find_user_id_by_name_zip",
+            "kwargs": {
+              "first_name": "Chen",
+              "last_name": "Johnson",
+              "zip": "77004"
+            }
+          },
+          {
+            "name": "get_order_details",
+            "kwargs": {
+              "order_id": "#W5061109"
+            }
+          },
+          {
+            "name": "get_product_details",
+            "kwargs": {
+              "product_id": "9924732112"
+            }
+          },
+          {
+            "name": "calculate",
+            "kwargs": {
+              "expression": "256.67 - 226.49"
+            }
+          },
+          {
+            "name": "modify_pending_order_items",
+            "kwargs": {
+              "order_id": "#W5061109",
+              "item_ids": [
+                "3694871183"
+              ],
+              "new_item_ids": [
+                "8555936349"
+              ],
+              "payment_method_id": "paypal_3742148"
+            }
+          }
+        ],
+        "instruction": "You are Chen Johnson from Houston TX, 77004. You want to change your wireless earbuds in order W5061109 to a blue colored one. Provide all details upfront and ask the agent to resolve as soon as possible. You want the price to be the same or lower.",
+        "outputs": []
+      },
+      "source": "user",
+      "user_cost": 653,
+      "reward_info": {
+        "reward": 1.0,
+        "info": {
+          "r_actions": 1.0,
+          "gt_data_hash": "5a4b2cb59f4d12dea7e4adff24a7f8fada510ead49372ea4a729a82bbb5f49b5"
+        },
+        "actions": [
+          {
+            "name": "find_user_id_by_name_zip",
+            "kwargs": {
+              "first_name": "Chen",
+              "last_name": "Johnson",
+              "zip": "77004"
+            }
+          },
+          {
+            "name": "get_order_details",
+            "kwargs": {
+              "order_id": "#W5061109"
+            }
+          },
+          {
+            "name": "get_product_details",
+            "kwargs": {
+              "product_id": "9924732112"
+            }
+          },
+          {
+            "name": "calculate",
+            "kwargs": {
+              "expression": "256.67 - 226.49"
+            }
+          },
+          {
+            "name": "modify_pending_order_items",
+            "kwargs": {
+              "order_id": "#W5061109",
+              "item_ids": [
+                "3694871183"
+              ],
+              "new_item_ids": [
+                "8555936349"
+              ],
+              "payment_method_id": "paypal_3742148"
+            }
+          }
+        ]
+      }
+    },
+    "traj": [
+      {
+        "role": "system",
+        "content": "# Retail agent policy\n\nAs a retail agent, you can help users cancel or modify pending orders, return or exchange delivered orders, modify their default user address, or provide information about their own profile, orders, and related products.\n\n- At the beginning of the conversation, you have to authenticate the user identity by locating their user id via email, or via name + zip code. This has to be done even when the user already provides the user id.\n\n- Once the user has been authenticated, you can provide the user with information about order, product, profile information, e.g. help the user look up order id.\n\n- You can only help one user per conversation (but you can handle multiple requests from the same user), and must deny any requests for tasks related to any other user.\n\n- Before taking consequential actions that update the database (cancel, modify, return, exchange), you have to list the action detail and obtain explicit user confirmation (yes) to proceed.\n\n- You should not make up any information or knowledge or procedures not provided from the user or the tools, or give subjective recommendations or comments.\n\n- You should at most make one tool call at a time, and if you take a tool call, you should not respond to the user at the same time. If you respond to the user, you should not make a tool call.\n\n- You should transfer the user to a human agent if and only if the request cannot be handled within the scope of your actions.\n\n## Domain basic\n\n- All times in the database are EST and 24 hour based. For example \"02:30:00\" means 2:30 AM EST.\n\n- Each user has a profile of its email, default address, user id, and payment methods. Each payment method is either a gift card, a paypal account, or a credit card.\n\n- Our retail store has 50 types of products. For each type of product, there are variant items of different options. For example, for a 't shirt' product, there could be an item with option 'color blue size M', and another item with option 'color red size L'.\n\n- Each product has an unique product id, and each item has an unique item id. They have no relations and should not be confused.\n\n- Each order can be in status 'pending', 'processed', 'delivered', or 'cancelled'. Generally, you can only take action on pending or delivered orders.\n\n- Exchange or modify order tools can only be called once. Be sure that all items to be changed are collected into a list before making the tool call!!!\n\n## Cancel pending order\n\n- An order can only be cancelled if its status is 'pending', and you should check its status before taking the action.\n\n- The user needs to confirm the order id and the reason (either 'no longer needed' or 'ordered by mistake') for cancellation.\n\n- After user confirmation, the order status will be changed to 'cancelled', and the total will be refunded via the original payment method immediately if it is gift card, otherwise in 5 to 7 business days.\n\n## Modify pending order\n\n- An order can only be modified if its status is 'pending', and you should check its status before taking the action.\n\n- For a pending order, you can take actions to modify its shipping address, payment method, or product item options, but nothing else.\n\n### Modify payment\n\n- The user can only choose a single payment method different from the original payment method.\n\n- If the user wants the modify the payment method to gift card, it must have enough balance to cover the total amount.\n\n- After user confirmation, the order status will be kept 'pending'. The original payment method will be refunded immediately if it is a gift card, otherwise in 5 to 7 business days.\n\n### Modify items\n\n- This action can only be called once, and will change the order status to 'pending (items modifed)', and the agent will not be able to modify or cancel the order anymore. So confirm all the details are right and be cautious before taking this action. In particular, remember to remind the customer to confirm they have provided all items to be modified.\n\n- For a pending order, each item can be modified to an available new item of the same product but of different product option. There cannot be any change of product types, e.g. modify shirt to shoe.\n\n- The user must provide a payment method to pay or receive refund of the price difference. If the user provides a gift card, it must have enough balance to cover the price difference.\n\n## Return delivered order\n\n- An order can only be returned if its status is 'delivered', and you should check its status before taking the action.\n\n- The user needs to confirm the order id, the list of items to be returned, and a payment method to receive the refund.\n\n- The refund must either go to the original payment method, or an existing gift card.\n\n- After user confirmation, the order status will be changed to 'return requested', and the user will receive an email regarding how to return items.\n\n## Exchange delivered order\n\n- An order can only be exchanged if its status is 'delivered', and you should check its status before taking the action. In particular, remember to remind the customer to confirm they have provided all items to be exchanged.\n\n- For a delivered order, each item can be exchanged to an available new item of the same product but of different product option. There cannot be any change of product types, e.g. modify shirt to shoe.\n\n- The user must provide a payment method to pay or receive refund of the price difference. If the user provides a gift card, it must have enough balance to cover the price difference.\n\n- After user confirmation, the order status will be changed to 'exchange requested', and the user will receive an email regarding how to return items. There is no need to place a new order.\n"
+      },
+      {
+        "role": "user",
+        "content": "Hi, I\u2019d like to change the wireless earbuds in my order W5061109 to a blue color instead."
+      },
+      {
+        "role": "assistant",
+        "content": "To assist you with changing the wireless earbuds in your order to a blue color, I first need to verify your identity for security purposes. Could you please provide the email address associated with your account? If you don\u2019t remember your email, I can also verify your identity using your first name, last name, and zip code.",
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "user",
+        "content": "Sure, my name is Chen Johnson, and my zip code is 77004."
+      },
+      {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_BnPuSC0RM93n6vx8zXE0epNF",
+            "type": "function",
+            "function": {
+              "name": "find_user_id_by_name_zip",
+              "arguments": "{\"first_name\":\"Chen\",\"last_name\":\"Johnson\",\"zip\":\"77004\"}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_BnPuSC0RM93n6vx8zXE0epNF",
+        "name": "find_user_id_by_name_zip",
+        "content": "chen_johnson_4204"
+      },
+      {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_0VPQ7RGotUC8AIuvd4w4fMrX",
+            "type": "function",
+            "function": {
+              "name": "get_user_details",
+              "arguments": "{\"user_id\":\"chen_johnson_4204\"}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_0VPQ7RGotUC8AIuvd4w4fMrX",
+        "name": "get_user_details",
+        "content": "{\"name\": {\"first_name\": \"Chen\", \"last_name\": \"Johnson\"}, \"address\": {\"address1\": \"503 Elm Avenue\", \"address2\": \"Suite 641\", \"city\": \"Houston\", \"country\": \"USA\", \"state\": \"TX\", \"zip\": \"77004\"}, \"email\": \"chen.johnson3889@example.com\", \"payment_methods\": {\"paypal_3742148\": {\"source\": \"paypal\", \"id\": \"paypal_3742148\"}, \"gift_card_3406421\": {\"source\": \"gift_card\", \"balance\": 79, \"id\": \"gift_card_3406421\"}}, \"orders\": [\"#W5797164\", \"#W5061109\", \"#W3973757\"]}"
+      },
+      {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_PTT1fVXf71XNp7FtrxXm2t4i",
+            "type": "function",
+            "function": {
+              "name": "get_order_details",
+              "arguments": "{\"order_id\":\"#W5061109\"}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_PTT1fVXf71XNp7FtrxXm2t4i",
+        "name": "get_order_details",
+        "content": "{\"order_id\": \"#W5061109\", \"user_id\": \"chen_johnson_4204\", \"address\": {\"address1\": \"503 Elm Avenue\", \"address2\": \"Suite 641\", \"city\": \"Houston\", \"country\": \"USA\", \"state\": \"TX\", \"zip\": \"77004\"}, \"items\": [{\"name\": \"Makeup Kit\", \"product_id\": \"5149340237\", \"item_id\": \"6254646215\", \"price\": 248.85, \"options\": {\"skin tone\": \"dark\", \"kit size\": \"basic\", \"brand\": \"Brand B\"}}, {\"name\": \"Wireless Earbuds\", \"product_id\": \"9924732112\", \"item_id\": \"3694871183\", \"price\": 256.67, \"options\": {\"color\": \"white\", \"battery life\": \"8 hours\", \"water resistance\": \"IPX4\"}}, {\"name\": \"Office Chair\", \"product_id\": \"4794339885\", \"item_id\": \"8323284863\", \"price\": 511.24, \"options\": {\"material\": \"fabric\", \"color\": \"blue\", \"armrest\": \"adjustable\", \"backrest height\": \"standard\"}}, {\"name\": \"Bluetooth Speaker\", \"product_id\": \"4768869376\", \"item_id\": \"3254583681\", \"price\": 302.67, \"options\": {\"color\": \"blue\", \"battery life\": \"20 hours\", \"water resistance\": \"yes\"}}], \"fulfillments\": [], \"status\": \"pending\", \"payment_history\": [{\"transaction_type\": \"payment\", \"amount\": 1319.43, \"payment_method_id\": \"paypal_3742148\"}]}"
+      },
+      {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_eEeDNz9G6Vu3HmHZWeqf8rZg",
+            "type": "function",
+            "function": {
+              "name": "get_all_available_variants_with_options",
+              "arguments": "{\"product_id\":\"9924732112\",\"filter_options\":\"{\\\"color\\\": \\\"blue\\\"}\"}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_eEeDNz9G6Vu3HmHZWeqf8rZg",
+        "name": "get_all_available_variants_with_options",
+        "content": "{\n  \"item_id\": \"1646531091\",\n  \"options\": {\n    \"color\": \"blue\",\n    \"battery life\": \"6 hours\",\n    \"water resistance\": \"IPX4\"\n  },\n  \"price\": 232.49\n}"
+      },
+      {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_zPKFxmzGbgdeqjG3DuQjM9vV",
+            "type": "function",
+            "function": {
+              "name": "get_user_payment_methods",
+              "arguments": "{\"user_id\":\"chen_johnson_4204\"}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_zPKFxmzGbgdeqjG3DuQjM9vV",
+        "name": "get_user_payment_methods",
+        "content": "{\n  \"paypal_3742148\": {\n    \"source\": \"paypal\",\n    \"id\": \"paypal_3742148\"\n  },\n  \"gift_card_3406421\": {\n    \"source\": \"gift_card\",\n    \"balance\": 79,\n    \"id\": \"gift_card_3406421\"\n  }\n}"
+      },
+      {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_xatOIf1waOMrK9rTMWKzBZCh",
+            "type": "function",
+            "function": {
+              "name": "calculate_order_total_with_item_replacement",
+              "arguments": "{\"order_id\":\"#W5061109\",\"old_item_ids\":\"[\\\"3694871183\\\"]\",\"new_item_ids\":\"[\\\"1646531091\\\"]\"}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_xatOIf1waOMrK9rTMWKzBZCh",
+        "name": "calculate_order_total_with_item_replacement",
+        "content": "{\"order_id\": \"#W5061109\", \"user_id\": \"chen_johnson_4204\", \"address\": {\"address1\": \"503 Elm Avenue\", \"address2\": \"Suite 641\", \"city\": \"Houston\", \"country\": \"USA\", \"state\": \"TX\", \"zip\": \"77004\"}, \"items\": [{\"name\": \"Makeup Kit\", \"product_id\": \"5149340237\", \"item_id\": \"6254646215\", \"price\": 248.85, \"options\": {\"skin tone\": \"dark\", \"kit size\": \"basic\", \"brand\": \"Brand B\"}}, {\"name\": \"Wireless Earbuds\", \"product_id\": \"9924732112\", \"item_id\": \"3694871183\", \"price\": 256.67, \"options\": {\"color\": \"white\", \"battery life\": \"8 hours\", \"water resistance\": \"IPX4\"}}, {\"name\": \"Office Chair\", \"product_id\": \"4794339885\", \"item_id\": \"8323284863\", \"price\": 511.24, \"options\": {\"material\": \"fabric\", \"color\": \"blue\", \"armrest\": \"adjustable\", \"backrest height\": \"standard\"}}, {\"name\": \"Bluetooth Speaker\", \"product_id\": \"4768869376\", \"item_id\": \"3254583681\", \"price\": 302.67, \"options\": {\"color\": \"blue\", \"battery life\": \"20 hours\", \"water resistance\": \"yes\"}}], \"fulfillments\": [], \"status\": \"pending\", \"payment_history\": [{\"transaction_type\": \"payment\", \"amount\": 1319.43, \"payment_method_id\": \"paypal_3742148\"}]}"
+      },
+      {
+        "role": "assistant",
+        "content": "You want to change the wireless earbuds in your pending order #W5061109 from the current white color to blue. Here are the details:\n\n- Current earbuds: White, 8 hours battery, IPX4 water resistance, $256.67\n- Replacement: Blue, 6 hours battery, IPX4 water resistance, $232.49\n\nThe replacement will reduce your order total, and the price difference will be refunded to your original payment method (PayPal).\n\nImportant: Once I modify the item, no further changes or cancellations can be made to this order. Please confirm:\n1. You want to replace the wireless earbuds with the blue variant (6 hours battery).\n2. You have provided all items you wish to modify in this order.\n\nWould you like to proceed with this change? (yes/no)",
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "user",
+        "content": "Yes, please proceed with changing the earbuds to the blue ones. I don\u2019t have any other modifications."
+      },
+      {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_UplrboQy04aG8GhcNGhgtwye",
+            "type": "function",
+            "function": {
+              "name": "modify_pending_order_items",
+              "arguments": "{\"order_id\":\"#W5061109\",\"item_ids\":[\"3694871183\"],\"new_item_ids\":[\"1646531091\"],\"payment_method_id\":\"paypal_3742148\"}"
+            }
+          }
+        ],
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_UplrboQy04aG8GhcNGhgtwye",
+        "name": "modify_pending_order_items",
+        "content": "{\"order_id\": \"#W5061109\", \"user_id\": \"chen_johnson_4204\", \"address\": {\"address1\": \"503 Elm Avenue\", \"address2\": \"Suite 641\", \"city\": \"Houston\", \"country\": \"USA\", \"state\": \"TX\", \"zip\": \"77004\"}, \"items\": [{\"name\": \"Makeup Kit\", \"product_id\": \"5149340237\", \"item_id\": \"6254646215\", \"price\": 248.85, \"options\": {\"skin tone\": \"dark\", \"kit size\": \"basic\", \"brand\": \"Brand B\"}}, {\"name\": \"Wireless Earbuds\", \"product_id\": \"9924732112\", \"item_id\": \"1646531091\", \"price\": 232.49, \"options\": {\"color\": \"blue\", \"battery life\": \"6 hours\", \"water resistance\": \"IPX4\"}}, {\"name\": \"Office Chair\", \"product_id\": \"4794339885\", \"item_id\": \"8323284863\", \"price\": 511.24, \"options\": {\"material\": \"fabric\", \"color\": \"blue\", \"armrest\": \"adjustable\", \"backrest height\": \"standard\"}}, {\"name\": \"Bluetooth Speaker\", \"product_id\": \"4768869376\", \"item_id\": \"3254583681\", \"price\": 302.67, \"options\": {\"color\": \"blue\", \"battery life\": \"20 hours\", \"water resistance\": \"yes\"}}], \"fulfillments\": [], \"status\": \"pending (item modified)\", \"payment_history\": [{\"transaction_type\": \"payment\", \"amount\": 1319.43, \"payment_method_id\": \"paypal_3742148\"}, {\"transaction_type\": \"refund\", \"amount\": 24.180000000000007, \"payment_method_id\": \"paypal_3742148\"}]}"
+      },
+      {
+        "role": "assistant",
+        "content": "The wireless earbuds in your order #W5061109 have been changed to the blue variant (6 hours battery). The price difference of $24.18 will be refunded to your original PayPal account within 5\u20137 business days.\n\nNo further modifications or cancellations can be made to this order. If you need anything else, please let me know!",
+        "refusal": null,
+        "annotations": []
+      },
+      {
+        "role": "user",
+        "content": "Thank you for the quick help! That\u2019s all I needed. \n\n###STOP###"
+      }
+    ],
+    "trial": 61,
+    "records": {}
+  }
+]

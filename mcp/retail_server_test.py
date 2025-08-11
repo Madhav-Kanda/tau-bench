@@ -914,208 +914,62 @@ def modify_user_address(user_id: str, address1: str, address2: str, city: str, s
 
 
 @mcp.tool()
-def list_user_orders(user_id):
+def count_product_variants(product_id, available_only):
     """
-    {
-      "type": "function",
-      "function": {
-        "name": "list_user_orders",
-        "description": "Lists all orders (including order ID and status) that belong to a specified user. This function allows efficient retrieval of all orders associated with a particular user, which can help in tasks such as checking pending or delivered orders, or locating a specific order when the user does not remember the order ID. The function queries user details, retrieves the associated order IDs, and then collects the order ID and status for each order.",
-        "parameters": {
-          "type": "object",
-          "properties": {
-            "user_id": {
-              "type": "string",
-              "description": "The user ID, for example 'sara_doe_496'."
-            }
-          },
-          "required": ["user_id"]
-        }
-      }
-    }
+    Counts the total number of item variants for a specified product ID, with an option to include only currently available variants.
+
+    This function accepts the product identifier and a flag indicating whether to consider only available variants. When 'available_only' is the string 'true' (case-insensitive), only variants that are currently available are counted. When 'available_only' is 'false', all variants are counted regardless of their availability. All input parameters must be provided as strings; 'available_only' should be either 'true' or 'false'.
+
+    This function is useful for generating reports on the number of purchasing options that are currently in stock or the total possible options for a given product.
+
+    Args:
+        product_id (str): The identifier of the product whose variants are to be counted.
+        available_only (str): Determines if only available variants are counted. Expected values are 'true' or 'false' (case-insensitive).
+
+    Returns:
+        dict: A dictionary containing the product ID, whether only available variants were counted, and the computed variant count. The returned dictionary has the keys 'product_id', 'available_only', and 'variant_count'.
+        In case of parameter or processing errors, returns a dictionary with a single key 'error' containing the error message.
     """
-    import json
     try:
-        # Attempt to coerce user_id to string.
-        user_id_str = str(user_id)
-    except Exception as e:
-        return {"error": f"user_id could not be converted to string: {e}", "input_value": repr(user_id)}
-    try:
-        details = get_user_details(user_id_str)
-    except Exception as e:
-        return {"error": f"Error calling get_user_details: {e}", "user_id": user_id_str}
-    try:
-        if isinstance(details, str):
-            d = json.loads(details)
-        elif isinstance(details, dict):
-            d = details
-        else:
-            return {"error": "get_user_details did not return str or dict", "details": repr(details)}
-    except Exception as e:
-        return {"error": f"Error parsing user details: {e}", "details": repr(details)}
-    orders = d.get('orders', [])
-    if not isinstance(orders, list):
-        return {"error": "User orders is not a list.", "orders": repr(orders)}
-    result = []
-    for oid in orders:
-        try:
-            oid_str = str(oid)
-        except Exception as e:
-            return {"error": f"Order ID could not be converted to string: {e}", "order_id": repr(oid)}
-        try:
-            order_details = get_order_details(oid_str)
-        except Exception as e:
-            result.append({"order_id": oid_str, "status": None, "error": f"Error calling get_order_details: {e}"})
-            continue
-        try:
-            if isinstance(order_details, str):
-                o = json.loads(order_details)
-            elif isinstance(order_details, dict):
-                o = order_details
-            else:
-                result.append({"order_id": oid_str, "status": None, "error": "get_order_details did not return str or dict"})
-                continue
-        except Exception as e:
-            result.append({"order_id": oid_str, "status": None, "error": f"Error parsing order details: {e}"})
-            continue
-        result.append({'order_id': o.get('order_id'), 'status': o.get('status')})
-    return result
-@mcp.tool()
-def list_product_variants(product_id):
-    """
-    {
-      "type": "function",
-      "function": {
-        "name": "list_product_variants",
-        "description": "Fetches all available variants for the specified product using its unique product identifier. For the given product ID, this function returns a dictionary where each key is a variant's item ID. The value for each key contains details about that variant, such as a dictionary of distinguishing options (e.g., size, color), an 'available' boolean indicating current stock, and a 'price' field which is a float if set, or None otherwise. This function facilitates efficient enumeration of possible item exchanges or modifications without retrieving the full product detail payload.",
-        "parameters": {
-          "type": "object",
-          "properties": {
-            "product_id": {
-              "type": "string",
-              "description": "A string identifier representing the product whose variants are to be retrieved."
-            }
-          },
-          "required": ["product_id"]
-        }
-      }
-    }
-    """
-    import json
-    # Attempt to coerce the product_id to a string for consistency
-    try:
-        if isinstance(product_id, (dict, list)):
-            raise ValueError("product_id must be a string-like value, not a complex object.")
+        # Convert to string if not already
         product_id_str = str(product_id)
-    except Exception as e:
-        return {"error": f"Invalid product_id: {e}. Please check the input format."}
+        available_only_str = str(available_only).strip().lower()
 
-    # Try to call get_product_details, handle its possible errors
-    try:
-        details = get_product_details(product_id_str)
-    except Exception as e:
-        return {"error": f"Error in get_product_details: {e}. Please check logs."}
+        # Validate available_only value (allow bool as well as string)
+        if available_only_str in ['true', '1', 'yes', 'on', 't']:
+            available_flag = True
+        elif available_only_str in ['false', '0', 'no', 'off', 'f']:
+            available_flag = False
+        else:
+            return {'error': f"Invalid value for available_only: '{available_only}'. Must be 'true' or 'false'."}
 
-    # If details is a JSON string, parse it
-    if isinstance(details, str):
+        # Validate product_id is not empty
+        if not product_id_str or product_id_str.strip() == '':
+            return {'error': "Product ID cannot be empty."}
+
+        # Fetch product details
         try:
-            details = json.loads(details)
+            details_json = get_product_details(product_id_str)
         except Exception as e:
-            return {"error": f"Product detail response could not be parsed as JSON: {e}. Raw response: {details}"}
-    if not isinstance(details, dict):
-        return {"error": f"Product detail response is not a dictionary. Type: {type(details)}. Value: {details}"}
+            return {'error': f"Could not fetch product details: {e}"}
+        if not isinstance(details_json, dict):
+            return {'error': "Invalid product details returned. Expected a dict."}
+        variants = details_json.get('variants', {})
+        if not isinstance(variants, dict):
+            return {'error': "Malformed product data. Variants should be a dict."}
 
-    output = {}
-    variants = details.get("variants", {})
-    if not isinstance(variants, dict):
-        return {"error": f"Variants expected to be a dictionary, got {type(variants)} instead."}
+        # Count variants
+        if available_flag:
+            count = sum(1 for v in variants.values() if v.get('available', False))
+        else:
+            count = len(variants)
 
-    for item_id, info in variants.items():
-        # Defensive: info could be non-dict due to LLM oddities
-        if not isinstance(info, dict):
-            output[item_id] = {"error": f"Variant info is not a dictionary: {info}"}
-            continue
-        options = info.get("options", {})
-        if not isinstance(options, dict):
-            options = {}
-        available = info.get("available", False)
-        available = bool(available) # Defensive conversion
-        price = info.get("price", None)
-        try:
-            if price is not None:
-                price = float(price)
-        except Exception:
-            price = None
-        output[item_id] = {
-            "options": options,
-            "available": available,
-            "price": price
+        return {
+            'product_id': product_id_str,
+            'available_only': available_flag,
+            'variant_count': count
         }
-    return output
-@mcp.tool()
-def list_order_items(order_id):
-    '''
-    {
-      "type": "function",
-      "function": {
-        "name": "list_order_items",
-        "description": "Retrieves a list of all items associated with a specified order. For the given order ID, this function fetches details for each item, returning a list of dictionaries with keys 'item_id', 'product_name', 'product_id', and 'options'. This function is particularly useful for users who wish to view, return, or exchange items by reviewing their product category, description, or variant options, even if the full order information is not known.",
-        "parameters": {
-          "type": "object",
-          "properties": {
-            "order_id": {
-              "type": "string or integer",
-              "description": "The identifier for the order whose items will be listed."
-            }
-          },
-          "required": ["order_id"]
-        }
-      }
-    }
-    '''
-    import json
-    try:
-        # Convert order_id to string if necessary (handles cases where LLM passes e.g. float, bool, None)
-        if order_id is None:
-            return {"error": "order_id cannot be None"}
-        # Try integer conversion if possible
-        if isinstance(order_id, bool):
-            # Prevent True/False being interpreted as 1/0
-            return {"error": "order_id cannot be a boolean value"}
-        try:
-            # Try to cast to integer first if it looks like an int string
-            if isinstance(order_id, str) and order_id.isdigit():
-                order_id_str = str(int(order_id))
-            else:
-                order_id_str = str(order_id)
-        except Exception as e:
-            return {"error": f"Could not process order_id: {e}"}
-
-        order = get_order_details(order_id_str)
-        # Parse if JSON string
-        if isinstance(order, str):
-            try:
-                order = json.loads(order)
-            except Exception as e:
-                return {"error": f"Order details could not be parsed as JSON: {e}"}
-        if not isinstance(order, dict):
-            return {"error": "Order details could not be loaded as a dictionary."}
-        items = order.get('items', [])
-        if not isinstance(items, list):
-            return {"error": "Order 'items' field is not a list."}
-        result = []
-        for item in items:
-            if not isinstance(item, dict):
-                continue  # skip invalid items
-            info = {
-                'item_id': item.get('item_id', ''),
-                'product_name': item.get('name', ''),
-                'product_id': item.get('product_id', ''),
-                'options': item.get('options', {}) if isinstance(item.get('options', {}), dict) else {}
-            }
-            result.append(info)
-        return result
-    except Exception as err:
-        return {"error": f"Unexpected error: {str(err)}. Please check logs."}
+    except Exception as e:
+        return {'error': f"Unexpected error occurred: {e}"}
 if __name__ == "__main__":
     mcp.run(transport='stdio')
