@@ -304,7 +304,6 @@ Output a JSON object in the following format:
             user_message = f'Conversation: {trajectory}\nGround Truth: {ground_truth}'
         else:
             user_message = f'Conversation: {trajectory}\nGround Truth: {ground_truth}\nResponses: {outputs}'
-        print(self.llm_client.model)
         response = self.llm_client.complete(
             model=self.model_name,
             messages=[
@@ -498,7 +497,7 @@ def main():
             response.compute_stats(ground_truth_failures[i])
             
         analysis(sorted_responses)
-        output_file = "llm_judge_responses_multiple_runs.json"  
+        output_file = "llm_judge_responses_multiple_runs_temp.json"  
         with open(output_file, 'w') as f:
             json.dump([response.to_dict() for response in sorted_responses], f, indent=4)
         
