@@ -280,7 +280,7 @@ def main():
             response.compute_stats(ground_truth_failures[i])
             
         analysis(sorted_responses)
-        output_file = "llm_judge_responses_multiple_runs_reasoning_effort_high.json"  
+        output_file = "llm_judge_responses_multiple_runs.json"  
         with open(output_file, 'w') as f:
             json.dump([response.to_dict() for response in sorted_responses], f, indent=4)
         
