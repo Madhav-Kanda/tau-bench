@@ -9,6 +9,7 @@ import json
 
 import time
 from tau_bench.globals import *
+from litellm import completion as llm_completion
 
 credential = ChainedTokenCredential(
     AzureCliCredential(),
@@ -97,17 +98,65 @@ class RecursiveModel(RootModel[Json]):
         else:
             return self.root
 def model_dump(x):
-    model = RecursiveModel.from_data(x._data)
-    dumped = model.model_dump()
-    return dumped
+    # Prefer native dump methods when available
+    try:
+        if hasattr(x, "model_dump") and callable(getattr(x, "model_dump")):
+            return x.model_dump()
+        if hasattr(x, "to_dict") and callable(getattr(x, "to_dict")):
+            return x.to_dict()
+        if hasattr(x, "dict") and callable(getattr(x, "dict")):
+            return x.dict()
+        if isinstance(x, dict):
+            return x
+        # Fallback for Azure SDK objects that expose `_data`
+        if hasattr(x, "_data"):
+            model = RecursiveModel.from_data(x._data)
+            return model.model_dump()
+        # Last resort: attempt to serialize __dict__-like objects
+        model = RecursiveModel.from_data(getattr(x, "__dict__", x))
+        return model.model_dump()
+    except Exception:
+        # Safe fallback
+        return x
 
 
 def completion(*args, **kwargs):
+    """
+    Dispatches chat completion calls:
+    - OpenAI-compatible (e.g., vLLM) via LiteLLM when provider/base_url indicate OpenAI API
+    - Azure TRAPI client otherwise (existing path)
+    """
+    provider = kwargs.get("custom_llm_provider")
+    base_url = kwargs.pop("base_url", None) or os.environ.get("OPENAI_API_BASE") or os.environ.get("VLLM_BASE_URL")
+
+    use_openai_compatible = (
+        (provider in ("openai", "openai_compatible")) or
+        (base_url is not None)
+    )
+
+    if use_openai_compatible:
+        # Ensure tool calling occurs when tools are provided
+        tools = kwargs.get("tools")
+        # Only enable auto tool choice if explicitly requested and supported by server flags
+        enable_auto = os.environ.get("TAU_ENABLE_AUTO_TOOL_CHOICE") == "1" or os.environ.get("VLLM_ENABLE_AUTO_TOOL_CHOICE") == "1"
+        if tools is not None and "tool_choice" not in kwargs and enable_auto:
+            kwargs["tool_choice"] = "auto"
+        # Honor base_url/api_key if provided via env/kwargs
+        if base_url is not None:
+            kwargs["base_url"] = base_url
+        api_key = kwargs.get("api_key") or os.environ.get("OPENAI_API_KEY")
+        if api_key is not None:
+            kwargs["api_key"] = api_key
+        start_time = time.time()
+        res = llm_completion(*args, **kwargs)
+        end_time = time.time()
+        llm_time.record_time(end_time - start_time)
+        return res
+
+    # Default Azure TRAPI path (existing behavior)
     sig = inspect.signature(client.complete)
     allowed_params = sig.parameters
-
     filtered_kwargs = {k: v for k, v in kwargs.items() if k in allowed_params}
-    # contextLength.get_lengths_from_messages(filtered_kwargs['messages'])
     start_time = time.time()
     res = client.complete(*args, **filtered_kwargs)
     end_time = time.time()

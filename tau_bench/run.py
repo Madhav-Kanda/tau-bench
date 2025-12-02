@@ -42,7 +42,10 @@ def run(config: RunConfig) -> List[EnvRunResult]:
     random.seed(config.seed)
     time_str = datetime.now().strftime("%m%d%H%M%S")
     if config.ckpt_path == "":  
-        ckpt_path = f"{config.log_dir}/{config.agent_strategy}-{config.model.split('/')[-1]}-{config.temperature}_range_{config.start_index}-{config.end_index}_user-{config.user_model}-{config.user_strategy}_{time_str}.json"
+        # sanitize model names for filesystem paths (avoid '/')
+        agent_model_name = config.model.split('/')[-1] if config.model else "model"
+        user_model_name = config.user_model.split('/')[-1] if config.user_model else "user_model"
+        ckpt_path = f"{config.log_dir}/{config.agent_strategy}-{agent_model_name}-{config.temperature}_range_{config.start_index}-{config.end_index}_user-{user_model_name}-{config.user_strategy}_{time_str}.json"
     else:
         ckpt_path = config.ckpt_path
     if not os.path.exists(config.log_dir):

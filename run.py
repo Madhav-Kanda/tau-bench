@@ -77,6 +77,9 @@ def parse_args() -> RunConfig:
     parser.add_argument("--user-strategy", type=str, default="llm", choices=[item.value for item in UserStrategy])
     parser.add_argument("--few-shot-displays-path", type=str, help="Path to a jsonlines file containing few shot displays")
     args = parser.parse_args()
+    # Fallbacks to avoid validation errors when user_model_provider is omitted
+    if args.user_model_provider is None:
+        args.user_model_provider = args.model_provider or "openai"
     return RunConfig(
         model_provider=args.model_provider,
         user_model_provider=args.user_model_provider,
