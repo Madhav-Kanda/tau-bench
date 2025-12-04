@@ -13,9 +13,10 @@ from tau_bench.globals import *
 
 from tau_bench.agents.llmagent import LLMAgent
 
-class SubtaskChecker(LLMAgent):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+class SubtaskChecker:
+    def __init__(self, model_name: str, provider: str):
+        self.model_name = model_name
+        self.provider = provider
 
     def check_subtask(self, history, subtask):
         system_prompt = f'''
@@ -32,8 +33,14 @@ Return your answer in the following json format:
 }}  
 '''
         messages = [{"role": "system", "content": system_prompt}, {"role": "user", "content": f'Conversation history: \n{history}\n\nSubtask: \n{subtask}'}]
-        res = self.llm_client.complete(model = self.model_name, messages=messages, response_format="json_object").choices[0].message['content']
-        res = json.loads(res)
+        res = completion(
+            model=self.model_name,
+            custom_llm_provider=self.provider,
+            messages=messages,
+            response_format="json_object",
+        )
+        msg = model_dump(res.choices[0].message)
+        res = json.loads(msg["content"])
         # print(colored(res, 'magenta'))
         return res
     
@@ -70,7 +77,7 @@ class ToolCallingWithSubtasksCheckAgent(Agent):
 
         self.formalized_tasks_all = read_formalized_tasks()
         self.one_shot_tasks_all = read_one_shot_tasks()
-        self.subtasks_checker = SubtaskChecker()
+        self.subtasks_checker = SubtaskChecker(model_name=self.model, provider=self.provider)
 
     def solve(
         self, env: Env, task_index: Optional[int] = None, max_num_steps: int = 30

@@ -135,7 +135,7 @@ def get_tool_description(tool):
         s = f'{p}:{type}'
 
         if 'default' in tool.inputSchema['properties'][p].keys():
-            s += f' = {tool.inputSchema['properties'][p]["default"]}'
+            s += f" = {tool.inputSchema['properties'][p]['default']}"
         
         if i > 0:
             param_str += ', '

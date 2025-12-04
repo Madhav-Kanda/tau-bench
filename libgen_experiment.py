@@ -1,6 +1,7 @@
 import json
 import os
 import subprocess
+from glob import glob
 
 from termcolor import colored
 
@@ -9,13 +10,15 @@ from libgen_utils import *
 
 def run_tasks(task_ids, mcp_server, output_file, agent_strategy='tool-calling', new_func_name=None):
     open(output_file, 'w').close()
+    agent_model = os.environ.get("LIBGEN_AGENT_MODEL", os.environ.get("OPENAI_MODEL", "none"))
+    user_model = os.environ.get("LIBGEN_USER_MODEL", agent_model)
     command = [
         "python", "run.py",
         "--agent-strategy", agent_strategy,
         "--env", "retail",
-        "--model", "none",
+        "--model", agent_model,
         "--model-provider", "openai",
-        "--user-model", "none",
+        "--user-model", user_model,
         "--user-model-provider", "openai",
         "--user-strategy", "llm",
         "--max-concurrency", "10",
@@ -160,7 +163,13 @@ def test_phase(task_ids, mcp_server, new_funcs, output_folder):
 
 
 def main2():
-    original_logs = "final_results/tool-calling-none-0.1_range_0-100_user-none-llm_06232025.json"
+    original_logs = os.environ.get("LIBGEN_ORIGINAL_LOGS")
+    if original_logs is None or not os.path.exists(original_logs):
+        candidates = sorted(glob("results/*.json"), key=os.path.getmtime, reverse=True)
+        if len(candidates) > 0:
+            original_logs = candidates[0]
+        else:
+            raise FileNotFoundError("Set LIBGEN_ORIGINAL_LOGS to a prior tau-bench results JSON, or place one under results/.")
     lib_gen_experiment_output_folder = "libgen_experiment_output_trial_7"
     # original_mcp_server = os.path.normpath('mcp/retail_server.py')
     # mcp_server_before_generation = os.path.normpath('mcp/retail_server_initial.py')

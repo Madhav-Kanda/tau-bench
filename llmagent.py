@@ -41,7 +41,9 @@ class LLMAgent:
 
         # Note: Check out the other model deployments here - https://dev.azure.com/msresearch/TRAPI/_wiki/wikis/TRAPI.wiki/15124/Deployment-Model-Information
         self.api_version = api_version
-        self.model_name = model_name
+        # Allow overriding model from environment to support local OSS models
+        env_model = os.environ.get("LIBGEN_AGENT_MODEL") or os.environ.get("OPENAI_MODEL") or os.environ.get("LIBGEN_MODEL")
+        self.model_name = env_model if env_model else model_name
         self.model_version = model_version
         self.deployment_name = deployment_name
         self.instance = "redmond/interactive/openai" #'gcr/shared/openai' # See https://aka.ms/trapi/models for the instance name

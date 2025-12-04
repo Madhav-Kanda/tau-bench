@@ -1,7 +1,9 @@
 import json
+import os
 from termcolor import colored
 from llmagent import LLMAgent
 from libgen_utils import *
+from tau_bench.trapi_infer import completion, model_dump
 
 class FunctionSuggestionAgent(LLMAgent):
     def __init__(self, *args, **kwargs):
@@ -23,17 +25,18 @@ Output only the name of the function, its arguments and the description in the f
 '''
         user_message = "\n".join(f"Conversation: {task['traj']}" for task in tasks)
         user_message += f"\nCurrent Library: {library}"
-        response = self.llm_client.complete(
+        response = completion(
             model=self.model_name,
+            custom_llm_provider=os.environ.get("LIBGEN_PROVIDER", "openai"),
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_message},
             ],
-            response_format="json_object",
+            response_format={"type": "json_object"},
         )
-        completion = response.choices[0].message.content.strip()
-        completion = json.loads(completion)
-        return completion
+        msg = model_dump(response.choices[0].message)
+        content = msg["content"].strip()
+        return json.loads(content)
 
 class LibRankerAgent(LLMAgent):
     def __init__(self, *args, **kwargs):
@@ -55,15 +58,16 @@ Just output the function names in the correct order.
 Do not output any explanation or anything else. 
 If there are multiple functions that can be defined, prefer the one that has more utility.
 '''
-        response = self.llm_client.complete(
+        response = completion(
             model=self.model_name,
+            custom_llm_provider=os.environ.get("LIBGEN_PROVIDER", "openai"),
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": str(funcs)},
             ],
         )
-        completion = response.choices[0].message.content.strip()
-        return completion
+        msg = model_dump(response.choices[0].message)
+        return msg["content"].strip()
     
 
 class FuncDefinitionAgent(LLMAgent):
@@ -92,18 +96,20 @@ Output a JSON object in the following fomat:
 }}
 '''
         user_message = f'Current available functions: {library}\nNew function: {new_func}\nSolved Tasks: {tasks}'
-        response = self.llm_client.complete(
+        response = completion(
             model=self.model_name,
+            custom_llm_provider=os.environ.get("LIBGEN_PROVIDER", "openai"),
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_message},
             ],
-            response_format="json_object"
+            response_format={"type": "json_object"}
         )
-        completion = response.choices[0].message.content.strip()
-        completion = json.loads(completion)
-        # print(completion)
-        return completion['new_function']
+        msg = model_dump(response.choices[0].message)
+        content = msg["content"].strip()
+        parsed = json.loads(content)
+        # print(parsed)
+        return parsed['new_function']
 
 class DocStringGenerator(LLMAgent):
     def __init__(self, *args, **kwargs):
@@ -133,18 +139,19 @@ Output only the format in the following json format:
 }}
 '''
         user_message = f'Function {func}'
-        response = self.llm_client.complete(
+        response = completion(
             model=self.model_name,
+            custom_llm_provider=os.environ.get("LIBGEN_PROVIDER", "openai"),
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_message},
             ],
-            response_format="json_object"
+            response_format={"type": "json_object"}
         )
-        completion = response.choices[0].message.content.strip()
-        completion = json.loads(completion)
-        completion = completion['function']
-        return completion
+        msg = model_dump(response.choices[0].message)
+        content = msg["content"].strip()
+        parsed = json.loads(content)
+        return parsed['function']
 
 class FuncCorrector(LLMAgent):
     def __init__(self, *args, **kwargs):
@@ -165,17 +172,19 @@ Output a JSON object in the following fomat:
     "explanation": <explanation>
 }}
 '''
-        response = self.llm_client.complete(
+        response = completion(
             model=self.model_name,
+            custom_llm_provider=os.environ.get("LIBGEN_PROVIDER", "openai"),
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": f'{func}'},
             ],
-            response_format="json_object"
+            response_format={"type": "json_object"}
         )
-        completion = response.choices[0].message.content.strip()
-        completion = json.loads(completion)
-        return completion["new_function"]
+        msg = model_dump(response.choices[0].message)
+        content = msg["content"].strip()
+        parsed = json.loads(content)
+        return parsed["new_function"]
 
 
 class FuncCorrectorFromTrajectories(LLMAgent):
@@ -199,16 +208,18 @@ Output a JSON object in the following fomat:
 Only change the things that caused the mistake. Do not predict any new changes.
 '''
         messages = [{"role": "system", "content": system_prompt}] + new_func_def_history + [{"role": "user", "content": f'Old Library: {old_library}\nNew Function: {new_func}\n\nNew Trajectory: {new_trajectory}'}]
-        response = self.llm_client.complete(
+        response = completion(
             model=self.model_name,
+            custom_llm_provider=os.environ.get("LIBGEN_PROVIDER", "openai"),
             messages=messages,
-            response_format="json_object"
+            response_format={"type": "json_object"}
         )
-        completion = response.choices[0].message.content.strip()
-        completion = json.loads(completion)
-        # print(completion)
+        msg = model_dump(response.choices[0].message)
+        content = msg["content"].strip()
+        parsed = json.loads(content)
+        # print(parsed)
         # ljkdf
-        return completion["new_function"], completion["explanation"]
+        return parsed["new_function"], parsed["explanation"]
 
 
 # def get_tool_description(tool):
@@ -285,7 +296,7 @@ def get_new_func(tasks, old_library, verbose=True):
     #     suggested_func = suggested_funcs[0]
     
     if verbose:
-        print(colored(f'Suggested function name: {suggested_func['name']}', 'blue'))
+        print(colored(f"Suggested function name: {suggested_func['name']}", 'blue'))
         
     
     new_func = func_def_agent.define_func(old_library, suggested_func, tasks)
