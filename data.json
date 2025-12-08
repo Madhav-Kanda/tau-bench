@@ -39445,20 +39445,14 @@
         }
       ],
       "fulfillments": [],
-      "status": "cancelled",
+      "status": "pending",
       "payment_history": [
         {
           "transaction_type": "payment",
           "amount": 243.62,
           "payment_method_id": "credit_card_3095586"
-        },
-        {
-          "transaction_type": "refund",
-          "amount": 243.62,
-          "payment_method_id": "credit_card_3095586"
         }
-      ],
-      "cancel_reason": "no longer needed"
+      ]
     },
     "#W3794101": {
       "order_id": "#W3794101",
@@ -40456,20 +40450,14 @@
         }
       ],
       "fulfillments": [],
-      "status": "cancelled",
+      "status": "pending",
       "payment_history": [
         {
           "transaction_type": "payment",
           "amount": 1074.31,
           "payment_method_id": "credit_card_3095586"
-        },
-        {
-          "transaction_type": "refund",
-          "amount": 1074.31,
-          "payment_method_id": "credit_card_3095586"
         }
-      ],
-      "cancel_reason": "no longer needed"
+      ]
     },
     "#W9284598": {
       "order_id": "#W9284598",

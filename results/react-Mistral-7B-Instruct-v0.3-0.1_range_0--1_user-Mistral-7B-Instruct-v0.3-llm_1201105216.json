@@ -1,0 +1,211 @@
+[
+  {
+    "task_id": 0,
+    "reward": 0.0,
+    "info": {
+      "error": "1 validation error for EnvRunResult\nrecords\n  Input should be a valid dictionary [type=dict_type, input_value=None, input_type=NoneType]\n    For further information visit https://errors.pydantic.dev/2.12/v/dict_type",
+      "traceback": "Traceback (most recent call last):\n  File \"/home/madhav/ext-madhav/tau-bench/tau_bench/run.py\", line 128, in _run\n    result = EnvRunResult(\n             ^^^^^^^^^^^^^\n  File \"/home/madhav/miniconda3/envs/tau/lib/python3.11/site-packages/pydantic/main.py\", line 250, in __init__\n    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\npydantic_core._pydantic_core.ValidationError: 1 validation error for EnvRunResult\nrecords\n  Input should be a valid dictionary [type=dict_type, input_value=None, input_type=NoneType]\n    For further information visit https://errors.pydantic.dev/2.12/v/dict_type\n"
+    },
+    "traj": [],
+    "trial": 0,
+    "records": {}
+  },
+  {
+    "task_id": 1,
+    "reward": 0.0,
+    "info": {
+      "error": "1 validation error for EnvRunResult\nrecords\n  Input should be a valid dictionary [type=dict_type, input_value=None, input_type=NoneType]\n    For further information visit https://errors.pydantic.dev/2.12/v/dict_type",
+      "traceback": "Traceback (most recent call last):\n  File \"/home/madhav/ext-madhav/tau-bench/tau_bench/run.py\", line 128, in _run\n    result = EnvRunResult(\n             ^^^^^^^^^^^^^\n  File \"/home/madhav/miniconda3/envs/tau/lib/python3.11/site-packages/pydantic/main.py\", line 250, in __init__\n    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\npydantic_core._pydantic_core.ValidationError: 1 validation error for EnvRunResult\nrecords\n  Input should be a valid dictionary [type=dict_type, input_value=None, input_type=NoneType]\n    For further information visit https://errors.pydantic.dev/2.12/v/dict_type\n"
+    },
+    "traj": [],
+    "trial": 1,
+    "records": {}
+  },
+  {
+    "task_id": 2,
+    "reward": 0.0,
+    "info": {
+      "error": "1 validation error for EnvRunResult\nrecords\n  Input should be a valid dictionary [type=dict_type, input_value=None, input_type=NoneType]\n    For further information visit https://errors.pydantic.dev/2.12/v/dict_type",
+      "traceback": "Traceback (most recent call last):\n  File \"/home/madhav/ext-madhav/tau-bench/tau_bench/run.py\", line 128, in _run\n    result = EnvRunResult(\n             ^^^^^^^^^^^^^\n  File \"/home/madhav/miniconda3/envs/tau/lib/python3.11/site-packages/pydantic/main.py\", line 250, in __init__\n    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\npydantic_core._pydantic_core.ValidationError: 1 validation error for EnvRunResult\nrecords\n  Input should be a valid dictionary [type=dict_type, input_value=None, input_type=NoneType]\n    For further information visit https://errors.pydantic.dev/2.12/v/dict_type\n"
+    },
+    "traj": [],
+    "trial": 2,
+    "records": {}
+  },
+  {
+    "task_id": 3,
+    "reward": 0.0,
+    "info": {
+      "error": "1 validation error for EnvRunResult\nrecords\n  Input should be a valid dictionary [type=dict_type, input_value=None, input_type=NoneType]\n    For further information visit https://errors.pydantic.dev/2.12/v/dict_type",
+      "traceback": "Traceback (most recent call last):\n  File \"/home/madhav/ext-madhav/tau-bench/tau_bench/run.py\", line 128, in _run\n    result = EnvRunResult(\n             ^^^^^^^^^^^^^\n  File \"/home/madhav/miniconda3/envs/tau/lib/python3.11/site-packages/pydantic/main.py\", line 250, in __init__\n    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\npydantic_core._pydantic_core.ValidationError: 1 validation error for EnvRunResult\nrecords\n  Input should be a valid dictionary [type=dict_type, input_value=None, input_type=NoneType]\n    For further information visit https://errors.pydantic.dev/2.12/v/dict_type\n"
+    },
+    "traj": [],
+    "trial": 3,
+    "records": {}
+  },
+  {
+    "task_id": 4,
+    "reward": 0.0,
+    "info": {
+      "error": "1 validation error for EnvRunResult\nrecords\n  Input should be a valid dictionary [type=dict_type, input_value=None, input_type=NoneType]\n    For further information visit https://errors.pydantic.dev/2.12/v/dict_type",
+      "traceback": "Traceback (most recent call last):\n  File \"/home/madhav/ext-madhav/tau-bench/tau_bench/run.py\", line 128, in _run\n    result = EnvRunResult(\n             ^^^^^^^^^^^^^\n  File \"/home/madhav/miniconda3/envs/tau/lib/python3.11/site-packages/pydantic/main.py\", line 250, in __init__\n    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\npydantic_core._pydantic_core.ValidationError: 1 validation error for EnvRunResult\nrecords\n  Input should be a valid dictionary [type=dict_type, input_value=None, input_type=NoneType]\n    For further information visit https://errors.pydantic.dev/2.12/v/dict_type\n"
+    },
+    "traj": [],
+    "trial": 4,
+    "records": {}
+  },
+  {
+    "task_id": 5,
+    "reward": 0.0,
+    "info": {
+      "error": "1 validation error for EnvRunResult\nrecords\n  Input should be a valid dictionary [type=dict_type, input_value=None, input_type=NoneType]\n    For further information visit https://errors.pydantic.dev/2.12/v/dict_type",
+      "traceback": "Traceback (most recent call last):\n  File \"/home/madhav/ext-madhav/tau-bench/tau_bench/run.py\", line 128, in _run\n    result = EnvRunResult(\n             ^^^^^^^^^^^^^\n  File \"/home/madhav/miniconda3/envs/tau/lib/python3.11/site-packages/pydantic/main.py\", line 250, in __init__\n    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\npydantic_core._pydantic_core.ValidationError: 1 validation error for EnvRunResult\nrecords\n  Input should be a valid dictionary [type=dict_type, input_value=None, input_type=NoneType]\n    For further information visit https://errors.pydantic.dev/2.12/v/dict_type\n"
+    },
+    "traj": [],
+    "trial": 5,
+    "records": {}
+  },
+  {
+    "task_id": 6,
+    "reward": 0.0,
+    "info": {
+      "error": "1 validation error for EnvRunResult\nrecords\n  Input should be a valid dictionary [type=dict_type, input_value=None, input_type=NoneType]\n    For further information visit https://errors.pydantic.dev/2.12/v/dict_type",
+      "traceback": "Traceback (most recent call last):\n  File \"/home/madhav/ext-madhav/tau-bench/tau_bench/run.py\", line 128, in _run\n    result = EnvRunResult(\n             ^^^^^^^^^^^^^\n  File \"/home/madhav/miniconda3/envs/tau/lib/python3.11/site-packages/pydantic/main.py\", line 250, in __init__\n    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\npydantic_core._pydantic_core.ValidationError: 1 validation error for EnvRunResult\nrecords\n  Input should be a valid dictionary [type=dict_type, input_value=None, input_type=NoneType]\n    For further information visit https://errors.pydantic.dev/2.12/v/dict_type\n"
+    },
+    "traj": [],
+    "trial": 6,
+    "records": {}
+  },
+  {
+    "task_id": 7,
+    "reward": 0.0,
+    "info": {
+      "error": "1 validation error for EnvRunResult\nrecords\n  Input should be a valid dictionary [type=dict_type, input_value=None, input_type=NoneType]\n    For further information visit https://errors.pydantic.dev/2.12/v/dict_type",
+      "traceback": "Traceback (most recent call last):\n  File \"/home/madhav/ext-madhav/tau-bench/tau_bench/run.py\", line 128, in _run\n    result = EnvRunResult(\n             ^^^^^^^^^^^^^\n  File \"/home/madhav/miniconda3/envs/tau/lib/python3.11/site-packages/pydantic/main.py\", line 250, in __init__\n    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\npydantic_core._pydantic_core.ValidationError: 1 validation error for EnvRunResult\nrecords\n  Input should be a valid dictionary [type=dict_type, input_value=None, input_type=NoneType]\n    For further information visit https://errors.pydantic.dev/2.12/v/dict_type\n"
+    },
+    "traj": [],
+    "trial": 7,
+    "records": {}
+  },
+  {
+    "task_id": 8,
+    "reward": 0.0,
+    "info": {
+      "error": "1 validation error for EnvRunResult\nrecords\n  Input should be a valid dictionary [type=dict_type, input_value=None, input_type=NoneType]\n    For further information visit https://errors.pydantic.dev/2.12/v/dict_type",
+      "traceback": "Traceback (most recent call last):\n  File \"/home/madhav/ext-madhav/tau-bench/tau_bench/run.py\", line 128, in _run\n    result = EnvRunResult(\n             ^^^^^^^^^^^^^\n  File \"/home/madhav/miniconda3/envs/tau/lib/python3.11/site-packages/pydantic/main.py\", line 250, in __init__\n    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\npydantic_core._pydantic_core.ValidationError: 1 validation error for EnvRunResult\nrecords\n  Input should be a valid dictionary [type=dict_type, input_value=None, input_type=NoneType]\n    For further information visit https://errors.pydantic.dev/2.12/v/dict_type\n"
+    },
+    "traj": [],
+    "trial": 8,
+    "records": {}
+  },
+  {
+    "task_id": 9,
+    "reward": 0.0,
+    "info": {
+      "error": "1 validation error for EnvRunResult\nrecords\n  Input should be a valid dictionary [type=dict_type, input_value=None, input_type=NoneType]\n    For further information visit https://errors.pydantic.dev/2.12/v/dict_type",
+      "traceback": "Traceback (most recent call last):\n  File \"/home/madhav/ext-madhav/tau-bench/tau_bench/run.py\", line 128, in _run\n    result = EnvRunResult(\n             ^^^^^^^^^^^^^\n  File \"/home/madhav/miniconda3/envs/tau/lib/python3.11/site-packages/pydantic/main.py\", line 250, in __init__\n    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\npydantic_core._pydantic_core.ValidationError: 1 validation error for EnvRunResult\nrecords\n  Input should be a valid dictionary [type=dict_type, input_value=None, input_type=NoneType]\n    For further information visit https://errors.pydantic.dev/2.12/v/dict_type\n"
+    },
+    "traj": [],
+    "trial": 9,
+    "records": {}
+  },
+  {
+    "task_id": 10,
+    "reward": 0.0,
+    "info": {
+      "error": "1 validation error for EnvRunResult\nrecords\n  Input should be a valid dictionary [type=dict_type, input_value=None, input_type=NoneType]\n    For further information visit https://errors.pydantic.dev/2.12/v/dict_type",
+      "traceback": "Traceback (most recent call last):\n  File \"/home/madhav/ext-madhav/tau-bench/tau_bench/run.py\", line 128, in _run\n    result = EnvRunResult(\n             ^^^^^^^^^^^^^\n  File \"/home/madhav/miniconda3/envs/tau/lib/python3.11/site-packages/pydantic/main.py\", line 250, in __init__\n    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\npydantic_core._pydantic_core.ValidationError: 1 validation error for EnvRunResult\nrecords\n  Input should be a valid dictionary [type=dict_type, input_value=None, input_type=NoneType]\n    For further information visit https://errors.pydantic.dev/2.12/v/dict_type\n"
+    },
+    "traj": [],
+    "trial": 10,
+    "records": {}
+  },
+  {
+    "task_id": 11,
+    "reward": 0.0,
+    "info": {
+      "error": "1 validation error for EnvRunResult\nrecords\n  Input should be a valid dictionary [type=dict_type, input_value=None, input_type=NoneType]\n    For further information visit https://errors.pydantic.dev/2.12/v/dict_type",
+      "traceback": "Traceback (most recent call last):\n  File \"/home/madhav/ext-madhav/tau-bench/tau_bench/run.py\", line 128, in _run\n    result = EnvRunResult(\n             ^^^^^^^^^^^^^\n  File \"/home/madhav/miniconda3/envs/tau/lib/python3.11/site-packages/pydantic/main.py\", line 250, in __init__\n    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\npydantic_core._pydantic_core.ValidationError: 1 validation error for EnvRunResult\nrecords\n  Input should be a valid dictionary [type=dict_type, input_value=None, input_type=NoneType]\n    For further information visit https://errors.pydantic.dev/2.12/v/dict_type\n"
+    },
+    "traj": [],
+    "trial": 11,
+    "records": {}
+  },
+  {
+    "task_id": 12,
+    "reward": 0.0,
+    "info": {
+      "error": "1 validation error for EnvRunResult\nrecords\n  Input should be a valid dictionary [type=dict_type, input_value=None, input_type=NoneType]\n    For further information visit https://errors.pydantic.dev/2.12/v/dict_type",
+      "traceback": "Traceback (most recent call last):\n  File \"/home/madhav/ext-madhav/tau-bench/tau_bench/run.py\", line 128, in _run\n    result = EnvRunResult(\n             ^^^^^^^^^^^^^\n  File \"/home/madhav/miniconda3/envs/tau/lib/python3.11/site-packages/pydantic/main.py\", line 250, in __init__\n    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\npydantic_core._pydantic_core.ValidationError: 1 validation error for EnvRunResult\nrecords\n  Input should be a valid dictionary [type=dict_type, input_value=None, input_type=NoneType]\n    For further information visit https://errors.pydantic.dev/2.12/v/dict_type\n"
+    },
+    "traj": [],
+    "trial": 12,
+    "records": {}
+  },
+  {
+    "task_id": 13,
+    "reward": 0.0,
+    "info": {
+      "error": "1 validation error for EnvRunResult\nrecords\n  Input should be a valid dictionary [type=dict_type, input_value=None, input_type=NoneType]\n    For further information visit https://errors.pydantic.dev/2.12/v/dict_type",
+      "traceback": "Traceback (most recent call last):\n  File \"/home/madhav/ext-madhav/tau-bench/tau_bench/run.py\", line 128, in _run\n    result = EnvRunResult(\n             ^^^^^^^^^^^^^\n  File \"/home/madhav/miniconda3/envs/tau/lib/python3.11/site-packages/pydantic/main.py\", line 250, in __init__\n    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\npydantic_core._pydantic_core.ValidationError: 1 validation error for EnvRunResult\nrecords\n  Input should be a valid dictionary [type=dict_type, input_value=None, input_type=NoneType]\n    For further information visit https://errors.pydantic.dev/2.12/v/dict_type\n"
+    },
+    "traj": [],
+    "trial": 13,
+    "records": {}
+  },
+  {
+    "task_id": 14,
+    "reward": 0.0,
+    "info": {
+      "error": "1 validation error for EnvRunResult\nrecords\n  Input should be a valid dictionary [type=dict_type, input_value=None, input_type=NoneType]\n    For further information visit https://errors.pydantic.dev/2.12/v/dict_type",
+      "traceback": "Traceback (most recent call last):\n  File \"/home/madhav/ext-madhav/tau-bench/tau_bench/run.py\", line 128, in _run\n    result = EnvRunResult(\n             ^^^^^^^^^^^^^\n  File \"/home/madhav/miniconda3/envs/tau/lib/python3.11/site-packages/pydantic/main.py\", line 250, in __init__\n    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\npydantic_core._pydantic_core.ValidationError: 1 validation error for EnvRunResult\nrecords\n  Input should be a valid dictionary [type=dict_type, input_value=None, input_type=NoneType]\n    For further information visit https://errors.pydantic.dev/2.12/v/dict_type\n"
+    },
+    "traj": [],
+    "trial": 14,
+    "records": {}
+  },
+  {
+    "task_id": 15,
+    "reward": 0.0,
+    "info": {
+      "error": "1 validation error for EnvRunResult\nrecords\n  Input should be a valid dictionary [type=dict_type, input_value=None, input_type=NoneType]\n    For further information visit https://errors.pydantic.dev/2.12/v/dict_type",
+      "traceback": "Traceback (most recent call last):\n  File \"/home/madhav/ext-madhav/tau-bench/tau_bench/run.py\", line 128, in _run\n    result = EnvRunResult(\n             ^^^^^^^^^^^^^\n  File \"/home/madhav/miniconda3/envs/tau/lib/python3.11/site-packages/pydantic/main.py\", line 250, in __init__\n    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\npydantic_core._pydantic_core.ValidationError: 1 validation error for EnvRunResult\nrecords\n  Input should be a valid dictionary [type=dict_type, input_value=None, input_type=NoneType]\n    For further information visit https://errors.pydantic.dev/2.12/v/dict_type\n"
+    },
+    "traj": [],
+    "trial": 15,
+    "records": {}
+  },
+  {
+    "task_id": 16,
+    "reward": 0.0,
+    "info": {
+      "error": "1 validation error for EnvRunResult\nrecords\n  Input should be a valid dictionary [type=dict_type, input_value=None, input_type=NoneType]\n    For further information visit https://errors.pydantic.dev/2.12/v/dict_type",
+      "traceback": "Traceback (most recent call last):\n  File \"/home/madhav/ext-madhav/tau-bench/tau_bench/run.py\", line 128, in _run\n    result = EnvRunResult(\n             ^^^^^^^^^^^^^\n  File \"/home/madhav/miniconda3/envs/tau/lib/python3.11/site-packages/pydantic/main.py\", line 250, in __init__\n    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\npydantic_core._pydantic_core.ValidationError: 1 validation error for EnvRunResult\nrecords\n  Input should be a valid dictionary [type=dict_type, input_value=None, input_type=NoneType]\n    For further information visit https://errors.pydantic.dev/2.12/v/dict_type\n"
+    },
+    "traj": [],
+    "trial": 16,
+    "records": {}
+  },
+  {
+    "task_id": 17,
+    "reward": 0.0,
+    "info": {
+      "error": "1 validation error for EnvRunResult\nrecords\n  Input should be a valid dictionary [type=dict_type, input_value=None, input_type=NoneType]\n    For further information visit https://errors.pydantic.dev/2.12/v/dict_type",
+      "traceback": "Traceback (most recent call last):\n  File \"/home/madhav/ext-madhav/tau-bench/tau_bench/run.py\", line 128, in _run\n    result = EnvRunResult(\n             ^^^^^^^^^^^^^\n  File \"/home/madhav/miniconda3/envs/tau/lib/python3.11/site-packages/pydantic/main.py\", line 250, in __init__\n    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\npydantic_core._pydantic_core.ValidationError: 1 validation error for EnvRunResult\nrecords\n  Input should be a valid dictionary [type=dict_type, input_value=None, input_type=NoneType]\n    For further information visit https://errors.pydantic.dev/2.12/v/dict_type\n"
+    },
+    "traj": [],
+    "trial": 17,
+    "records": {}
+  },
+  {
+    "task_id": 18,
+    "reward": 0.0,
+    "info": {
+      "error": "1 validation error for EnvRunResult\nrecords\n  Input should be a valid dictionary [type=dict_type, input_value=None, input_type=NoneType]\n    For further information visit https://errors.pydantic.dev/2.12/v/dict_type",
+      "traceback": "Traceback (most recent call last):\n  File \"/home/madhav/ext-madhav/tau-bench/tau_bench/run.py\", line 128, in _run\n    result = EnvRunResult(\n             ^^^^^^^^^^^^^\n  File \"/home/madhav/miniconda3/envs/tau/lib/python3.11/site-packages/pydantic/main.py\", line 250, in __init__\n    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\npydantic_core._pydantic_core.ValidationError: 1 validation error for EnvRunResult\nrecords\n  Input should be a valid dictionary [type=dict_type, input_value=None, input_type=NoneType]\n    For further information visit https://errors.pydantic.dev/2.12/v/dict_type\n"
+    },
+    "traj": [],
+    "trial": 18,
+    "records": {}
+  }
+]

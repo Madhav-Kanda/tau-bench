@@ -37,3 +37,53 @@ To run a range of tasks, use the `--start-index` and `--end-index` flags. For ex
 python run.py --agent-strategy <agent-name> --env retail --model none --model-provider openai --user-model none --user-model-provider openai --user-strategy llm --max-concurrency 10 --start-index 10 --end-index 100
 ```
 
+## New commands (Tau Bench Running with VLLM Server)
+
+VLLM Server Starting:
+
+```python
+
+python -m vllm.entrypoints.openai.api_server \
+  --model Qwen/Qwen2.5-7B-Instruct \
+  --host 0.0.0.0 --port 8000 \
+  --max-model-len 32768 \
+  --gpu-memory-utilization 0.95 \
+  --trust-remote-code \
+  --tool-call-parser qwen2 \
+  --enable-auto-tool-choice
+
+  ```
+
+Tau-Bench Running:
+
+```python
+
+export OPENAI_API_BASE=http://localhost:8000/v1
+export OPENAI_API_KEY=sk-local
+export VLLM_ENABLE_AUTO_TOOL_CHOICE=1
+
+
+python run.py \
+  --model-provider openai \
+  --model Qwen/Qwen2.5-7B-Instruct \
+  --user-model Qwen/Qwen2.5-7B-Instruct \
+  --user-model-provider openai \
+  --agent-strategy tool-calling \
+  --env airline \
+  --num-trials 1 \
+  --task-split test \
+  --temperature 0.1
+```
+
+
+## Library Learning
+
+```python
+export OPENAI_API_BASE=http://localhost:8000/v1
+export OPENAI_API_KEY=sk-local
+
+export LIBGEN_AGENT_MODEL=deepseek-ai/deepseek-coder-1.3b-instruct
+export LIBGEN_USER_MODEL=$LIBGEN_AGENT_MODEL
+
+python libgen_experiment.py
+```
