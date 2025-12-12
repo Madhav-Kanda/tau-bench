@@ -38,3 +38,4 @@
 [2025-12-12 08:05:27] Iteration 5
 [2025-12-12 08:05:27] Running generation phase
 [2025-12-12 08:05:27] Generation iteration 1
+[2025-12-12 13:40:11] Detected latest results file: results/airline/tool-calling-Qwen2.5-7B-Instruct-0.1_range_0--1_user-Qwen2.5-7B-Instruct-llm_1205034445.json
