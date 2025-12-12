@@ -1,0 +1,40 @@
+[2025-12-12 07:52:11] Detected latest results file: results/airline/tool-calling-Qwen2.5-7B-Instruct-0.1_range_0--1_user-Qwen2.5-7B-Instruct-llm_1205034445.json
+[2025-12-12 07:52:11] Iteration 1
+[2025-12-12 07:52:11] Running generation phase
+[2025-12-12 07:52:11] Generation iteration 1
+[2025-12-12 07:53:28] Failed to generate a valid function definition.
+[2025-12-12 07:53:28] Generation iteration 2
+[2025-12-12 07:54:37] Failed to generate a valid function definition.
+[2025-12-12 07:54:37] Generation iteration 3
+[2025-12-12 07:55:55] Failed to generate a valid function definition.
+[2025-12-12 07:55:55] Generation produced no valid functions; continuing to next iteration
+[2025-12-12 07:55:55] Iteration 2
+[2025-12-12 07:55:55] Running generation phase
+[2025-12-12 07:55:55] Generation iteration 1
+[2025-12-12 07:56:52] Failed to generate a valid function definition.
+[2025-12-12 07:56:52] Generation iteration 2
+[2025-12-12 07:57:42] Failed to generate a valid function definition.
+[2025-12-12 07:57:42] Generation iteration 3
+[2025-12-12 07:58:26] Failed to generate a valid function definition.
+[2025-12-12 07:58:26] Generation produced no valid functions; continuing to next iteration
+[2025-12-12 07:58:26] Iteration 3
+[2025-12-12 07:58:26] Running generation phase
+[2025-12-12 07:58:26] Generation iteration 1
+[2025-12-12 07:59:43] Failed to generate a valid function definition.
+[2025-12-12 07:59:43] Generation iteration 2
+[2025-12-12 08:01:00] Failed to generate a valid function definition.
+[2025-12-12 08:01:00] Generation iteration 3
+[2025-12-12 08:02:10] Failed to generate a valid function definition.
+[2025-12-12 08:02:10] Generation produced no valid functions; continuing to next iteration
+[2025-12-12 08:02:10] Iteration 4
+[2025-12-12 08:02:10] Running generation phase
+[2025-12-12 08:02:10] Generation iteration 1
+[2025-12-12 08:03:24] Failed to generate a valid function definition.
+[2025-12-12 08:03:24] Generation iteration 2
+[2025-12-12 08:04:01] Failed to generate a valid function definition.
+[2025-12-12 08:04:01] Generation iteration 3
+[2025-12-12 08:05:27] Failed to generate a valid function definition.
+[2025-12-12 08:05:27] Generation produced no valid functions; continuing to next iteration
+[2025-12-12 08:05:27] Iteration 5
+[2025-12-12 08:05:27] Running generation phase
+[2025-12-12 08:05:27] Generation iteration 1

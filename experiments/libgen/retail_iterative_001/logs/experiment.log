@@ -1,0 +1,36 @@
+[2025-12-11 13:18:06] Detected latest results file: results/tool-calling-deepseek-coder-1.3b-instruct-0.1_range_0--1_user-deepseek-coder-1.3b-instruct-llm_1207070713.json
+[2025-12-11 14:09:13] Detected latest results file: results/tool-calling-deepseek-coder-1.3b-instruct-0.1_range_0--1_user-deepseek-coder-1.3b-instruct-llm_1207070713.json
+[2025-12-11 14:13:18] Detected latest results file: results/tool-calling-deepseek-coder-1.3b-instruct-0.1_range_0--1_user-deepseek-coder-1.3b-instruct-llm_1207070713.json
+[2025-12-11 14:13:18] Iteration 1
+[2025-12-11 14:13:18] Running generation phase
+[2025-12-11 14:13:18] Generation iteration 1
+[2025-12-11 14:13:56] Failed to generate a valid function definition.
+[2025-12-11 14:13:56] Generation iteration 2
+[2025-12-11 14:14:31] Failed to generate a valid function definition.
+[2025-12-11 14:14:31] Generation iteration 3
+[2025-12-11 14:15:09] Failed to generate a valid function definition.
+[2025-12-11 14:15:09] Generation produced no valid functions; continuing to next iteration
+[2025-12-11 14:15:09] Iteration 2
+[2025-12-11 14:15:09] No more train tasks to process in generation phase.
+[2025-12-11 14:15:09] Running test phase
+[2025-12-11 14:20:30] Detected latest results file: results/tool-calling-deepseek-coder-1.3b-instruct-0.1_range_0--1_user-deepseek-coder-1.3b-instruct-llm_1207070713.json
+[2025-12-11 14:20:30] Iteration 1
+[2025-12-11 14:20:30] Running generation phase
+[2025-12-11 14:20:30] Generation iteration 1
+[2025-12-11 14:21:02] Failed to generate a valid function definition.
+[2025-12-11 14:21:02] Generation iteration 2
+[2025-12-11 14:21:33] Failed to generate a valid function definition.
+[2025-12-11 14:21:33] Generation iteration 3
+[2025-12-11 14:22:05] Failed to generate a valid function definition.
+[2025-12-11 14:22:05] Generation produced no valid functions; continuing to next iteration
+[2025-12-11 14:22:05] Iteration 2
+[2025-12-11 14:22:05] No more train tasks to process in generation phase.
+[2025-12-11 14:22:05] Running test phase
+[2025-12-12 07:28:30] Detected latest results file: results/tool-calling-Qwen2.5-7B-Instruct-0.1_range_0--1_user-Qwen2.5-7B-Instruct-llm_1211143257.json
+[2025-12-12 07:28:30] Iteration 1
+[2025-12-12 07:28:30] Running generation phase
+[2025-12-12 07:28:30] Generation iteration 1
+[2025-12-12 07:32:47] Detected latest results file: results/tool-calling-Qwen2.5-7B-Instruct-0.1_range_0--1_user-Qwen2.5-7B-Instruct-llm_1211143257.json
+[2025-12-12 07:32:47] Iteration 1
+[2025-12-12 07:32:47] Running generation phase
+[2025-12-12 07:32:47] Generation iteration 1
