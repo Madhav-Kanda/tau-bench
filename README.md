@@ -37,9 +37,13 @@ To run a range of tasks, use the `--start-index` and `--end-index` flags. For ex
 python run.py --agent-strategy <agent-name> --env retail --model none --model-provider openai --user-model none --user-model-provider openai --user-strategy llm --max-concurrency 10 --start-index 10 --end-index 100
 ```
 
-## New commands (Tau Bench Running with VLLM Server)
+## Tau Bench Running
 
-VLLM Server Starting:
+TRAPI is prioritized for LibGen (function suggestion/definition/correction). Tau Bench can run either:
+- via TRAPI (no OpenAI-compatible base URL set; providers set to `azure`)
+- via OpenAI-compatible endpoints (e.g., vLLM) when `OPENAI_API_BASE` is present
+
+### OpenAI-compatible (vLLM) Server Starting:
 
 ```python
 
@@ -54,7 +58,7 @@ python -m vllm.entrypoints.openai.api_server \
 
   ```
 
-Tau-Bench Running:
+### Tau Bench Running (OpenAI-compatible):
 
 ```python
 
@@ -75,15 +79,68 @@ python run.py \
   --temperature 0.1
 ```
 
+### Tau Bench Running (TRAPI):
+
+```bash
+az login
+unset OPENAI_API_BASE
+unset VLLM_BASE_URL
+
+python run.py \
+  --agent-strategy tool-calling \
+  --env airline \
+  --model gpt-4o \
+  --model-provider azure \
+  --user-model gpt-4o \
+  --user-model-provider azure \
+  --user-strategy llm \
+  --num-trials 1 \
+  --task-split test \
+  --temperature 0.1
+```
+
+Notes:
+- Ensure `OPENAI_API_BASE` is unset so requests route through TRAPI.
 
 ## Library Learning
+Preferred (TRAPI) setup for LibGen:
 
-```python
+1) Ensure your config points to the correct MCP server (absolute path recommended). 
+
+Key fields to verify for airline:
+- `"env": "airline"`
+- `"library.base_library_path": "mcp/airline_server.py"`
+- `"input_tasks.mode": "latest_for_env"` or `"base_library"`
+- Leave `"agent.model"` and `"agent.user_model"` as `null` to use env vars
+
+2) Use TRAPI for LibGen (function suggestion/definition/correction):
+
+```bash
+az login
+export LIBGEN_PROVIDER=azure_trapi
+unset OPENAI_API_BASE
+unset VLLM_BASE_URL
+# optional: export DEFAULT_IDENTITY_CLIENT_ID=<your-identity-client-id>
+# optional TRAPI model selection:
+# export LIBGEN_AGENT_MODEL=gpt-4.1
+# export LIBGEN_USER_MODEL=$LIBGEN_AGENT_MODEL
+
+python libgen_experiment.py \
+  --config configs/libgen/airline.json
+```
+
+Alternative (OpenAI-compatible vLLM) setup for LibGen:
+
+```bash
 export OPENAI_API_BASE=http://localhost:8000/v1
 export OPENAI_API_KEY=sk-local
-
-export LIBGEN_AGENT_MODEL=deepseek-ai/deepseek-coder-1.3b-instruct
+export LIBGEN_AGENT_MODEL=meta-llama/Meta-Llama-3.1-8B-Instruct
 export LIBGEN_USER_MODEL=$LIBGEN_AGENT_MODEL
 
-python libgen_experiment.py
+python libgen_experiment.py \
+  --config configs/libgen/airline.json
 ```
+
+Notes:
+- If `OPENAI_API_BASE` is set in the shell, LibGen calls will route to your OpenAI-compatible endpoint instead of TRAPI.
+- To run TRAPI for LibGen and vLLM for env in the same process, a small code change is needed to force TRAPI regardless of `OPENAI_API_BASE`.
