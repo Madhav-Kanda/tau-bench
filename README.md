@@ -67,42 +67,6 @@ Notes:
 - Ensure `OPENAI_API_BASE` is unset so requests route through TRAPI.
 
 
-### OpenAI-compatible (vLLM) Server Starting:
-
-```python
-
-python -m vllm.entrypoints.openai.api_server \
-  --model Qwen/Qwen2.5-7B-Instruct \
-  --host 0.0.0.0 --port 8000 \
-  --max-model-len 32768 \
-  --gpu-memory-utilization 0.95 \
-  --trust-remote-code \
-  --tool-call-parser qwen2 \
-  --enable-auto-tool-choice
-
-  ```
-
-### Tau Bench Running (OpenAI-compatible):
-
-```python
-
-export OPENAI_API_BASE=http://localhost:8000/v1
-export OPENAI_API_KEY=sk-local
-export VLLM_ENABLE_AUTO_TOOL_CHOICE=1
-
-
-python run.py \
-  --model-provider openai \
-  --model Qwen/Qwen2.5-7B-Instruct \
-  --user-model Qwen/Qwen2.5-7B-Instruct \
-  --user-model-provider openai \
-  --agent-strategy tool-calling \
-  --env airline \
-  --num-trials 1 \
-  --task-split test \
-  --temperature 0.1
-```
-
 
 ## Library Learning
 Preferred (TRAPI) setup for LibGen:
@@ -126,18 +90,6 @@ unset VLLM_BASE_URL
 # optional TRAPI model selection:
 # export LIBGEN_AGENT_MODEL=gpt-4.1
 # export LIBGEN_USER_MODEL=$LIBGEN_AGENT_MODEL
-
-python libgen_experiment.py \
-  --config configs/libgen/airline.json
-```
-
-Alternative (OpenAI-compatible vLLM) setup for LibGen:
-
-```bash
-export OPENAI_API_BASE=http://localhost:8000/v1
-export OPENAI_API_KEY=sk-local
-export LIBGEN_AGENT_MODEL=meta-llama/Meta-Llama-3.1-8B-Instruct
-export LIBGEN_USER_MODEL=$LIBGEN_AGENT_MODEL
 
 python libgen_experiment.py \
   --config configs/libgen/airline.json
