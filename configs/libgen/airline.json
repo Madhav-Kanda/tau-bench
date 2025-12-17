@@ -11,7 +11,7 @@
   "library": {
     "mode": "base_library",
     "explicit_path": null,
-    "base_library_path": "/home/madhav/ext-madhav/tau-bench/mcp/airline_server.py"
+    "base_library_path": "mcp/airline_server.py"
   },
   "splits": {
     "train_ids": [0, 40],

@@ -79,6 +79,9 @@ Key fields to verify for airline:
 - `"input_tasks.mode": "latest_for_env"` or `"base_library"`
 - Leave `"agent.model"` and `"agent.user_model"` as `null` to use env vars
 
+Important:
+- Change `"experiment_name"` in your config for each new run. The runner writes to `experiments/libgen/<experiment_name>/`. Reusing the same name will overwrite prior results in that folder.
+
 2) Use TRAPI for LibGen (function suggestion/definition/correction):
 
 ```bash
