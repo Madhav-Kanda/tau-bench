@@ -41,15 +41,21 @@ def run(config: RunConfig) -> List[EnvRunResult]:
 
     random.seed(config.seed)
     time_str = datetime.now().strftime("%m%d%H%M%S")
-    if config.ckpt_path == "":  
+    # Derive env-specific log directory: results/<env> by default
+    base_log_dir = config.log_dir or "results"
+    env_name = config.env
+    # Avoid double-appending if user already provided results/<env>
+    final_log_dir = base_log_dir if os.path.basename(os.path.normpath(base_log_dir)) == env_name else os.path.join(base_log_dir, env_name)
+    if config.ckpt_path == "":
         # sanitize model names for filesystem paths (avoid '/')
         agent_model_name = config.model.split('/')[-1] if config.model else "model"
         user_model_name = config.user_model.split('/')[-1] if config.user_model else "user_model"
-        ckpt_path = f"{config.log_dir}/{config.agent_strategy}-{agent_model_name}-{config.temperature}_range_{config.start_index}-{config.end_index}_user-{user_model_name}-{config.user_strategy}_{time_str}.json"
+        ckpt_path = f"{final_log_dir}/{config.agent_strategy}-{agent_model_name}-{config.temperature}_range_{config.start_index}-{config.end_index}_user-{user_model_name}-{config.user_strategy}_{time_str}.json"
     else:
         ckpt_path = config.ckpt_path
-    if not os.path.exists(config.log_dir):
-        os.makedirs(config.log_dir)
+    target_dir = os.path.dirname(ckpt_path) if ckpt_path else final_log_dir
+    if not os.path.exists(target_dir):
+        os.makedirs(target_dir)
 
     print(f"Loading user with strategy: {config.user_strategy}")
     env = get_env(

@@ -41,10 +41,16 @@ scopes = ["api://trapi/.default"]
 # instance = "redmond/interactive/openai" #'gcr/shared/openai' # See https://aka.ms/trapi/models for the instance name
 # endpoint = f'https://trapi.research.microsoft.com/{instance}/deployments/'+deployment_name
 
-api_version = '2025-03-01-preview'  # Ensure this is a valid API version see: https://learn.microsoft.com/en-us/azure/ai-services/openai/api-version-deprecation#latest-ga-api-release
-model_name = 'gpt-4o'  # Ensure this is a valid model name
-model_version = '2024-11-20'  # Ensure this is a valid model version
-deployment_name = "gpt-4o_2024-11-20" #re.sub(r'[^a-zA-Z0-9-_]', '', f'{model_name}_{model_version}')  # If your Endpoint doesn't have harmonized deployment names, you can use the deployment name directly: see: https://aka.ms/trapi/models
+api_version_default = '2025-03-01-preview'  # https://learn.microsoft.com/en-us/azure/ai-services/openai/api-version-deprecation#latest-ga-api-release
+model_name_default = 'gpt-4o'  # default model
+model_version_default = '2024-11-20'  # default version
+deployment_name_default = "gpt-4o_2024-11-20"
+
+# Allow environment overrides for TRAPI selection
+api_version = os.environ.get("TRAPI_API_VERSION", api_version_default)
+model_name = os.environ.get("TRAPI_MODEL_NAME", model_name_default)
+model_version = os.environ.get("TRAPI_MODEL_VERSION", model_version_default)
+deployment_name = os.environ.get("TRAPI_DEPLOYMENT_NAME", deployment_name_default)
 
 
 
@@ -53,7 +59,16 @@ deployment_name = "gpt-4o_2024-11-20" #re.sub(r'[^a-zA-Z0-9-_]', '', f'{model_na
 # model_name = 'gpt-4.1'  # Ensure this is a valid model name
 # model_version = '2025-04-14'  # Ensure this is a valid model version
 # deployment_name = "gpt-4.1_2025-04-14" #re.sub(r'[^a-zA-Z0-9-_]', '', f'{model_name}_{model_version}')  # If your Endpoint doesn't have harmonized deployment names, you can use the deployment name directly: see: https://aka.ms/trapi/models
-instance = "redmond/interactive/openai" #'gcr/shared/openai' # See https://aka.ms/trapi/models for the instance name
+instance_default = "redmond/interactive/openai"  #'gcr/shared/openai' # See https://aka.ms/trapi/models for instances
+instance = os.environ.get("TRAPI_INSTANCE", instance_default)
+
+# If deployment name not explicitly set but model or version were overridden, derive sanitized deployment
+if ("TRAPI_DEPLOYMENT_NAME" not in os.environ) and (
+    ("TRAPI_MODEL_NAME" in os.environ) or ("TRAPI_MODEL_VERSION" in os.environ)
+):
+    derived = f"{model_name}_{model_version}"
+    deployment_name = re.sub(r'[^a-zA-Z0-9-_]', '', derived)
+
 endpoint = f'https://trapi.research.microsoft.com/{instance}/deployments/'+deployment_name
 
 client = ChatCompletionsClient(

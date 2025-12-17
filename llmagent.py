@@ -6,10 +6,10 @@ from azure.identity import DefaultAzureCredential, ChainedTokenCredential, Azure
 class LLMAgent:
     def __init__(
             self,
-            api_version = '2025-03-01-preview',  # Ensure this is a valid API version see: https://learn.microsoft.com/en-us/azure/ai-services/openai/api-version-deprecation#latest-ga-api-release
-            model_name = 'gpt-4.1',  # Ensure this is a valid model name
-            model_version = '2025-04-14',  # Ensure this is a valid model version
-            deployment_name = "gpt-4.1_2025-04-14", #re.sub(r'[^a-zA-Z0-9-_]', '', f'{model_name}_{model_version}')  # If your Endpoint doesn't have harmonized deployment names, you can use the deployment name directly: see: https://aka.ms/trapi/models
+            api_version = '2025-03-01-preview',  # https://learn.microsoft.com/en-us/azure/ai-services/openai/api-version-deprecation#latest-ga-api-release
+            model_name = 'gpt-4.1',
+            model_version = '2025-04-14',
+            deployment_name = "gpt-4.1_2025-04-14",
     ):
         
         # api_version = '2025-03-01-preview',  # Ensure this is a valid API version see: https://learn.microsoft.com/en-us/azure/ai-services/openai/api-version-deprecation#latest-ga-api-release
@@ -40,13 +40,20 @@ class LLMAgent:
         self.scopes = ["api://trapi/.default"]
 
         # Note: Check out the other model deployments here - https://dev.azure.com/msresearch/TRAPI/_wiki/wikis/TRAPI.wiki/15124/Deployment-Model-Information
-        self.api_version = api_version
+        # Allow env overrides for TRAPI selection used in LibGen
+        self.api_version = os.environ.get("TRAPI_API_VERSION", api_version)
         # Allow overriding model from environment to support local OSS models
         env_model = os.environ.get("LIBGEN_AGENT_MODEL") or os.environ.get("OPENAI_MODEL") or os.environ.get("LIBGEN_MODEL")
-        self.model_name = env_model if env_model else model_name
-        self.model_version = model_version
-        self.deployment_name = deployment_name
-        self.instance = "redmond/interactive/openai" #'gcr/shared/openai' # See https://aka.ms/trapi/models for the instance name
+        self.model_name = env_model if env_model else os.environ.get("TRAPI_MODEL_NAME", model_name)
+        self.model_version = os.environ.get("TRAPI_MODEL_VERSION", model_version)
+        self.deployment_name = os.environ.get("TRAPI_DEPLOYMENT_NAME", deployment_name)
+        self.instance = os.environ.get("TRAPI_INSTANCE", "redmond/interactive/openai") #'gcr/shared/openai'
+        # If deployment not explicitly set but model/version overridden, derive a sanitized name
+        if ("TRAPI_DEPLOYMENT_NAME" not in os.environ) and (
+            ("TRAPI_MODEL_NAME" in os.environ) or ("TRAPI_MODEL_VERSION" in os.environ)
+        ):
+            import re as _re
+            self.deployment_name = _re.sub(r'[^a-zA-Z0-9-_]', '', f"{self.model_name}_{self.model_version}")
         self.endpoint = f'https://trapi.research.microsoft.com/{self.instance}/deployments/'+self.deployment_name
 
         self.llm_client = ChatCompletionsClient(

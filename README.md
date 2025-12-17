@@ -50,12 +50,19 @@ az login
 unset OPENAI_API_BASE
 unset VLLM_BASE_URL
 
+# TRAPI selection (deployment/model) via environment (authoritative for TRAPI)
+export TRAPI_API_VERSION=2025-03-01-preview
+export TRAPI_INSTANCE=redmond/interactive/openai
+export TRAPI_MODEL_NAME=gpt-4o
+export TRAPI_MODEL_VERSION=2024-11-20
+export TRAPI_DEPLOYMENT_NAME=gpt-4o_2024-11-20
+
 python run.py \
   --agent-strategy tool-calling \
   --env airline \
-  --model gpt-4o \
+  --model $TRAPI_MODEL_NAME \
   --model-provider azure \
-  --user-model gpt-4o \
+  --user-model $TRAPI_MODEL_NAME \
   --user-model-provider azure \
   --user-strategy llm \
   --num-trials 1 \
@@ -65,6 +72,7 @@ python run.py \
 
 Notes:
 - Ensure `OPENAI_API_BASE` is unset so requests route through TRAPI.
+ - TRAPI selection is controlled by the environment variables above (api version, instance, model name/version, deployment name). The `--model/--user-model` flags are forwarded but do not change the TRAPI deployment.
 
 
 
@@ -90,8 +98,13 @@ export LIBGEN_PROVIDER=azure_trapi
 unset OPENAI_API_BASE
 unset VLLM_BASE_URL
 # optional: export DEFAULT_IDENTITY_CLIENT_ID=<your-identity-client-id>
-# optional TRAPI model selection:
-export LIBGEN_AGENT_MODEL=gpt-4.1
+# TRAPI selection for LibGen (deployment/model) via environment (authoritative for TRAPI)
+export TRAPI_API_VERSION=2025-03-01-preview
+export TRAPI_INSTANCE=redmond/interactive/openai
+export TRAPI_MODEL_NAME=gpt-4.1
+export TRAPI_MODEL_VERSION=2025-04-14
+export TRAPI_DEPLOYMENT_NAME=gpt-4.1_2025-04-14
+export LIBGEN_AGENT_MODEL=$TRAPI_MODEL_NAME
 export LIBGEN_USER_MODEL=$LIBGEN_AGENT_MODEL
 
 python libgen_experiment.py \
@@ -101,3 +114,5 @@ python libgen_experiment.py \
 Notes:
 - If `OPENAI_API_BASE` is set in the shell, LibGen calls will route to your OpenAI-compatible endpoint instead of TRAPI.
 - To run TRAPI for LibGen and vLLM for env in the same process, a small code change is needed to force TRAPI regardless of `OPENAI_API_BASE`.
+ - TRAPI selection for LibGen is controlled by the same environment variables:
+   - `TRAPI_API_VERSION`, `TRAPI_INSTANCE`, `TRAPI_MODEL_NAME`, `TRAPI_MODEL_VERSION`, `TRAPI_DEPLOYMENT_NAME`
