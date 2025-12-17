@@ -16,10 +16,6 @@ pip install -e .
 
 ## Tau Bench Running
 
-TRAPI is prioritized for LibGen (function suggestion/definition/correction). Tau Bench can run either:
-- via TRAPI (no OpenAI-compatible base URL set; providers set to `azure`)
-- via OpenAI-compatible endpoints (e.g., vLLM) when `OPENAI_API_BASE` is present
-
 ### Tau Bench Running (TRAPI):
 
 ```bash
@@ -43,10 +39,7 @@ python run.py \
 Notes:
 - Ensure `OPENAI_API_BASE` is unset so requests route through TRAPI.
 
-
-
 ## Library Learning
-Preferred (TRAPI) setup for LibGen:
 
 1) Ensure your configs file [configs/libgen/airline.json] points to the correct MCP server (absolute path recommended). 
 
