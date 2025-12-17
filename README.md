@@ -14,34 +14,7 @@ git clone https://github.com/avaljotsingh/tau-bench.git && cd ./tau-bench
 pip install -e .
 ```
 
-
-## Run
-
-In the following commands, the agent-name can be one of the following: 
-1. Original tau bench baseline: tool-calling 
-2. Tool calling with preconditions in the form of advice: tool-calling-with-preconditions 
-3. Tool calling with preconditions in the form of advice and python code generation: tool-calling-with-preconditions-and-python 
-4. Symbolic multi-agent system: orchestrator 
-5. With pre and post conditions: assertions-agent 
-
-
-To run specific tasks, use the `--task-ids` flag. For example:
-
-```bash
-python run.py --agent-strategy <agent-name> --env retail --model none --model-provider openai --user-model none --user-model-provider openai --user-strategy llm --max-concurrency 10 --task-ids 1
-```
-
-To run a range of tasks, use the `--start-index` and `--end-index` flags. For example:
- 
-```bash
-python run.py --agent-strategy <agent-name> --env retail --model none --model-provider openai --user-model none --user-model-provider openai --user-strategy llm --max-concurrency 10 --start-index 10 --end-index 100
-```
-
 ## Tau Bench Running
-
-TRAPI is prioritized for LibGen (function suggestion/definition/correction). Tau Bench can run either:
-- via TRAPI (no OpenAI-compatible base URL set; providers set to `azure`)
-- via OpenAI-compatible endpoints (e.g., vLLM) when `OPENAI_API_BASE` is present
 
 ### Tau Bench Running (TRAPI):
 
@@ -74,17 +47,14 @@ Notes:
 - Ensure `OPENAI_API_BASE` is unset so requests route through TRAPI.
  - TRAPI selection is controlled by the environment variables above (api version, instance, model name/version, deployment name). The `--model/--user-model` flags are forwarded but do not change the TRAPI deployment.
 
-
-
 ## Library Learning
-Preferred (TRAPI) setup for LibGen:
 
-1) Ensure your config points to the correct MCP server (absolute path recommended). 
+1) Ensure your configs file [configs/libgen/airline.json] points to the correct MCP server (absolute path recommended). 
 
 Key fields to verify for airline:
 - `"env": "airline"`
 - `"library.base_library_path": "mcp/airline_server.py"`
-- `"input_tasks.mode": "latest_for_env"` or `"base_library"`
+- `"input_tasks.mode": "latest_for_env"`
 - Leave `"agent.model"` and `"agent.user_model"` as `null` to use env vars
 
 Important:
