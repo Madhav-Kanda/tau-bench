@@ -71,12 +71,12 @@ Notes:
 ## Library Learning
 Preferred (TRAPI) setup for LibGen:
 
-1) Ensure your config points to the correct MCP server (absolute path recommended). 
+1) Ensure your configs file [configs/libgen/airline.json] points to the correct MCP server (absolute path recommended). 
 
 Key fields to verify for airline:
 - `"env": "airline"`
 - `"library.base_library_path": "mcp/airline_server.py"`
-- `"input_tasks.mode": "latest_for_env"` or `"base_library"`
+- `"input_tasks.mode": "latest_for_env"`
 - Leave `"agent.model"` and `"agent.user_model"` as `null` to use env vars
 
 Important:
