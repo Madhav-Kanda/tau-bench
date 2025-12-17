@@ -43,6 +43,30 @@ TRAPI is prioritized for LibGen (function suggestion/definition/correction). Tau
 - via TRAPI (no OpenAI-compatible base URL set; providers set to `azure`)
 - via OpenAI-compatible endpoints (e.g., vLLM) when `OPENAI_API_BASE` is present
 
+### Tau Bench Running (TRAPI):
+
+```bash
+az login
+unset OPENAI_API_BASE
+unset VLLM_BASE_URL
+
+python run.py \
+  --agent-strategy tool-calling \
+  --env airline \
+  --model gpt-4o \
+  --model-provider azure \
+  --user-model gpt-4o \
+  --user-model-provider azure \
+  --user-strategy llm \
+  --num-trials 1 \
+  --task-split test \
+  --temperature 0.1
+```
+
+Notes:
+- Ensure `OPENAI_API_BASE` is unset so requests route through TRAPI.
+
+
 ### OpenAI-compatible (vLLM) Server Starting:
 
 ```python
@@ -79,28 +103,6 @@ python run.py \
   --temperature 0.1
 ```
 
-### Tau Bench Running (TRAPI):
-
-```bash
-az login
-unset OPENAI_API_BASE
-unset VLLM_BASE_URL
-
-python run.py \
-  --agent-strategy tool-calling \
-  --env airline \
-  --model gpt-4o \
-  --model-provider azure \
-  --user-model gpt-4o \
-  --user-model-provider azure \
-  --user-strategy llm \
-  --num-trials 1 \
-  --task-split test \
-  --temperature 0.1
-```
-
-Notes:
-- Ensure `OPENAI_API_BASE` is unset so requests route through TRAPI.
 
 ## Library Learning
 Preferred (TRAPI) setup for LibGen:
