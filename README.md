@@ -88,8 +88,8 @@ unset OPENAI_API_BASE
 unset VLLM_BASE_URL
 # optional: export DEFAULT_IDENTITY_CLIENT_ID=<your-identity-client-id>
 # optional TRAPI model selection:
-# export LIBGEN_AGENT_MODEL=gpt-4.1
-# export LIBGEN_USER_MODEL=$LIBGEN_AGENT_MODEL
+export LIBGEN_AGENT_MODEL=gpt-4.1
+export LIBGEN_USER_MODEL=$LIBGEN_AGENT_MODEL
 
 python libgen_experiment.py \
   --config configs/libgen/airline.json
